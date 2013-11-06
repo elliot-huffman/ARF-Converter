@@ -1,24 +1,32 @@
 @echo off
+
+:source
 echo Please select the folder with the ARF files in it.
 set /p source=E.G. C:\Users\Elliot\Desktop\HAOH:
+goto dest
+
 
 rem This sets the folder location for the ARF files.
 rem I am going to add a menu for simplicity sake later.
 
 
+:dest
 echo Please select where the mp4 files should appear.
 set /p dest=E.G. C:\Users\Elliot\Desktop\Converted:
+goto precfg
 
 
 rem This sets the output folder for the converted files.
 rem Again I will make a menu in the future.
 
 
+:precfg
 setlocal
 set cd=%source%
 cd %cd%
 for %%a in ("%cd%\*.arf") do call:MakeCFG "%%~a" "%dest%" "%source%"
 for %%a in ("%cd%\*.cfg") do c:\programdata\webex\webex\500\nbrplay.exe -Convert %%~a
+del *.cfg
 goto end
 
 
@@ -53,8 +61,8 @@ ECHO(framerate=10
 )>"%MP4%.cfg"
 exit /b
 
-rem Above is the CFG file template used to apply to the ARF's CFG file.
 
+rem Above is the CFG file template used to apply to the ARF's CFG file.
 
 
 :end
