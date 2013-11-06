@@ -13,7 +13,7 @@ REMs are comments in *.bat files
 Now for the legal stuff...
 ==========================
 
-Quick summary: This is Public Domain software yadda yadda yadda...
+<>Quick summary: This is Public Domain software yadda yadda yadda...<>
 
 
 This is free and unencumbered software released into the public domain.
