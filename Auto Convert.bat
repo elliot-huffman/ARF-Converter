@@ -92,6 +92,7 @@ ECHO(media=MP4
 ECHO(showui=1
 ECHO([UI]
 ECHO(chat=1
+ECHO(video=0
 ECHO(qa=0
 ECHO(largeroutline=1
 ECHO([MP4]
