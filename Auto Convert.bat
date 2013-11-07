@@ -42,7 +42,7 @@ rem make %source%. %source% is then copied into %dest% to set the destination of
 :source
 cls
 echo Please select the folder with the ARF files in it.
-set /p source=E.G. C:\Users\Elliot\Desktop\HAOH:
+set /p source=E.G. C:\Users\Elliot\Desktop\ARFs:
 goto dest
 
 
