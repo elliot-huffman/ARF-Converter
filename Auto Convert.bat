@@ -25,11 +25,13 @@ pause
 goto mainmenu
 
 
-rem This displayes a simple menu for users to chose either advanced mode, Where you type the full path, or Easy mode, Where you type ony the folder name of a folder on the 
+rem This displayes a simple menu for users to chose either advanced mode, Where you type the full path, or Easy mode, Where you 
 
-desktop.
+type ony the folder name of a folder on the desktop.
 rem This menu uses the choice command to make the user chose one of two choices.
-rem After they chose it records which one the chose in fromm (from menu) so that they can be routed after they have thosen the file type.
+rem After they chose it records which one the chose in fromm (from menu) so that they can be routed after they have thosen the 
+
+file type.
 
 :easy
 set errorlevel=0
@@ -49,7 +51,7 @@ rem make %source%. %source% is then copied into %dest% to set the destination of
 
 :filetype
 cls
-echo You have two file types to chose from: WMV and MP4.
+echo You have two file types to convert to: WMV and MP4.
 echo WMV is the Windows Media Video format and is compatible with most computers and devices.
 echo MP4 is MPEG Layer 4. It is compatible with almost all computers and devices.
 rem SWF is a Shockwave Flash file. It is compatible with most web browsers with flash installed.
@@ -59,6 +61,13 @@ if %errorlevel% EQU 2 set ftype=MP4
 if %errorlevel% EQU 3 set ftype=SWF
 if fromm==easy goto where
 if fromm==advanced goto source
+
+
+rem The above gives you the choice to chose which formats that you can convert to. it does this by changing the %ftype% to the 
+
+selected format then reading from which menu you came from (%fromm%, From Menu). After it has determined which one you came from 
+
+it routs you to the approiate next step.
 
 
 
@@ -120,7 +129,9 @@ rem Then processes the list (%a) and runs the call command for each entry while 
 rem the preselected destination and source to the config file that is created.
 
 rem After that is done it then looks and makes a list of all the config files in the %cd% folder, again as %a.
-rem Then it runs the NBRPLAY.exe -convert %%~a to process all of the config files in the %cd% folder then convert the specified ARF file (in the CFG file)
+rem Then it runs the NBRPLAY.exe -convert %%~a to process all of the config files in the %cd% folder then convert the specified 
+
+ARF file (in the CFG file)
 
 
 :MakeMP4CFG
@@ -150,6 +161,7 @@ exit /b
 
 rem Above is the CFG file template used to apply to the ARF's CFG file.
 
+
 :prewmvcfg
 cls
 echo Converting files... This may take some time so go get yourself a coffee and     watch your favorite TV show.
@@ -167,7 +179,9 @@ rem Then processes the list (%a) and runs the call command for each entry while 
 rem the preselected destination and source to the config file that is created.
 
 rem After that is done it then looks and makes a list of all the config files in the %cd% folder, again as %a.
-rem Then it runs the NBRPLAY.exe -convert %%~a to process all of the config files in the %cd% folder then convert the specified ARF file (in the CFG file)
+rem Then it runs the NBRPLAY.exe -convert %%~a to process all of the config files in the %cd% folder then convert the specified 
+
+ARF file (in the CFG file)
 
 
 :MakeWMVCFG
@@ -206,7 +220,9 @@ rem Above is the CFG file template used to apply to the ARF's CFG file.
 
 :preswfcfg
 cls
-echo You have somehow found thw SWF mode of the bulk converter. However the converter cannot convert to SWF at the moment. It will be here soon. Hang in there :-)
+echo You have somehow found thw SWF mode of the bulk converter. However the converter cannot convert to SWF at the moment. It 
+
+will be here soon. Hang in there :-)
 pause
 goto end
 
@@ -226,10 +242,15 @@ goto end
 rem The above is displayed if you do not have the Networking Recording Player (nbrplayer)
 rem installed. It displays a link to the download page to the NBR tool.
 
+
 :help
 echo Coming soon...
 pause
 goto end
+
+
+rem Coming soon... :)
+
 
 :end
 cls
