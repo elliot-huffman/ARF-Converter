@@ -64,7 +64,7 @@ cls
 echo Converting files... This may take some time so go get yourself a coffee and     watch your favorite TV show.
 setlocal
 set cd=%source%
-cd %cd%
+cd /d %cd%
 for %%a in ("%cd%\*.arf") do call:MakeCFG "%%~a" "%dest%" "%source%"
 for %%a in ("%cd%\*.cfg") do c:\programdata\webex\webex\500\nbrplay.exe -Convert %%~a
 del *.cfg
