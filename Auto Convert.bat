@@ -40,7 +40,9 @@ set fromm=easy
 cls
 echo The converted files will appear in the same folder with the ARF files in it.
 echo.
-set /p deskfolder=Enter the name of the folder on your desktop that contains the ARF file(s):
+echo Please enter, below, the name of the folder on your desktop that contains ARF files you wish to convert.
+echo.
+set /p deskfolder=Enter the folder name here:
 set source=%userprofile%\Desktop\%deskfolder%\
 set dest=%source%
 goto filetype
