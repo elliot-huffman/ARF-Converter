@@ -13,14 +13,16 @@ rem Also checks if the required player is installed.
 :mainmenu
 cls
 echo Easy mode: Enter the name of the folder on your desktop that contains your ARF  files.
-echo Advanced mode: Enter the full path to the folder containing the ARF files.                                    
+echo Advanced mode: Enter the full path to the folder containing the ARF files.
+echo.
 choice /c EA /M "Press E for Easy and A for Advanced."
-if %errorlevel% ==1 set fromm=easy
-if %errorlevel% ==2 set fromm=advanced
-if %errorlevel% ==1 goto easy
-if %errorlevel% ==2 goto filetype
+if %errorlevel%==1 set fromm=easy
+if %errorlevel%==2 set fromm=advanced
+if %errorlevel%==1 goto easy
+if %errorlevel%==2 goto filetype
 cls
-echo Error please try again.
+echo There has been an error
+echo Error Location "mainmenu"
 pause
 goto mainmenu
 
@@ -34,10 +36,10 @@ rem After they chose it records which one the chose in fromm (from menu) so that
 file type.
 
 :easy
-set errorlevel=0
 set fromm=easy
 cls
 echo The converted files will appear in the same folder with the ARF files in it.
+echo.
 set /p deskfolder=Enter the name of the folder on your desktop that contains the ARF file(s):
 set source=%userprofile%\Desktop\%deskfolder%\
 set dest=%source%
@@ -52,15 +54,30 @@ rem make %source%. %source% is then copied into %dest% to set the destination of
 :filetype
 cls
 echo You have two file types to convert to: WMV and MP4.
+echo.
 echo WMV is the Windows Media Video format and is compatible with most computers and devices.
+echo.
 echo MP4 is MPEG Layer 4. It is compatible with almost all computers and devices.
-rem SWF is a Shockwave Flash file. It is compatible with most web browsers with flash installed.
-choice /c WM /m "Please chose which file you want to convert to: W=WMF, M=MP4"
-if %errorlevel% EQU 1 set ftype=WMF
-if %errorlevel% EQU 2 set ftype=MP4
-if %errorlevel% EQU 3 set ftype=SWF
-if fromm==easy goto where
-if fromm==advanced goto source
+rem SWF is a Shockwave Flash file. It is compatible with most web browsers with flash installed. It is ideal for embedding in web 
+
+pages.
+echo.
+echo.
+set /p filetypechoice="Enter you chosen file type here. W=WMV M=MP4. W or M?"
+if %filetypechoice%==W set ftype=WMV
+if %filetypechoice%==M set ftype=MP4
+if %filetypechoice%==S set ftype=SWF
+if %filetypechoice%==w set ftype=WMV
+if %filetypechoice%==m set ftype=MP4
+if %filetypechoice%==s set ftype=SWF
+if %fromm%==easy goto where
+if %fromm%==advanced goto source
+cls
+echo An error has occored. Please email me with the details.
+echo Error Location "filetype"
+echo elliot-labs@live.com
+pause
+goto end
 
 
 rem The above gives you the choice to chose which formats that you can convert to. it does this by changing the %ftype% to the 
@@ -72,7 +89,6 @@ it routs you to the approiate next step.
 
 
 :source
-set errorlevel=0
 cls
 echo Please select the folder with the ARF files in it.
 set /p source=E.G. C:\Users\Elliot\Desktop\ARFs:
@@ -90,6 +106,7 @@ goto where
 cls
 echo An error has occored.
 echo Please email me with what happened.
+echo Error location "dest"
 echo elliot-labs@live.com
 pause
 goto end
@@ -99,11 +116,12 @@ rem This sets the output folder for the converted files.
 
 
 :where
-if %ftype% ==MP4 goto premp4cfg
-if %ftype% ==WMV goto prewmvcfg
-if %ftype% ==SWF goto preswfcfg
+if %ftype% EQU MP4 goto premp4cfg
+if %ftype% EQU WMV goto prewmvcfg
+if %ftype% EQU SWF goto preswfcfg
 cls
 echo An error has occored. Please email me with what happened :(
+echo Error location "where"
 echo elliot-labs@live.com
 pause
 goto end
@@ -201,7 +219,7 @@ ECHO(chat=1
 ECHO(video=0
 ECHO(qa=0
 ECHO(largeroutline=1
-ECHO([MP4]
+ECHO([WMV]
 ECHO(outputfile="%dest%\%filename%.wmv"
 ECHO(width=1440
 ECHO(height=768
@@ -225,6 +243,25 @@ echo You have somehow found thw SWF mode of the bulk converter. However the conv
 will be here soon. Hang in there :-)
 pause
 goto end
+
+:MakeSWFCFG
+setlocal
+set "SWF=%~n1"
+set "source=%~dp1"
+set "filename=%~n1"
+
+(
+ECHO([Console]
+ECHO(inputfile="%source%\%filename%.arf"
+ECHO(media=SWF
+ECHO(showui=0
+ECHO(PCAudio=0
+ECHO([SWF]
+ECHO(outputfile="%dest%\%filename%.swf"
+ECHO(width=1440
+ECHO(height=768
+)>"%SWF%.cfg"
+exit /b
 
 
 rem The above is coming soon.
