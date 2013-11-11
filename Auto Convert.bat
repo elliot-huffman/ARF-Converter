@@ -27,13 +27,11 @@ pause
 goto mainmenu
 
 
-rem This displayes a simple menu for users to chose either advanced mode, Where you type the full path, or Easy mode, Where you 
+rem This displayes a simple menu for users to chose either advanced mode, Where you type the full path, or Easy mode, Where you type ony the folder name of a folder on the 
 
-type ony the folder name of a folder on the desktop.
+desktop.
 rem This menu uses the choice command to make the user chose one of two choices.
-rem After they chose it records which one the chose in fromm (from menu) so that they can be routed after they have thosen the 
-
-file type.
+rem After they chose it records which one the chose in fromm (from menu) so that they can be routed after they have thosen the file type.
 
 :easy
 set fromm=easy
@@ -60,12 +58,11 @@ echo.
 echo WMV is the Windows Media Video format and is compatible with most computers and devices.
 echo.
 echo MP4 is MPEG Layer 4. It is compatible with almost all computers and devices.
-rem SWF is a Shockwave Flash file. It is compatible with most web browsers with flash installed. It is ideal for embedding in web 
-
-pages.
+echo.
+echo SWF is a Shockwave Flash file. It is compatible with most web browsers with flash installed. It is ideal for embedding in web pages.
 echo.
 echo.
-set /p filetypechoice="Enter you chosen file type here. W=WMV M=MP4. W or M?"
+set /p filetypechoice="Enter you chosen file type here. W=WMV M=MP4 S=SWF.  W, S or M?"
 if %filetypechoice%==W set ftype=WMV
 if %filetypechoice%==M set ftype=MP4
 if %filetypechoice%==S set ftype=SWF
@@ -82,11 +79,9 @@ pause
 goto end
 
 
-rem The above gives you the choice to chose which formats that you can convert to. it does this by changing the %ftype% to the 
+rem The above gives you the choice to chose which formats that you can convert to. it does this by changing the %ftype% to the selected format then reading from which menu you 
 
-selected format then reading from which menu you came from (%fromm%, From Menu). After it has determined which one you came from 
-
-it routs you to the approiate next step.
+came from (%fromm%, From Menu). After it has determined which one you came from it routs you to the approiate next step.
 
 
 
@@ -153,9 +148,7 @@ rem Then processes the list (%a) and runs the call command for each entry while 
 rem the preselected destination and source to the config file that is created.
 
 rem After that is done it then looks and makes a list of all the config files in the %cd% folder, again as %a.
-rem Then it runs the NBRPLAY.exe -convert %%~a to process all of the config files in the %cd% folder then convert the specified 
-
-ARF file (in the CFG file)
+rem Then it runs the NBRPLAY.exe -convert %%~a to process all of the config files in the %cd% folder then convert the specified ARF file (in the CFG file)
 
 
 :MakeMP4CFG
@@ -183,7 +176,7 @@ ECHO(framerate=10
 exit /b
 
 
-rem Above is the CFG file template used to apply to the ARF's CFG file.
+rem Above is the CFG file template used to create the ARF's CFG file.
 
 
 :prewmvcfg
@@ -203,9 +196,7 @@ rem Then processes the list (%a) and runs the call command for each entry while 
 rem the preselected destination and source to the config file that is created.
 
 rem After that is done it then looks and makes a list of all the config files in the %cd% folder, again as %a.
-rem Then it runs the NBRPLAY.exe -convert %%~a to process all of the config files in the %cd% folder then convert the specified 
-
-ARF file (in the CFG file)
+rem Then it runs the NBRPLAY.exe -convert %%~a to process all of the config files in the %cd% folder then convert the specified ARF file (in the CFG file)
 
 
 :MakeWMVCFG
@@ -239,16 +230,28 @@ ECHO(maxstream=1000
 exit /b
 
 
-rem Above is the CFG file template used to apply to the ARF's CFG file.
+rem Above is the CFG file template used to create the ARF's CFG file.
 
 
 :preswfcfg
 cls
-echo You have somehow found thw SWF mode of the bulk converter. However the converter cannot convert to SWF at the moment. It 
-
-will be here soon. Hang in there :-)
-pause
+echo Converting files... This may take some time so go get yourself a coffee and     watch your favorite TV show.
+setlocal
+set cd=%source%
+cd /d %cd%
+for %%a in ("%cd%\*.arf") do call:MakeSWFCFG "%%~a" "%dest%" "%source%"
+for %%a in ("%cd%\*.cfg") do c:\programdata\webex\webex\500\nbrplay.exe -Convert %%~a
+del *.cfg
 goto end
+
+
+rem lists the contents of %cd% and puts the list in %%a.
+rem Then processes the list (%a) and runs the call command for each entry while passing
+rem the preselected destination and source to the config file that is created.
+
+rem After that is done it then looks and makes a list of all the config files in the %cd% folder, again as %a.
+rem Then it runs the NBRPLAY.exe -convert %%~a to process all of the config files in the %cd% folder then convert the specified ARF file (in the CFG file)
+
 
 :MakeSWFCFG
 setlocal
@@ -270,7 +273,7 @@ ECHO(height=768
 exit /b
 
 
-rem The above is coming soon.
+rem Above is the CFG file template used to create the ARF's CFG file.
 
 
 :nonbr
