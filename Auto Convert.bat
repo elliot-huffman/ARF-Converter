@@ -27,11 +27,12 @@ pause
 goto mainmenu
 
 
-rem This displayes a simple menu for users to chose either advanced mode, Where you type the full path, or Easy mode, Where you type ony the folder name of a folder on the 
-
-desktop.
+rem This displayes a simple menu for users to chose either advanced mode, Where you type 
+rem the full path, or Easy mode, Where you type ony the folder name of a folder on the desktop.
+rem
 rem This menu uses the choice command to make the user chose one of two choices.
 rem After they chose it records which one the chose in fromm (from menu) so that they can be routed after they have thosen the file type.
+
 
 :easy
 set fromm=easy
