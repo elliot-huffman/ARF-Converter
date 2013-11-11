@@ -17,8 +17,8 @@ echo Advanced mode: Enter the full path to the folder containing the ARF files.
 echo.
 choice /c EA /M "Press E for Easy and A for Advanced."
 if %errorlevel%==1 set fromm=easy
-if %errorlevel%==2 set fromm=advanced
 if %errorlevel%==1 goto easy
+if %errorlevel%==2 set fromm=advanced
 if %errorlevel%==2 goto filetype
 cls
 echo There has been an error
@@ -92,6 +92,8 @@ it routs you to the approiate next step.
 
 :source
 cls
+echo Make sure that you type the full path to the folder that contains the ARF files. I have not tested network shares. Yet...
+echo.
 echo Please select the folder with the ARF files in it.
 set /p source=E.G. C:\Users\Elliot\Desktop\ARFs:
 goto dest
@@ -102,6 +104,8 @@ rem This sets the folder location for the ARF files.
 
 :dest
 cls
+echo Make sure that you type the full path to the folder that contains the ARF files. I have not tested network shares. Yet...
+echo.
 echo Please select where the converted files should appear.
 set /p dest=E.G. C:\Users\Elliot\Desktop\Converted:
 goto where
@@ -272,8 +276,17 @@ rem The above is coming soon.
 :nonbr
 cls
 echo You do not have WebEx's Network Recording Player installed.
-echo Please go to http://www.webex.com/play-webex-recording.html
-echo and download the ARF version
+echo.
+echo Pressing "Y" will open http://www.webex.com/play-webex-recording.html
+echo Pressing "N" will jump the program to the end.
+echo.
+choice /m "NOTE: When you download the player, download the ARF version."
+if %errorlevel% EQU 2 goto end
+cls
+echo I have opened the above link in you web browser.
+echo.
+echo NOTE: Download and install the ARF version!!!
+start www.webex.com/play-webex-recording.html
 pause
 goto end
 
@@ -296,6 +309,7 @@ cls
 echo Thank you for using the Elliot Labs ARF converter.
 echo Special thanks to HuffDaddy for coding help.
 echo For feature requests please email Elliot at elliot-labs@live.com
+echo.
 pause | echo Press any key to exit...
 exit /b
 
