@@ -139,7 +139,8 @@ setlocal
 set cd=%source%
 cd /d %cd%
 for %%a in ("%cd%\*.arf") do call:MakeMP4CFG "%%~a" "%dest%" "%source%"
-for %%a in ("%cd%\*.cfg") do c:\programdata\webex\webex\500\nbrplay.exe -Convert %%~a
+for %%a in ("%cd%\*.cfg") do set /a count +=1
+for %%a in ("%cd%\*.cfg") do call:countnconvert "%%~a" "%source%" "%count%" & set /a count -=1
 del *.cfg
 goto end
 
@@ -149,7 +150,7 @@ rem Then processes the list (%a) and runs the call command for each entry while 
 rem the preselected destination and source to the config file that is created.
 
 rem After that is done it then looks and makes a list of all the config files in the %cd% folder, again as %a.
-rem Then it runs the NBRPLAY.exe -convert %%~a to process all of the config files in the %cd% folder then convert the specified ARF file (in the CFG file)
+rem Then it calls the :countnconvert section and converts them while displaying the remaining file count.
 
 
 :MakeMP4CFG
@@ -187,7 +188,8 @@ setlocal
 set cd=%source%
 cd /d %cd%
 for %%a in ("%cd%\*.arf") do call:MakeWMVCFG "%%~a" "%dest%" "%source%"
-for %%a in ("%cd%\*.cfg") do c:\programdata\webex\webex\500\nbrplay.exe -Convert %%~a
+for %%a in ("%cd%\*.cfg") do set /a count +=1
+for %%a in ("%cd%\*.cfg") do call:countnconvert "%%~a" "%source%" "%count%" & set /a count -=1
 del *.cfg
 goto end
 
@@ -197,7 +199,7 @@ rem Then processes the list (%a) and runs the call command for each entry while 
 rem the preselected destination and source to the config file that is created.
 
 rem After that is done it then looks and makes a list of all the config files in the %cd% folder, again as %a.
-rem Then it runs the NBRPLAY.exe -convert %%~a to process all of the config files in the %cd% folder then convert the specified ARF file (in the CFG file)
+rem Then it calls the :countnconvert section and converts them while displaying the remaining file count.
 
 
 :MakeWMVCFG
@@ -236,12 +238,13 @@ rem Above is the CFG file template used to create the ARF's CFG file.
 
 :preswfcfg
 cls
-echo Converting files... This may take some time so go get yourself a coffee and     watch your favorite TV show.
 setlocal
+set count =0
 set cd=%source%
 cd /d %cd%
 for %%a in ("%cd%\*.arf") do call:MakeSWFCFG "%%~a" "%dest%" "%source%"
-for %%a in ("%cd%\*.cfg") do c:\programdata\webex\webex\500\nbrplay.exe -Convert %%~a
+for %%a in ("%cd%\*.cfg") do set /a count +=1
+for %%a in ("%cd%\*.cfg") do call:countnconvert "%%~a" "%source%" "%count%" & set /a count -=1
 del *.cfg
 goto end
 
@@ -251,7 +254,7 @@ rem Then processes the list (%a) and runs the call command for each entry while 
 rem the preselected destination and source to the config file that is created.
 
 rem After that is done it then looks and makes a list of all the config files in the %cd% folder, again as %a.
-rem Then it runs the NBRPLAY.exe -convert %%~a to process all of the config files in the %cd% folder then convert the specified ARF file (in the CFG file)
+rem Then it calls the :countnconvert section and converts them while displaying the remaining file count.
 
 
 :MakeSWFCFG
@@ -297,6 +300,18 @@ goto end
 
 rem The above is displayed if you do not have the Networking Recording Player (nbrplayer)
 rem installed. It displays a link to the download page to the NBR tool.
+
+
+:countnconvert
+setlocal
+cls
+echo %count% files remaining... This may take some time ;)
+c:\programdata\webex\webex\500\nbrplay.exe -Convert "%~dp1\%~n1.cfg"
+exit /b
+
+
+rem This converts the file based upon the inputed CFG file that was created in one of the previous steps.
+rem This also displays the current files that are left for conversion.
 
 
 :help
