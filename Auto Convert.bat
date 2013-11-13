@@ -134,7 +134,6 @@ rem The above code routes the user to the diffrent config makers based on there 
 
 :premp4cfg
 cls
-echo Converting files... This may take some time so go get yourself a coffee and     watch your favorite TV show.
 setlocal
 set cd=%source%
 cd /d %cd%
@@ -183,7 +182,6 @@ rem Above is the CFG file template used to create the ARF's CFG file.
 
 :prewmvcfg
 cls
-echo Converting files... This may take some time so go get yourself a coffee and     watch your favorite TV show.
 setlocal
 set cd=%source%
 cd /d %cd%
@@ -239,7 +237,6 @@ rem Above is the CFG file template used to create the ARF's CFG file.
 :preswfcfg
 cls
 setlocal
-set count =0
 set cd=%source%
 cd /d %cd%
 for %%a in ("%cd%\*.arf") do call:MakeSWFCFG "%%~a" "%dest%" "%source%"
