@@ -6,10 +6,13 @@ if not EXIST C:\programdata\webex\webex\500\nbrplay.exe goto nonbr
 goto mainmenu
 
 
-rem Also checks if the required program is installed.
+rem Checks if the required program is installed, turns off the output of commands and sets the color of the terminial. After it has completed the above tasks it routs the user to the main menu.
 
 
 :init
+
+
+
 
 
 :mainmenu
