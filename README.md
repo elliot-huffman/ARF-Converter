@@ -1,4 +1,4 @@
-ARF-Convert
+ARF-Converter
 ===========
 
 Bach ARF file converter.
@@ -7,7 +7,9 @@ Documentation is in the Auto Convert.bat file. Just look at the REMs.
 REMs are comments in *.bat files
 
 
+These scripts require the nbrplayer to convert the files. You can grab it from here:http://www.webex.com/play-webex-recording.html
 
+Make sure that you download the ARF version!!!
 
 
 Now for the legal stuff...
