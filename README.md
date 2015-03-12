@@ -2,14 +2,15 @@ ARF-Converter
 ===========
 
 Bach ARF file converter.
-Documentation is in the Auto Convert.bat file. Just look at the REMs.
+Documentation will be available in the wiki.
 
-REMs are comments in *.bat files
-
+Comments will be located in the script file for ease of understanding.
 
 These scripts require the nbrplayer to convert the files. You can grab it from here:http://www.webex.com/play-webex-recording.html
 
 Make sure that you download the ARF version!!!
+
+The python script is written with Python 3.
 
 
 Now for the legal stuff...
