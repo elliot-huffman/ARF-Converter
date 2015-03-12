@@ -4,6 +4,8 @@ color 2e
 cls
 cd /d %~dp0
 if not EXIST C:\programdata\webex\webex\500\nbrplay.exe goto nonbr
+if not EXIST "%cd%\Converted\" mkdir Converted
+del *.cfg
 goto precfg
 
 rem Checks if the required program is installed, turns off the output of commands and sets the color of the terminial. After it has completed the above tasks it routs the user to the main menu
@@ -31,7 +33,7 @@ rem installed. It displays a link to the download page to the NBR tool.
 :precfg
 cls
 setlocal
-for %%a in ("%cd%\*.arf") do call:MakeMP4CFG "%%~a" "%dest%\Converted" "%cd%"
+for %%a in ("%cd%\*.arf") do call:MakeMP4CFG "%%~a" "%source%\Converted" "%cd%"
 for %%a in ("%cd%\*.cfg") do set /a count +=1
 for %%a in ("%cd%\*.cfg") do call:countnconvert "%%~a" "%cd%" "%count%" & set /a count -=1
 del *.cfg
@@ -63,7 +65,7 @@ ECHO(video=0
 ECHO(qa=0
 ECHO(largeroutline=1
 ECHO([MP4]
-ECHO(outputfile="%dest%\%filename%.mp4"
+ECHO(outputfile="%source%\%filename%.mp4"
 ECHO(width=1440
 ECHO(height=768
 ECHO(framerate=10
