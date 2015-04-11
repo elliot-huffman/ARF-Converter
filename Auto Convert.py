@@ -19,6 +19,30 @@ def init_script():
     path_to_file = path.abspath(__file__)
     directory_name = path.dirname(path_to_file)
     chdir(directory_name)
+    global g_input_file_dir
+    global g_output_file_dir
+    global g_media_setting
+    global g_showui
+    global g_need_ui_section
+    global g_width
+    global g_height
+    global m_ui_chat
+    global m_ui_qa
+    global m_ui_largeroutline
+    global m_framerate
+    global s_console_pcaudio
+    global s_framerate
+    global w_console_pcaudio
+    global w_ui_chat
+    global w_ui_video
+    global w_ui_largeroutline
+    global w_videocodec
+    global w_audiocodec
+    global w_videoformat
+    global w_audioformat
+    global w_videokeyframes
+    global w_maxstream
+    global nbr_path
     nbr_path = "C:\programdata\webex\webex\\500\\nbrplay.exe"
     g_input_file_dir = path.dirname(path_to_file)
     g_output_file_dir = path.dirname(path_to_file) + "\\Converted"
@@ -32,6 +56,7 @@ def init_script():
     m_ui_largeroutline = 1
     m_framerate = 5
     s_console_pcaudio = 0
+    s_framerate = 10
     w_console_pcaudio = 0
     w_ui_chat = 1
     w_ui_video = 1
@@ -42,29 +67,6 @@ def init_script():
     w_audioformat = "default"
     w_videokeyframes = 4
     w_maxstream = 1000
-    global g_input_file_dir
-    global g_output_file_dir
-    global g_media_setting
-    global g_showui
-    global g_need_ui_section
-    global g_width
-    global g_height
-    global m_ui_chat
-    global m_ui_qa
-    global m_ui_largeroutline
-    global m_framerate
-    global s_console_pcaudio
-    global w_console_pcaudio
-    global w_ui_chat
-    global w_ui_video
-    global w_ui_largeroutline
-    global w_videocodec
-    global w_audiocodec
-    global w_videoformat
-    global w_audioformat
-    global w_videokeyframes
-    global w_maxstream
-    global nbr_path
     check_os()
     locate_nbr()
 
@@ -74,9 +76,9 @@ def init_script():
 
 def clear_screen():
     if system() == "Windows":
-        call("cls")
+        call("cls", shell=True)
     elif system() == "Darwin" or system() == "Linux":
-        call("clear")
+        call("clear", shell=True)
 
 
 # Sets up a multi platform clear screen function for Windows, OS X and Linux
@@ -138,7 +140,6 @@ def custom_nbr_location():
     clear_screen()
     print("Please enter the path to the nbrplay.exe here")
     nbr_path = input("\n(E.G. C:\\foo\\bar\\nbrplay.exe): ")
-    global nbr_path
 
 
 # Sets the nbr_path variable to the user provided path.
@@ -152,7 +153,7 @@ def main_menu():
     print("3. Convert file(s) to SWF")
     print("\n4. Advanced Options")
     print("5. Exit program")
-    me_main_menu = input("\n enter your selection here (1-5) then press Enter/Return: ")
+    me_main_menu = int(input("\nEnter your selection here (1-5) then press Enter/Return: "))
     if me_main_menu == 1:
         file_type("mp4")
         convert_file()
@@ -177,8 +178,8 @@ def main_menu():
 
 
 def file_type(ftype):
-    file_type = ftype
     global file_type
+    file_type = ftype
 
 
 # Sets the file type to be converted to.
@@ -240,6 +241,8 @@ def create_configs(fname):
             config_file.write("framerate=%s" % m_framerate)
         elif file_type.lower() == "wmv":
             config_file.write("videocodec=%s" % w_videocodec)
+        elif file_type.lower() == "swf":
+            config_file.write("framerate=%s" % s_framerate)
         if file_type.lower() == "wmv":
             config_file.write("audiocodec=%s" % w_audiocodec)
         if file_type.lower() == "wmv":
@@ -327,14 +330,12 @@ def mp4_toggle_chat():
     if me_mp4_toggle_chat.lower() == "y":
         if m_ui_chat == 1:
             m_ui_chat = 0
-            global m_ui_chat
             clear_screen()
             print("The chat toggle is now set to: %s" % m_ui_chat)
             input("Press Enter/Return to continue...")
             mp4_options_menu()
         else:
             m_ui_chat = 1
-            global m_ui_chat
             clear_screen()
             print("The chat toggle is now set to: %s" % m_ui_chat)
             input("Press Enter/Return to continue...")
@@ -351,14 +352,12 @@ def mp4_toggle_qa():
     if me_mp4_toggle_qa.lower() == "y":
         if m_ui_qa == 1:
             m_ui_qa = 0
-            global m_ui_qa
             clear_screen()
             print("The Q&A toggle is now set to: %s" % m_ui_qa)
             input("Press Enter/Return to continue...")
             mp4_options_menu()
         else:
             m_ui_qa = 1
-            global m_ui_qa
             clear_screen()
             print("The Q&A toggle is currently set to: %s" % m_ui_qa)
             input("Press Enter/Return to continue...")
@@ -375,14 +374,12 @@ def mp4_toggle_largeroutline():
     if me_mp4_toggle_largeroutline.lower() == "y":
         if m_ui_largeroutline == 1:
             m_ui_largeroutline = 0
-            global m_ui_largeroutline
             clear_screen()
             print("The largeroutline toggle is now set to: %s" % m_ui_largeroutline)
             input("Press Enter/Return to continue...")
             mp4_options_menu()
         else:
             m_ui_largeroutline = 1
-            global m_ui_largeroutline
             clear_screen()
             print("The largeroutline toggle is now set to: %s" % m_ui_largeroutline)
             input("Press Enter/Return to continue...")
@@ -398,7 +395,6 @@ def mp4_change_framerate():
     me_mp4_change_framerate = input("Leave it blank to do nothing. Press Enter/Return when you are ready to continue: ")
     if me_mp4_change_framerate > 0:
         m_framerate = me_mp4_change_framerate
-        global m_framerate
         clear_screen()
         print("The framerate is now set to: %sFPS" % m_framerate)
         input("Press Enter/Return to continue...")
@@ -412,46 +408,218 @@ def wmv_options_menu():
     print("WMV Files have 10 configurable options (at the moment)\n\n1. Toggle PCAudio setting\n2. Toggle Chat Box")
     print("3. Toggle Webcam Video\n4. Toggle Largeroutline setting\n5. Change the video codec")
     print("6. Change the audio codec\n7. Alter the Videoformat setting\n8. Alter the Audioformat setting")
-    print("9. Change the video key frames (framerate)\n10. Change the maxstream (bitrate)")
+    print("9. Change the video key frames (frame rate)\n10. Change the maxstream (bitrate)")
     print("\n\n11. Go back to the main options menu.")
-    me_mp4_options_menu = input("\nPlease enter 1-11 and press Enter/Return: ")
-    if me_mp4_options_menu == 1:
+    me_wmv_options_menu = input("\nPlease enter 1-11 and press Enter/Return: ")
+    if me_wmv_options_menu == 1:
         wmv_toggle_pcaudio()
-    elif me_mp4_options_menu == 2:
+    elif me_wmv_options_menu == 2:
         wmv_toggle_chat_box()
-    elif me_mp4_options_menu == 3:
+    elif me_wmv_options_menu == 3:
         wmv_toggle_webcam_video()
-    elif me_mp4_options_menu == 4:
+    elif me_wmv_options_menu == 4:
         wmv_toggle_largeroutline()
-    elif me_mp4_options_menu == 5:
+    elif me_wmv_options_menu == 5:
         wmv_change_videocodec()
-    elif me_mp4_options_menu == 6:
+    elif me_wmv_options_menu == 6:
         wmv_change_audiocodec()
-    elif me_mp4_options_menu == 7:
+    elif me_wmv_options_menu == 7:
         wmv_alter_videoformat()
-    elif me_mp4_options_menu == 8:
+    elif me_wmv_options_menu == 8:
         wmv_alter_audioformat()
-    elif me_mp4_options_menu == 9:
+    elif me_wmv_options_menu == 9:
         wmv_change_keyframes()
-    elif me_mp4_options_menu == 10:
+    elif me_wmv_options_menu == 10:
         wmv_change_maxstream()
-    elif me_mp4_options_menu == 11:
+    elif me_wmv_options_menu == 11:
         options_menu()
     else:
         clear_screen()
         print("Please enter a valid number from 1 to 11!")
         input("\n Press Enter/Return to continue...")
-        mp4_options_menu()
+        wmv_options_menu()
 
 
 # Lists settings available for the WMV file format
 
 
-def swf_options_menu():
+def wmv_toggle_pcaudio():
+    clear_screen()
+    print("The PCAudio toggle is set to: %s\n Would you like to toggle this setting?" % w_console_pcaudio)
+    print("This is an experimental and untested setting!!!")
+    print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
+    me_wmv_toggle_pcaudio = input("Press Enter/Return when you are ready to continue: ")
+    if me_wmv_toggle_pcaudio.lower() == "y":
+        if w_console_pcaudio == 1:
+            w_console_pcaudio = 0
+        else:
+            w_console_pcaudio = 1
+        clear_screen()
+        print("The PCAudio toggle is now set to: %s" % w_console_pcaudio)
+        input("Press Enter/Return to continue...")
+    wmv_options_menu()
+
+
+# Enables or Disables the PCAudio setting for the WMV file
+
+
+def wmv_toggle_chat_box():
+    clear_screen()
+    print("The chat box toggle is set to: %s\n Would you like to toggle this setting?" % w_ui_chat)
+    print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
+    me_wmv_toggle_chat_box = input("Press Enter/Return when you are ready to continue: ")
+    if me_wmv_toggle_chat_box.lower() == "y":
+        if w_ui_chat == 1:
+            w_ui_chat = 0
+        else:
+            w_ui_chat = 1
+        clear_screen()
+        print("The chat box toggle is now set to: %s" % w_ui_chat)
+        input("Press Enter/Return to continue...")
+    wmv_options_menu()
+
+
+def wmv_toggle_webcam_video():
+    clear_screen()
+    print("The web cam box toggle is set to: %s\n Would you like to toggle this setting?" % w_ui_video)
+    print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
+    me_wmv_toggle_video_box = input("Press Enter/Return when you are ready to continue: ")
+    if me_wmv_toggle_video_box.lower() == "y":
+        if w_ui_video == 1:
+            w_ui_video = 0
+        else:
+            w_ui_video = 1
+        clear_screen()
+        print("The web cam toggle is now set to: %s" % w_ui_video)
+        input("Press Enter/Return to continue...")
+    wmv_options_menu()
+
+
+def wmv_toggle_largeroutline():
+    clear_screen()
+    print("The LargerOutline toggle is set to: %s\n Would you like to toggle this setting?" % w_ui_largeroutline)
+    print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
+    me_wmv_toggle_largeroutline = input("Press Enter/Return when you are ready to continue: ")
+    if me_wmv_toggle_largeroutline.lower() == "y":
+        if w_ui_largeroutline == 1:
+            w_ui_largeroutline = 0
+        else:
+            w_ui_largeroutline = 1
+        clear_screen()
+        print("The LargerOutline toggle is now set to: %s" % w_ui_largeroutline)
+        input("Press Enter/Return to continue...")
+    wmv_options_menu()
+
+
+def wmv_change_videocodec():
+    clear_screen()
+    print("The WMV video codec is currently set to: %s" % w_videocodec)
+    print("There are 2 options for this setting:\n1. Windows Media Video 9\n2. Windows Media Video 9 Screen")
+    print("\nLeave the field blank to do nothing")
+    me_wmv_videocodec = input("\nPlease enter 1 or 2 then press Enter/Return: ")
+    if me_wmv_videocodec == 1:
+        w_videocodec = "Windows Media Video"
+    elif me_wmv_videocodec == 2:
+        w_videocodec = "Windows Media Video 9 Screen"
+    clear_screen()
+    print("The video codec is now set to: %s" % w_videocodec)
+    input("Press Enter/Return to continue...")
+    wmv_options_menu()
+
+
+def wmv_change_audiocodec():
+    clear_screen()
+    print("The WMV audio codec is currently set to: %s" % w_audiocodec)
+    print("There are 3 options for this setting:\n1. Windows Media Audio 9.2 9\n2. Windows Media Audio 9.2 Lossless")
+    print("3. Windows Media Audio 10 Professional\nLeave the field blank to do nothing")
+    me_wmv_audiocodec = input("\nPlease enter 1-3 then press Enter/Return: ")
+    if me_wmv_audiocodec == 1:
+        w_audiocodec = "Windows Media Video"
+    elif me_wmv_audiocodec == 2:
+        w_audiocodec = "Windows Media Video 9 Screen"
+    elif me_wmv_audiocodec == 3:
+        w_audiocodec = "Windows Media Audio 10 Professional"
+    clear_screen()
+    print("The audio codec is now set to: %s" % w_audiocodec)
+    input("Press Enter/Return to continue...")
+    wmv_options_menu()
+
+
+def wmv_alter_videoformat():
+    clear_screen()
+    print("I have no idea what this setting does so I do not recomend changeing this.")
+    print("Leave the field blank to do nothing.\n The current setting is: %s" % w_videoformat)
+    me_wmv_videoformat = input("Enter some value here: ")
+    if len(me_wmv_videoformat) > 0:
+        w_videoformat = me_wmv_videoformat
+
+
+def wmv_alter_audioformat():
     pass
 
 
+def wmv_change_keyframes():
+    pass
+
+
+def wmv_change_maxstream():
+    pass
+
+
+def swf_options_menu():
+    clear_screen()
+    print("SWF Files have 2 configurable options (at the moment):\n\n1. Toggle PCAudio setting\n2. Change frame rate")
+    print("\n3. Go back to the main options menu.")
+    me_swf_options_menu = input("\nPlease enter 1-3 and press Enter/Return: ")
+    if me_swf_options_menu == 1:
+        swf_toggle_pcaudio()
+    elif me_swf_options_menu == 2:
+        swf_change_framerate()
+    elif me_swf_options_menu == 3:
+        options_menu()
+    else:
+        clear_screen()
+        print("Please enter a valid number from 1 to 3!")
+        input("\n Press Enter/Return to continue...")
+        swf_options_menu()
+
+
 # Lists settings available for the SWF file format
+
+
+def swf_toggle_pcaudio():
+    clear_screen()
+    print("The PCAudio toggle is set to: %s\n Would you like to toggle this setting?" % s_console_pcaudio)
+    print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
+    me_swf_toggle_pcaudio = input("Press Enter/Return when you are ready to continue: ")
+    if me_swf_toggle_pcaudio.lower() == "y":
+        if s_console_pcaudio == 1:
+            s_console_pcaudio = 0
+        else:
+            s_console_pcaudio = 1
+        clear_screen()
+        print("The PCAudio toggle is now set to: %s" % s_console_pcaudio)
+        input("Press Enter/Return to continue...")
+    swf_options_menu()
+
+
+# Enables or Disables the PCAudio setting for the SWF file
+
+
+def swf_change_framerate():
+    clear_screen()
+    print("The current frame rate is set to: %sFPS. Leave below blank to do nothing." % s_framerate)
+    print("Enter a number above 0 to change the frame rate (the recommended range is from 1 to 10).")
+    me_swf_change_framerate = input("Press Enter/Return when you are ready to continue: ")
+    if me_swf_change_framerate > 0:
+        s_framerate = me_swf_change_framerate
+        clear_screen()
+        print("The frame rate is now set to: %sFPS" % s_framerate)
+        input("Press Enter/Return to continue...")
+    swf_options_menu()
+
+
+# Changes the frame rate for SWF files.
 
 
 def global_options_menu():
