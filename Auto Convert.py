@@ -264,6 +264,8 @@ def execute_nbr_conversion(cfg_name):
     call(args)
 
 
+# Executes the nbr executable with the path to the generated cfg file.
+
 
 def options_menu():
     clear_screen()
@@ -274,7 +276,7 @@ def options_menu():
     print("4. Global Options (applies to all formats)")
     print("\n5. Restore default settings")
     print("\n6. Go back to the main menu")
-    me_options_menu = input("\nEnter your selection here (1-6)")
+    me_options_menu = int(input("\nEnter your selection here (1-6)"))
     if me_options_menu == 1:
         mp4_options_menu()
     elif me_options_menu == 2:
@@ -301,7 +303,7 @@ def mp4_options_menu():
     clear_screen()
     print("MP4 Files have 4 configurable options (at the moment)\n\n1. Toggle Chat Window\n2. Toggle Q&A Box")
     print("3. Toggle Largeroutline\n4. Change Framerate\n\n5. Go back to the main options menu.")
-    me_mp4_options_menu = input("\nPlease enter 1-5 and press Enter/Return: ")
+    me_mp4_options_menu = int(input("\nPlease enter 1-5 and press Enter/Return: "))
     if me_mp4_options_menu == 1:
         mp4_toggle_chat()
     elif me_mp4_options_menu == 2:
@@ -324,83 +326,75 @@ def mp4_options_menu():
 
 def mp4_toggle_chat():
     clear_screen()
-    print("The current chat toggle is set to: %s\n Would you like to toggle this setting?" % m_ui_chat)
-    print("Press Y to toggle the setting. Leave it blank to do nothing.")
+    print("The Q&A box toggle is set to: %s" % m_ui_chat)
+    print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
     me_mp4_toggle_chat = input("Press Enter/Return when you are ready to continue: ")
     if me_mp4_toggle_chat.lower() == "y":
         if m_ui_chat == 1:
             m_ui_chat = 0
-            clear_screen()
-            print("The chat toggle is now set to: %s" % m_ui_chat)
-            input("Press Enter/Return to continue...")
-            mp4_options_menu()
         else:
             m_ui_chat = 1
-            clear_screen()
-            print("The chat toggle is now set to: %s" % m_ui_chat)
-            input("Press Enter/Return to continue...")
-            mp4_options_menu()
-    else:
-        mp4_options_menu()
+        clear_screen()
+        print("The Q&A box toggle is now set to: %s" % m_ui_chat)
+        input("Press Enter/Return to continue...")
+    mp4_options_menu()
+
+
+# Toggles the chat box setting for MP4 files.
 
 
 def mp4_toggle_qa():
     clear_screen()
-    print("The current Q&A toggle is set to: %s\n Would you like to toggle this setting?" % m_ui_qa)
-    print("Press Y to toggle the setting. Leave it blank to do nothing.")
+    print("The Q&A box toggle is set to: %s" % m_ui_qa)
+    print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
     me_mp4_toggle_qa = input("Press Enter/Return when you are ready to continue: ")
     if me_mp4_toggle_qa.lower() == "y":
         if m_ui_qa == 1:
             m_ui_qa = 0
-            clear_screen()
-            print("The Q&A toggle is now set to: %s" % m_ui_qa)
-            input("Press Enter/Return to continue...")
-            mp4_options_menu()
         else:
             m_ui_qa = 1
-            clear_screen()
-            print("The Q&A toggle is currently set to: %s" % m_ui_qa)
-            input("Press Enter/Return to continue...")
-            mp4_options_menu()
-    else:
-        mp4_options_menu()
+        clear_screen()
+        print("The Q&A box toggle is now set to: %s" % m_ui_qa)
+        input("Press Enter/Return to continue...")
+    mp4_options_menu()
+
+
+# Toggles the Q&A box setting for MP4 files.
 
 
 def mp4_toggle_largeroutline():
     clear_screen()
-    print("The current Largeroutline toggle is set to: %s\n Would you like to toggle this setting?" % m_ui_largeroutline)
-    print("Press Y to toggle the setting. Leave it blank to do nothing.")
+    print("The LargerOutline toggle is set to: %s" % m_ui_largeroutline)
+    print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
     me_mp4_toggle_largeroutline = input("Press Enter/Return when you are ready to continue: ")
     if me_mp4_toggle_largeroutline.lower() == "y":
         if m_ui_largeroutline == 1:
             m_ui_largeroutline = 0
-            clear_screen()
-            print("The largeroutline toggle is now set to: %s" % m_ui_largeroutline)
-            input("Press Enter/Return to continue...")
-            mp4_options_menu()
         else:
             m_ui_largeroutline = 1
-            clear_screen()
-            print("The largeroutline toggle is now set to: %s" % m_ui_largeroutline)
-            input("Press Enter/Return to continue...")
-            mp4_options_menu()
-    else:
-        mp4_options_menu()
+        clear_screen()
+        print("The LargerOutline toggle is now set to: %s" % m_ui_largeroutline)
+        input("Press Enter/Return to continue...")
+    mp4_options_menu()
+
+
+# Toggles the LargerOutline setting for MP4 files.
 
 
 def mp4_change_framerate():
     clear_screen()
-    print("The current framerate is set to: %sFPS.\nWould you like to change this setting?" % m_framerate)
-    print("Enter a number above 0 (the recommended range is 1 to 10) to toggle the setting.")
-    me_mp4_change_framerate = input("Leave it blank to do nothing. Press Enter/Return when you are ready to continue: ")
+    print("The current frame rate is set to: %sFPS.\nLeave it blank to do nothing." % m_framerate)
+    print("Enter a number above 0 (the recommended range is 1 to 10) to change the setting.")
+    me_mp4_change_framerate = int(input("Press Enter/Return when you are ready to continue: "))
     if me_mp4_change_framerate > 0:
         m_framerate = me_mp4_change_framerate
         clear_screen()
-        print("The framerate is now set to: %sFPS" % m_framerate)
+        print("The frame rate is now set to: %sFPS" % m_framerate)
         input("Press Enter/Return to continue...")
-        mp4_options_menu()
-    else:
-        mp4_options_menu()
+    mp4_options_menu()
+
+
+# Changes the frame rate for MP4 files.
 
 
 def wmv_options_menu():
@@ -410,7 +404,7 @@ def wmv_options_menu():
     print("6. Change the audio codec\n7. Alter the Videoformat setting\n8. Alter the Audioformat setting")
     print("9. Change the video key frames (frame rate)\n10. Change the maxstream (bitrate)")
     print("\n\n11. Go back to the main options menu.")
-    me_wmv_options_menu = input("\nPlease enter 1-11 and press Enter/Return: ")
+    me_wmv_options_menu = int(input("\nPlease enter 1-11 and press Enter/Return: "))
     if me_wmv_options_menu == 1:
         wmv_toggle_pcaudio()
     elif me_wmv_options_menu == 2:
@@ -479,6 +473,9 @@ def wmv_toggle_chat_box():
     wmv_options_menu()
 
 
+# Toggles the chat box setting for WMV files.
+
+
 def wmv_toggle_webcam_video():
     clear_screen()
     print("The web cam box toggle is set to: %s\n Would you like to toggle this setting?" % w_ui_video)
@@ -493,6 +490,9 @@ def wmv_toggle_webcam_video():
         print("The web cam toggle is now set to: %s" % w_ui_video)
         input("Press Enter/Return to continue...")
     wmv_options_menu()
+
+
+# Toggles the web cam box setting for WMV files.
 
 
 def wmv_toggle_largeroutline():
@@ -511,12 +511,15 @@ def wmv_toggle_largeroutline():
     wmv_options_menu()
 
 
+# Toggles the LargerOutline setting for WMV files.
+
+
 def wmv_change_videocodec():
     clear_screen()
     print("The WMV video codec is currently set to: %s" % w_videocodec)
     print("There are 2 options for this setting:\n1. Windows Media Video 9\n2. Windows Media Video 9 Screen")
     print("\nLeave the field blank to do nothing")
-    me_wmv_videocodec = input("\nPlease enter 1 or 2 then press Enter/Return: ")
+    me_wmv_videocodec = int(input("\nPlease enter 1 or 2 then press Enter/Return: "))
     if me_wmv_videocodec == 1:
         w_videocodec = "Windows Media Video"
     elif me_wmv_videocodec == 2:
@@ -527,12 +530,15 @@ def wmv_change_videocodec():
     wmv_options_menu()
 
 
+# Changes the Video Codec for WMV files.
+
+
 def wmv_change_audiocodec():
     clear_screen()
     print("The WMV audio codec is currently set to: %s" % w_audiocodec)
     print("There are 3 options for this setting:\n1. Windows Media Audio 9.2 9\n2. Windows Media Audio 9.2 Lossless")
     print("3. Windows Media Audio 10 Professional\nLeave the field blank to do nothing")
-    me_wmv_audiocodec = input("\nPlease enter 1-3 then press Enter/Return: ")
+    me_wmv_audiocodec = int(input("\nPlease enter 1-3 then press Enter/Return: "))
     if me_wmv_audiocodec == 1:
         w_audiocodec = "Windows Media Video"
     elif me_wmv_audiocodec == 2:
@@ -545,32 +551,78 @@ def wmv_change_audiocodec():
     wmv_options_menu()
 
 
+# Changes the Audio Codec for WMV files.
+
+
 def wmv_alter_videoformat():
     clear_screen()
-    print("I have no idea what this setting does so I do not recomend changeing this.")
+    print("I have no idea what this setting does so I do not recommend changing this.")
     print("Leave the field blank to do nothing.\n The current setting is: %s" % w_videoformat)
     me_wmv_videoformat = input("Enter some value here: ")
     if len(me_wmv_videoformat) > 0:
         w_videoformat = me_wmv_videoformat
+        clear_screen()
+        print("The VideoFormat setting is now set to: %s" % w_videoformat)
+        input("Press Enter/Return to continue...")
+    wmv_options_menu()
+
+
+# Changes the VideoFormat for WMV files.
 
 
 def wmv_alter_audioformat():
-    pass
+    clear_screen()
+    print("I have no idea what this setting does so I do not recommend changing this.")
+    print("Leave the field blank to do nothing.\n The current setting is: %s" % w_audioformat)
+    me_wmv_audioformat = input("Enter some value here: ")
+    if len(me_wmv_audioformat) > 0:
+        w_audioformat = me_wmv_audioformat
+        clear_screen()
+        print("The AudioFormat setting is now set to: %s" % w_audioformat)
+        input("Press Enter/Return to continue...")
+    wmv_options_menu()
+
+
+# Changes the AudioFormat for WMV files.
 
 
 def wmv_change_keyframes():
-    pass
+    clear_screen()
+    print("The current frame rate is set to: %sFPS.\nLeave it blank to do nothing." % w_videokeyframes)
+    print("Enter a number above 0 (the recommended range is 4 to 10) to change the setting.")
+    me_wmv_change_framerate = int(input("Press Enter/Return when you are ready to continue: "))
+    if me_wmv_change_framerate > 0:
+        w_videokeyframes = me_wmv_change_framerate
+        clear_screen()
+        print("The frame rate is now set to: %sFPS" % w_videokeyframes)
+        input("Press Enter/Return to continue...")
+    wmv_options_menu()
+
+
+# Changes the KeyFrames for WMV files.
 
 
 def wmv_change_maxstream():
-    pass
+    clear_screen()
+    print("The current MaxStream is set to: %sBPS.\nLeave it blank to do nothing." % w_maxstream)
+    print("Enter a number above 0 (the recommended range is 500 to 1000) to change the setting.")
+    me_wmv_change_maxstream = int(input("Press Enter/Return when you are ready to continue: "))
+    if me_wmv_change_maxstream > 0:
+        w_maxstream = me_wmv_change_maxstream
+        clear_screen()
+        print("MaxStream is now set to: %s" % w_maxstream)
+        input("Press Enter/Return to continue...")
+    wmv_options_menu()
+
+
+# Changes the MaxStream for WMV files.
 
 
 def swf_options_menu():
     clear_screen()
     print("SWF Files have 2 configurable options (at the moment):\n\n1. Toggle PCAudio setting\n2. Change frame rate")
     print("\n3. Go back to the main options menu.")
-    me_swf_options_menu = input("\nPlease enter 1-3 and press Enter/Return: ")
+    me_swf_options_menu = int(input("\nPlease enter 1-3 and press Enter/Return: "))
     if me_swf_options_menu == 1:
         swf_toggle_pcaudio()
     elif me_swf_options_menu == 2:
@@ -610,7 +662,7 @@ def swf_change_framerate():
     clear_screen()
     print("The current frame rate is set to: %sFPS. Leave below blank to do nothing." % s_framerate)
     print("Enter a number above 0 to change the frame rate (the recommended range is from 1 to 10).")
-    me_swf_change_framerate = input("Press Enter/Return when you are ready to continue: ")
+    me_swf_change_framerate = int(input("Press Enter/Return when you are ready to continue: "))
     if me_swf_change_framerate > 0:
         s_framerate = me_swf_change_framerate
         clear_screen()
@@ -626,11 +678,12 @@ def global_options_menu():
     pass
 
 
-# Lists settings available for all of the file formats
+# Lists settings available that are compatible with all of the file formats
 
 
 def restore_default_settings():
     init_script()
+    options_menu()
 
 
 # Restores all settings to default values
@@ -650,5 +703,10 @@ def exit_program(friendly):
 
 
 # This is a simple program closer that thanks the user for using the program.
+
+
 init_script()
 main_menu()
+
+
+# Let the madness begin!
