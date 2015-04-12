@@ -16,9 +16,6 @@ from webbrowser import open_new_tab
 
 
 def init_script():
-    path_to_file = path.abspath(__file__)
-    directory_name = path.dirname(path_to_file)
-    chdir(directory_name)
     global g_input_file_dir
     global g_output_file_dir
     global g_media_setting
@@ -43,14 +40,17 @@ def init_script():
     global w_videokeyframes
     global w_maxstream
     global nbr_path
+    path_to_file = path.abspath(__file__)
+    directory_name = path.dirname(path_to_file)
+    chdir(directory_name)
     nbr_path = "C:\programdata\webex\webex\\500\\nbrplay.exe"
     g_input_file_dir = path.dirname(path_to_file)
     g_output_file_dir = path.dirname(path_to_file) + "\\Converted"
     g_media_setting = "MP4"
     g_showui = 0
     g_need_ui_section = True
-    g_width = 1440
-    g_height = 768
+    g_width = 1920
+    g_height = 1080
     m_ui_chat = 1
     m_ui_qa = 1
     m_ui_largeroutline = 1
@@ -137,6 +137,7 @@ def locate_nbr():
 
 
 def custom_nbr_location():
+    global nbr_path
     clear_screen()
     print("Please enter the path to the nbrplay.exe here")
     nbr_path = input("\n(E.G. C:\\foo\\bar\\nbrplay.exe): ")
@@ -210,6 +211,7 @@ def convert_file():
 
 
 def create_configs(fname):
+    global file_type
     with open(fname + ".cfg", "a") as config_file:
         config_file.write("[Console]")
         config_file.write("inputfile=%s" % g_input_file_dir + fname)
@@ -261,7 +263,7 @@ def create_configs(fname):
 def execute_nbr_conversion(cfg_name):
     args = ["nbr_path", "-Convert"]
     args.append(cfg_name)
-    call(args)
+    call(args, shell=True)
 
 
 # Executes the nbr executable with the path to the generated cfg file.
@@ -292,7 +294,7 @@ def options_menu():
     else:
         clear_screen()
         print("Please enter a valid number from 1 to 6!")
-        input("\n Press Enter/Return to continue...")
+        input("\nPress Enter/Return to continue...")
         options_menu()
 
 
@@ -325,6 +327,7 @@ def mp4_options_menu():
 
 
 def mp4_toggle_chat():
+    global m_ui_chat
     clear_screen()
     print("The Q&A box toggle is set to: %s" % m_ui_chat)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
@@ -344,6 +347,7 @@ def mp4_toggle_chat():
 
 
 def mp4_toggle_qa():
+    global m_ui_qa
     clear_screen()
     print("The Q&A box toggle is set to: %s" % m_ui_qa)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
@@ -363,6 +367,7 @@ def mp4_toggle_qa():
 
 
 def mp4_toggle_largeroutline():
+    global m_ui_largeroutline
     clear_screen()
     print("The LargerOutline toggle is set to: %s" % m_ui_largeroutline)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
@@ -382,6 +387,7 @@ def mp4_toggle_largeroutline():
 
 
 def mp4_change_framerate():
+    global m_framerate
     clear_screen()
     print("The current frame rate is set to: %sFPS.\nLeave it blank to do nothing." % m_framerate)
     print("Enter a number above 0 (the recommended range is 1 to 10) to change the setting.")
@@ -430,7 +436,7 @@ def wmv_options_menu():
     else:
         clear_screen()
         print("Please enter a valid number from 1 to 11!")
-        input("\n Press Enter/Return to continue...")
+        input("\nPress Enter/Return to continue...")
         wmv_options_menu()
 
 
@@ -438,6 +444,7 @@ def wmv_options_menu():
 
 
 def wmv_toggle_pcaudio():
+    global w_console_pcaudio
     clear_screen()
     print("The PCAudio toggle is set to: %s\n Would you like to toggle this setting?" % w_console_pcaudio)
     print("This is an experimental and untested setting!!!")
@@ -458,6 +465,7 @@ def wmv_toggle_pcaudio():
 
 
 def wmv_toggle_chat_box():
+    global w_ui_chat
     clear_screen()
     print("The chat box toggle is set to: %s\n Would you like to toggle this setting?" % w_ui_chat)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
@@ -477,6 +485,7 @@ def wmv_toggle_chat_box():
 
 
 def wmv_toggle_webcam_video():
+    global w_ui_video
     clear_screen()
     print("The web cam box toggle is set to: %s\n Would you like to toggle this setting?" % w_ui_video)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
@@ -496,6 +505,7 @@ def wmv_toggle_webcam_video():
 
 
 def wmv_toggle_largeroutline():
+    global w_ui_largeroutline
     clear_screen()
     print("The LargerOutline toggle is set to: %s\n Would you like to toggle this setting?" % w_ui_largeroutline)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
@@ -515,18 +525,20 @@ def wmv_toggle_largeroutline():
 
 
 def wmv_change_videocodec():
+    global w_videocodec
     clear_screen()
     print("The WMV video codec is currently set to: %s" % w_videocodec)
     print("There are 2 options for this setting:\n1. Windows Media Video 9\n2. Windows Media Video 9 Screen")
     print("\nLeave the field blank to do nothing")
     me_wmv_videocodec = int(input("\nPlease enter 1 or 2 then press Enter/Return: "))
-    if me_wmv_videocodec == 1:
-        w_videocodec = "Windows Media Video"
-    elif me_wmv_videocodec == 2:
-        w_videocodec = "Windows Media Video 9 Screen"
-    clear_screen()
-    print("The video codec is now set to: %s" % w_videocodec)
-    input("Press Enter/Return to continue...")
+    if me_wmv_videocodec == int:
+        if me_wmv_videocodec == 1:
+            w_videocodec = "Windows Media Video"
+        elif me_wmv_videocodec == 2:
+            w_videocodec = "Windows Media Video 9 Screen"
+        clear_screen()
+        print("The video codec is now set to: %s" % w_videocodec)
+        input("Press Enter/Return to continue...")
     wmv_options_menu()
 
 
@@ -534,6 +546,7 @@ def wmv_change_videocodec():
 
 
 def wmv_change_audiocodec():
+    global w_audiocodec
     clear_screen()
     print("The WMV audio codec is currently set to: %s" % w_audiocodec)
     print("There are 3 options for this setting:\n1. Windows Media Audio 9.2 9\n2. Windows Media Audio 9.2 Lossless")
@@ -555,6 +568,7 @@ def wmv_change_audiocodec():
 
 
 def wmv_alter_videoformat():
+    global w_videoformat
     clear_screen()
     print("I have no idea what this setting does so I do not recommend changing this.")
     print("Leave the field blank to do nothing.\n The current setting is: %s" % w_videoformat)
@@ -571,6 +585,7 @@ def wmv_alter_videoformat():
 
 
 def wmv_alter_audioformat():
+    global w_audioformat
     clear_screen()
     print("I have no idea what this setting does so I do not recommend changing this.")
     print("Leave the field blank to do nothing.\n The current setting is: %s" % w_audioformat)
@@ -587,6 +602,7 @@ def wmv_alter_audioformat():
 
 
 def wmv_change_keyframes():
+    global w_videokeyframes
     clear_screen()
     print("The current frame rate is set to: %sFPS.\nLeave it blank to do nothing." % w_videokeyframes)
     print("Enter a number above 0 (the recommended range is 4 to 10) to change the setting.")
@@ -603,6 +619,7 @@ def wmv_change_keyframes():
 
 
 def wmv_change_maxstream():
+    global w_maxstream
     clear_screen()
     print("The current MaxStream is set to: %sBPS.\nLeave it blank to do nothing." % w_maxstream)
     print("Enter a number above 0 (the recommended range is 500 to 1000) to change the setting.")
@@ -640,6 +657,7 @@ def swf_options_menu():
 
 
 def swf_toggle_pcaudio():
+    global s_console_pcaudio
     clear_screen()
     print("The PCAudio toggle is set to: %s\n Would you like to toggle this setting?" % s_console_pcaudio)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
@@ -659,6 +677,7 @@ def swf_toggle_pcaudio():
 
 
 def swf_change_framerate():
+    global s_framerate
     clear_screen()
     print("The current frame rate is set to: %sFPS. Leave below blank to do nothing." % s_framerate)
     print("Enter a number above 0 to change the frame rate (the recommended range is from 1 to 10).")
@@ -675,10 +694,125 @@ def swf_change_framerate():
 
 
 def global_options_menu():
-    pass
+    clear_screen()
+    print("There are 5 global options (at the moment):4\n\n1. Set the ARF input folder\n2. Toggle ShowUI")
+    print("3. Set the converted output folder\n4. Set the resolution Width\n5. Set the resolution Height")
+    print("\n6. Go back to the main options menu.")
+    me_global_options_menu = int(input("\nPlease enter 1-6 and press Enter/Return: "))
+    if me_global_options_menu == 1:
+        global_input_dir()
+    elif me_global_options_menu == 2:
+        global_toggle_showui()
+    elif me_global_options_menu == 3:
+        global_input_dir()
+    elif me_global_options_menu == 4:
+        global_set_res_width()
+    elif me_global_options_menu == 5:
+        global_set_res_height()
+    elif me_global_options_menu == 6:
+        options_menu()
+    else:
+        clear_screen()
+        print("Please enter a valid number from 1 to 6!")
+        input("\nPress Enter/Return to continue...")
+        global_options_menu()
 
 
 # Lists settings available that are compatible with all of the file formats
+
+
+def global_input_dir():
+    global g_input_file_dir
+    clear_screen()
+    print("This sets the directory that contains all of the ARFs to be converted. By default this setting is the same")
+    print("as the directory that this script file is in.")
+    print("The current input dir is: %s" % g_input_file_dir)
+    print("\nEnter the full path to the directory that contains the ARF files to be converted or blank to do nothing.")
+    me_global_input_dir = input("Press Enter/Return when you are ready to continue: ")
+    if len(me_global_input_dir) > 0:
+        g_input_file_dir = me_global_input_dir
+        clear_screen()
+        print("The input directory is now set to: %s" % g_input_file_dir)
+        input("\nPress Enter/Return to continue...")
+    global_options_menu()
+
+
+# Sets the directory that contains all of the ARF files to be converted.
+
+
+def global_toggle_showui():
+    global g_showui
+    clear_screen()
+    print("The ShowUI toggle is set to: %s\n Would you like to toggle this setting?" % g_showui)
+    print("This option is experimental, I would not recommend changing this until tested.")
+    print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
+    me_global_toggle_showui = input("Press Enter/Return when you are ready to continue: ")
+    if me_global_toggle_showui.lower() == "y":
+        if g_showui == 1:
+            g_showui = 0
+        else:
+            g_showui = 1
+        clear_screen()
+        print("The ShowUI toggle is now set to: %s" % g_showui)
+        input("Press Enter/Return to continue...")
+    global_options_menu()
+
+
+# Toggles the ShowUI setting for all file types.
+
+
+def global_output_dir():
+    global g_output_file_dir
+    clear_screen()
+    print("This sets the directory that will contain all of the converted ARFs. By default this setting is .\Converted")
+    print("The current output dir is: %s" % g_output_file_dir)
+    print("\nEnter the full path to the directory that will contain the converted ARF files or blank to do nothing.")
+    me_global_output_dir = input("Press Enter/Return when you are ready to continue: ")
+    if len(me_global_output_dir) > 0:
+        g_output_file_dir = me_global_output_dir
+        clear_screen()
+        print("The output directory is now set to: %s" % g_output_file_dir)
+        input("\nPress Enter/Return to continue...")
+    global_options_menu()
+
+
+# Sets the directory that will contain all of the converted ARF files after conversion.
+
+
+def global_set_res_width():
+    global g_width
+    clear_screen()
+    print("This sets the resolution width for the converted file.")
+    print("The resolution width is currently set to: %spx" % g_width)
+    print("\nEnter a number(recommended values are 1024 and above). Leave blank to change nothing.")
+    me_global_res_width = len(input("Press Enter/Return when you are ready to continue: "))
+    if me_global_res_width > 0:
+        g_width = me_global_res_width
+        clear_screen()
+        print("The resolution width is now set to: %s" % g_width)
+        input("\nPress Enter/Return to continue...")
+    global_options_menu()
+
+
+# Changes the output file's resolution width (the 1024 in 1024x768)
+
+
+def global_set_res_height():
+    global g_height
+    clear_screen()
+    print("This sets the resolution height for the converted file.")
+    print("The resolution height is currently set to: %spx" % g_height)
+    print("\nEnter a number(recommended values are 768 and above). Leave blank to change nothing.")
+    me_global_res_height = len(input("Press Enter/Return when you are ready to continue: "))
+    if me_global_res_height > 0:
+        g_height = me_global_res_height
+        clear_screen()
+        print("The resolution height is now set to: %s" % g_height)
+        input("\nPress Enter/Return to continue...")
+    global_options_menu()
+
+
+# Changes the output file's resolution height (the 768 in 1024x768)
 
 
 def restore_default_settings():
