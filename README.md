@@ -1,7 +1,7 @@
 ARF-Converter
 ===========
 
-Bach ARF file converter.
+Bulk ARF file converter.
 Documentation will be available in the wiki.
 
 Comments will be located in the script file for ease of understanding.
