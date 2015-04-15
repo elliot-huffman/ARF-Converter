@@ -202,6 +202,7 @@ def convert_file():
     for file in listdir("."):
         if path.isfile(file) and file[-3:].lower() == "cfg":
             remove(file)
+    for file in listdir("."):
         if path.isfile(file) and file[-3:].lower() == "arf":
             create_configs(file)
             cfg_counter += 1
@@ -210,6 +211,7 @@ def convert_file():
             clear_screen()
             print("%s Files left to convert. This may take a while..." % str(cfg_counter))
             execute_nbr_conversion(file)
+            print(file)
             cfg_counter -= 1
 
 
@@ -222,56 +224,55 @@ def create_configs(fname):
     global file_type
     with open(fname + ".cfg", "a") as config_file:
         config_file.write("[Console]")
-        config_file.write("inputfile=%s" % g_input_file_dir + fname)
-        config_file.write("media=%s" % file_type.upper())
-        config_file.write("showui=%s\n" % g_showui)
+        config_file.write("\ninputfile=%s" % g_input_file_dir + fname)
+        config_file.write("\nmedia=%s" % file_type.upper())
+        config_file.write("\nshowui=%s" % g_showui)
         if file_type.lower() == "swf":
-            config_file.write("PCAudio=%s" % s_console_pcaudio)
+            config_file.write("\nPCAudio=%s" % s_console_pcaudio)
         elif file_type.lower() == "wmv":
-            config_file.write("PCAudio=%s" % w_console_pcaudio)
+            config_file.write("\nPCAudio=%s" % w_console_pcaudio)
         if g_need_ui_section:
-            config_file.write("[UI]")
+            config_file.write("\n[UI]")
         if file_type.lower() == "mp4":
-            config_file.write("chat=%s" % m_ui_chat)
+            config_file.write("\nchat=%s" % m_ui_chat)
         elif file_type.lower() == "wmv":
-            config_file.write("chat=%s" % w_ui_chat)
+            config_file.write("\nchat=%s" % w_ui_chat)
         if file_type.lower() == "mp4":
-            config_file.write("qa=%s" % m_ui_qa)
+            config_file.write("\nqa=%s" % m_ui_qa)
         elif file_type.lower() == "wmv":
-            config_file.write("video=%s" % w_ui_video)
+            config_file.write("\nvideo=%s" % w_ui_video)
         if file_type.lower() == "mp4":
-            config_file.write("largeroutline=%s" % m_ui_largeroutline)
+            config_file.write("\nlargeroutline=%s" % m_ui_largeroutline)
         elif file_type.lower() == "wmv":
-            config_file.write("largeroutline=%s" % w_ui_largeroutline)
-        config_file.write("[%s]" % file_type.upper())
-        config_file.write("outputfile=%s" % g_input_file_dir + fname[:-3] + "mp4")
-        config_file.write("width=%s" % g_width)
-        config_file.write("height=%s" % g_height)
+            config_file.write("\nlargeroutline=%s" % w_ui_largeroutline)
+        config_file.write("\n[%s]" % file_type.upper())
+        config_file.write("\noutputfile=%s" % g_output_file_dir + "\\" + fname[:-3] + "mp4")
+        config_file.write("\nwidth=%s" % g_width)
+        config_file.write("\nheight=%s" % g_height)
         if file_type.lower() == "mp4":
-            config_file.write("framerate=%s" % m_framerate)
+            config_file.write("\nframerate=%s" % m_framerate)
         elif file_type.lower() == "wmv":
-            config_file.write("videocodec=%s" % w_videocodec)
+            config_file.write("\nvideocodec=%s" % w_videocodec)
         elif file_type.lower() == "swf":
-            config_file.write("framerate=%s" % s_framerate)
+            config_file.write("\nframerate=%s" % s_framerate)
         if file_type.lower() == "wmv":
-            config_file.write("audiocodec=%s" % w_audiocodec)
+            config_file.write("\naudiocodec=%s" % w_audiocodec)
         if file_type.lower() == "wmv":
-            config_file.write("videoformat=%s" % w_videoformat)
+            config_file.write("\nvideoformat=%s" % w_videoformat)
         if file_type.lower() == "wmv":
-            config_file.write("audioformat=%s" % w_audioformat)
+            config_file.write("\naudioformat=%s" % w_audioformat)
         if file_type.lower() == "wmv":
-            config_file.write("videokeyframes=%s" % w_videokeyframes)
+            config_file.write("\nvideokeyframes=%s" % w_videokeyframes)
         if file_type.lower() == "wmv":
-            config_file.write("maxstream=%s" % w_maxstream)
+            config_file.write("\nmaxstream=%s" % w_maxstream)
 
 
 # Creates configuration files for the nbrplayer to use to convert the files.
 
 
 def execute_nbr_conversion(cfg_name):
-    args = ["nbr_path", "-Convert"]
-    args.append(cfg_name)
-    call(args, shell=True)
+    global nbr_path
+    call([nbr_path, "-Convert", cfg_name])
 
 
 # Executes the nbr executable with the path to the generated cfg file.
