@@ -273,7 +273,6 @@ def create_configs(fname):
 
 def execute_nbr_conversion(cfg_name):
     global nbr_path
-    print(nbr_path + " -Convert" + ' "' + cfg_name + '"')
     call(nbr_path + " -Convert" + ' "' + cfg_name + '"')
 
 
