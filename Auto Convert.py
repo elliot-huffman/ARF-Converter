@@ -40,7 +40,7 @@ def init_script():
     path_to_file = path.abspath(__file__)
     directory_name = path.dirname(path_to_file)
     chdir(directory_name)
-    nbr_path = "C:\programdata\webex\webex\\500\\nbrplay.exe"
+    nbr_path = "C:\ProgramData\WebEx\WebEx\\500\\nbrplay.exe"
     g_input_file_dir = path.dirname(path_to_file)
     g_output_file_dir = path.dirname(path_to_file) + "\\Converted"
     g_media_setting = "MP4"
@@ -198,6 +198,7 @@ def check_folder():
 
 
 def convert_file():
+    global g_input_file_dir
     cfg_counter = 0
     for file in listdir("."):
         if path.isfile(file) and file[-3:].lower() == "cfg":
@@ -210,9 +211,9 @@ def convert_file():
         if path.isfile(file) and file[-3:].lower() == "cfg":
             clear_screen()
             print("%s Files left to convert. This may take a while..." % str(cfg_counter))
-            execute_nbr_conversion(file)
-            print(file)
+            execute_nbr_conversion(g_input_file_dir + "\\" + file)
             cfg_counter -= 1
+            remove(file)
 
 
 # Deletes CFG files already present in the selected/default folder then creates new config files. After the cfg creation
@@ -222,9 +223,9 @@ def convert_file():
 
 def create_configs(fname):
     global file_type
-    with open(fname + ".cfg", "a") as config_file:
+    with open(fname[:-3] + "cfg", "a") as config_file:
         config_file.write("[Console]")
-        config_file.write("\ninputfile=%s" % g_input_file_dir + fname)
+        config_file.write("\ninputfile=%s" % g_input_file_dir + "\\" + fname)
         config_file.write("\nmedia=%s" % file_type.upper())
         config_file.write("\nshowui=%s" % g_showui)
         if file_type.lower() == "swf":
@@ -246,7 +247,7 @@ def create_configs(fname):
         elif file_type.lower() == "wmv":
             config_file.write("\nlargeroutline=%s" % w_ui_largeroutline)
         config_file.write("\n[%s]" % file_type.upper())
-        config_file.write("\noutputfile=%s" % g_output_file_dir + "\\" + fname[:-3] + "mp4")
+        config_file.write("\noutputfile=%s" % g_output_file_dir + "\\" + fname[:-3] + file_type.lower())
         config_file.write("\nwidth=%s" % g_width)
         config_file.write("\nheight=%s" % g_height)
         if file_type.lower() == "mp4":
@@ -272,7 +273,8 @@ def create_configs(fname):
 
 def execute_nbr_conversion(cfg_name):
     global nbr_path
-    call([nbr_path, "-Convert", cfg_name])
+    print(nbr_path + " -Convert" + ' "' + cfg_name + '"')
+    call(nbr_path + " -Convert" + ' "' + cfg_name + '"')
 
 
 # Executes the nbr executable with the path to the generated cfg file.
