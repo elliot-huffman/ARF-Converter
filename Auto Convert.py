@@ -1,7 +1,4 @@
-from os import path
-from os import chdir
-from os import listdir
-from os import makedirs
+from os import path, chdir, listdir, makedirs, remove
 from subprocess import call
 from platform import system
 from webbrowser import open_new_tab
@@ -201,13 +198,24 @@ def check_folder():
 
 
 def convert_file():
+    cfg_counter = 0
     for file in listdir("."):
+        if path.isfile(file) and file[-3:].lower() == "cfg":
+            remove(file)
         if path.isfile(file) and file[-3:].lower() == "arf":
             create_configs(file)
-            execute_nbr_conversion(file + ".cfg")
+            cfg_counter += 1
+    for file in listdir("."):
+        if path.isfile(file) and file[-3:].lower() == "cfg":
+            clear_screen()
+            print("%s Files left to convert. This may take a while..." % str(cfg_counter))
+            execute_nbr_conversion(file)
+            cfg_counter -= 1
 
 
-# Converts the ARF file(s) to the previously selected format
+# Deletes CFG files already present in the selected/default folder then creates new config files. After the cfg creation
+# is complete, the NBR player is executed with the new cfg files for reference while the remaining files are counted
+# down.
 
 
 def create_configs(fname):
