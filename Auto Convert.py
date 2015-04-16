@@ -214,6 +214,7 @@ def convert_file():
             execute_nbr_conversion(g_input_file_dir + "\\" + file)
             cfg_counter -= 1
             remove(file)
+    convert_again()
 
 
 # Deletes CFG files already present in the selected/default folder then creates new config files. After the cfg creation
@@ -279,6 +280,20 @@ def execute_nbr_conversion(cfg_name):
 # Executes the nbr executable with the path to the generated cfg file.
 
 
+def convert_again():
+    clear_screen()
+    print("The conversion is finished.")
+    print("Would you like to run another bulk conversion?")
+    me_convert_again = input("\nType Y for yes and N for no then press Enter/Return to continue: ")
+    if me_convert_again.lower() == "y":
+        main_menu()
+    else:
+        exit_program(True)
+
+
+# Asks the user if they would like to convert another batch of files.
+
+
 def options_menu():
     clear_screen()
     print("Here you can change options for the conversion. You have 6 options to chose from:")
@@ -314,7 +329,7 @@ def options_menu():
 def mp4_options_menu():
     clear_screen()
     print("MP4 Files have 4 configurable options (at the moment)\n\n1. Toggle Chat Window\n2. Toggle Q&A Box")
-    print("3. Toggle Largeroutline\n4. Change Framerate\n\n5. Go back to the main options menu.")
+    print("3. Toggle Largeroutline\n4. Change frame rate\n\n5. Go back to the main options menu.")
     me_mp4_options_menu = int(input("\nPlease enter 1-5 and press Enter/Return: "))
     if me_mp4_options_menu == 1:
         mp4_toggle_chat()
