@@ -10,7 +10,7 @@ These scripts require the nbrplayer to convert the files. You can grab it from h
 
 Make sure that you download the ARF version!!!
 
-The python script is written with Python 3.
+The python script is written in Python 3.
 
 
 Now for the legal stuff...
