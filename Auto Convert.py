@@ -100,6 +100,24 @@ def check_for_nbr(path_to_nbr):
 # Checks for the nbr.exe at the provided location.
 
 
+def check_folder():
+    global g_input_file_dir
+    global g_output_file_dir
+    error_num = 0
+    if not path.exists(g_input_file_dir):
+        error_num = error_num + 5
+    if not path.exists(g_output_file_dir):
+        error_num = error_num + 4
+    return error_num
+
+
+# Check is the source directory exists and if it does not then displays an error and goes back to the main menu.
+# Also checks if the output directory exists and if it does not it creates it.
+# 5 = input
+# 4 = output
+# 9 = input and output
+
+
 def locate_nbr():
     if not check_for_nbr(nbr_path):
         clear_screen()
@@ -153,13 +171,13 @@ def main_menu():
     print("5. Exit program")
     me_main_menu = int(input("\nEnter your selection here (1-5) then press Enter/Return: "))
     if me_main_menu == 1:
-        file_type("mp4")
+        file_type_set("mp4")
         convert_file()
     elif me_main_menu == 2:
-        file_type("wmv")
+        file_type_set("wmv")
         convert_file()
     elif me_main_menu == 3:
-        file_type("swf")
+        file_type_set("swf")
         convert_file()
     elif me_main_menu == 4:
         options_menu()
@@ -175,30 +193,28 @@ def main_menu():
 # Creates the main menu for the user to navigate.
 
 
-def file_type(ftype):
+def file_type_set(ftype):
     global file_type
-    file_type = ftype
+    file_type = ftype.lower()
 
 
 # Sets the file type to be converted to.
 
 
-def check_folder():
-    if not path.exists(g_input_file_dir):
-        print("The source directory does not exist. Please check your settings and try again.")
-        input("\nPress Enter/Return to continue...")
-        main_menu()
-    elif not path.exists(g_output_file_dir):
-        makedirs(g_output_file_dir)
-        return "Created Destination Directory"
-
-
-# Check is the source directory exists and if it does not then displays an error and goes back to the main menu.
-# Also checks if the output directory exists and if it does not it creates it.
-
-
 def convert_file():
     global g_input_file_dir
+    if check_folder() == 5:
+        print("The ARF input dir is invalid, please check that it exisits.")
+        input("\n Press Enter/Return to return to the main menu...")
+        main_menu()
+    if check_folder() == 4:
+        print("The ARF output dir is invalid, please check that it exisits.")
+        input("\n Press Enter/Return to return to the main menu...")
+        main_menu()
+    if check_folder() == 9:
+        print("The ARF input and output dir is invalid, please check that they exist.")
+        input("\n Press Enter/Return to return to the main menu...")
+        main_menu()
     cfg_counter = 0
     for file in listdir("."):
         if path.isfile(file) and file[-3:].lower() == "cfg":
@@ -229,43 +245,43 @@ def create_configs(fname):
         config_file.write("\ninputfile=%s" % g_input_file_dir + "\\" + fname)
         config_file.write("\nmedia=%s" % file_type.upper())
         config_file.write("\nshowui=%s" % g_showui)
-        if file_type.lower() == "swf":
+        if file_type == "swf":
             config_file.write("\nPCAudio=%s" % s_console_pcaudio)
-        elif file_type.lower() == "wmv":
+        elif file_type == "wmv":
             config_file.write("\nPCAudio=%s" % w_console_pcaudio)
         if g_need_ui_section:
             config_file.write("\n[UI]")
-        if file_type.lower() == "mp4":
+        if file_type == "mp4":
             config_file.write("\nchat=%s" % m_ui_chat)
-        elif file_type.lower() == "wmv":
+        elif file_type == "wmv":
             config_file.write("\nchat=%s" % w_ui_chat)
-        if file_type.lower() == "mp4":
+        if file_type == "mp4":
             config_file.write("\nqa=%s" % m_ui_qa)
-        elif file_type.lower() == "wmv":
+        elif file_type == "wmv":
             config_file.write("\nvideo=%s" % w_ui_video)
-        if file_type.lower() == "mp4":
+        if file_type == "mp4":
             config_file.write("\nlargeroutline=%s" % m_ui_largeroutline)
-        elif file_type.lower() == "wmv":
+        elif file_type == "wmv":
             config_file.write("\nlargeroutline=%s" % w_ui_largeroutline)
         config_file.write("\n[%s]" % file_type.upper())
-        config_file.write("\noutputfile=%s" % g_output_file_dir + "\\" + fname[:-3] + file_type.lower())
+        config_file.write("\noutputfile=%s" % g_output_file_dir + "\\" + fname[:-3] + file_type)
         config_file.write("\nwidth=%s" % g_width)
         config_file.write("\nheight=%s" % g_height)
-        if file_type.lower() == "mp4":
+        if file_type == "mp4":
             config_file.write("\nframerate=%s" % m_framerate)
-        elif file_type.lower() == "wmv":
+        elif file_type == "wmv":
             config_file.write("\nvideocodec=%s" % w_videocodec)
-        elif file_type.lower() == "swf":
+        elif file_type == "swf":
             config_file.write("\nframerate=%s" % s_framerate)
-        if file_type.lower() == "wmv":
+        if file_type == "wmv":
             config_file.write("\naudiocodec=%s" % w_audiocodec)
-        if file_type.lower() == "wmv":
+        if file_type == "wmv":
             config_file.write("\nvideoformat=%s" % w_videoformat)
-        if file_type.lower() == "wmv":
+        if file_type == "wmv":
             config_file.write("\naudioformat=%s" % w_audioformat)
-        if file_type.lower() == "wmv":
+        if file_type == "wmv":
             config_file.write("\nvideokeyframes=%s" % w_videokeyframes)
-        if file_type.lower() == "wmv":
+        if file_type == "wmv":
             config_file.write("\nmaxstream=%s" % w_maxstream)
 
 
@@ -729,7 +745,7 @@ def global_options_menu():
     elif me_global_options_menu == 2:
         global_toggle_showui()
     elif me_global_options_menu == 3:
-        global_input_dir()
+        global_output_dir()
     elif me_global_options_menu == 4:
         global_set_res_width()
     elif me_global_options_menu == 5:
