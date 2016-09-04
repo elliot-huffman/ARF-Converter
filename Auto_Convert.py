@@ -880,8 +880,9 @@ def exit_program(friendly):
 # This is a simple program closer that thanks the user for using the program.
 
 
-init_script()
-main_menu()
+if __name__ == '__main__':
+    init_script()
+    main_menu()
 
 
-# Let the madness begin!
+# Checks to see if it is the main program (not an import) and then starts madness!
