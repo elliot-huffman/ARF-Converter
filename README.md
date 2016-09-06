@@ -2,14 +2,17 @@ ARF-Converter
 ===========
 
 Bulk ARF file converter.
-Documentation will be available in the wiki.
+These programs allows you to easily convert a large ammount of ARF files to MP4, WMV or SWF files. ARF files are creaded by Cisco's WebEx product, a web conferencing software.
 
-Comments will be located in the script file for ease of understanding.
 
+ * Documentation is available in the wiki.
+ * Comments will be located in the script file for ease of understanding.
+
+-- 
 These scripts require the nbrplayer to convert the files. You can grab it from here:http://www.webex.com/play-webex-recording.html
 
 Make sure that you download the ARF version!!!
-
+--- 
 The python script is written in Python 3.
 
 
