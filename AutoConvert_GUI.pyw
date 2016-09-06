@@ -206,9 +206,6 @@ def convert_file():
     messagebox.showinfo(title="Conversion complete!", message="File conversion(s) are complete!")
 
 
-# Needs Progress bar here
-
-
 def create_configs(fname):
     global file_type
     with open(fname[:-3] + "cfg", "a") as config_file:
