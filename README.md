@@ -15,6 +15,7 @@ Make sure that you download the ARF version!!!
 
 --- 
 The python script is written in Python 3.
+You can grab that here: https://www.python.org/
 
 
 Now for the legal stuff...
