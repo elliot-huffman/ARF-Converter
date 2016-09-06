@@ -204,11 +204,11 @@ def file_type_set(ftype):
 def convert_file():
     global g_input_file_dir
     if check_folder() == 5:
-        print("The ARF input dir is invalid, please check that it exisits.")
+        print("The ARF input dir is invalid, please check that it exists.")
         input("\n Press Enter/Return to return to the main menu...")
         main_menu()
     if check_folder() == 4:
-        print("The ARF output dir is invalid, please check that it exisits.")
+        print("The ARF output dir is invalid, please check that it exists.")
         input("\n Press Enter/Return to return to the main menu...")
         main_menu()
     if check_folder() == 9:
@@ -447,9 +447,9 @@ def mp4_change_framerate():
 def wmv_options_menu():
     clear_screen()
     print("WMV Files have 10 configurable options (at the moment)\n\n1. Toggle PCAudio setting\n2. Toggle Chat Box")
-    print("3. Toggle Webcam Video\n4. Toggle Largeroutline setting\n5. Change the video codec")
-    print("6. Change the audio codec\n7. Alter the Videoformat setting\n8. Alter the Audioformat setting")
-    print("9. Change the video key frames (frame rate)\n10. Change the maxstream (bitrate)")
+    print("3. Toggle Webcam Video\n4. Toggle Largeroutline setting\n5. Change the video codex")
+    print("6. Change the audio codex\n7. Alter the Videoformat setting\n8. Alter the Audioformat setting")
+    print("9. Change the video key frames (frame rate)\n10. Change the maxstream (bit rate)")
     print("\n\n11. Go back to the main options menu.")
     me_wmv_options_menu = int(input("\nPlease enter 1-11 and press Enter/Return: "))
     if me_wmv_options_menu == 1:
@@ -568,7 +568,7 @@ def wmv_toggle_largeroutline():
 def wmv_change_videocodec():
     global w_videocodec
     clear_screen()
-    print("The WMV video codec is currently set to: %s" % w_videocodec)
+    print("The WMV video codex is currently set to: %s" % w_videocodec)
     print("There are 2 options for this setting:\n1. Windows Media Video 9\n2. Windows Media Video 9 Screen")
     print("\nLeave the field blank to do nothing")
     me_wmv_videocodec = int(input("\nPlease enter 1 or 2 then press Enter/Return: "))
@@ -578,18 +578,18 @@ def wmv_change_videocodec():
         elif me_wmv_videocodec == 2:
             w_videocodec = "Windows Media Video 9 Screen"
         clear_screen()
-        print("The video codec is now set to: %s" % w_videocodec)
+        print("The video codex is now set to: %s" % w_videocodec)
         input("Press Enter/Return to continue...")
     wmv_options_menu()
 
 
-# Changes the Video Codec for WMV files.
+# Changes the Video Codex for WMV files.
 
 
 def wmv_change_audiocodec():
     global w_audiocodec
     clear_screen()
-    print("The WMV audio codec is currently set to: %s" % w_audiocodec)
+    print("The WMV audio codex is currently set to: %s" % w_audiocodec)
     print("There are 3 options for this setting:\n1. Windows Media Audio 9.2 9\n2. Windows Media Audio 9.2 Lossless")
     print("3. Windows Media Audio 10 Professional\nLeave the field blank to do nothing")
     me_wmv_audiocodec = int(input("\nPlease enter 1-3 then press Enter/Return: "))
@@ -600,12 +600,12 @@ def wmv_change_audiocodec():
     elif me_wmv_audiocodec == 3:
         w_audiocodec = "Windows Media Audio 10 Professional"
     clear_screen()
-    print("The audio codec is now set to: %s" % w_audiocodec)
+    print("The audio codex is now set to: %s" % w_audiocodec)
     input("Press Enter/Return to continue...")
     wmv_options_menu()
 
 
-# Changes the Audio Codec for WMV files.
+# Changes the Audio Codex for WMV files.
 
 
 def wmv_alter_videoformat():
