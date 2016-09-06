@@ -7,7 +7,7 @@ from tkinter import messagebox, filedialog, ttk
 
 
 # Variables naming convention:
-# Varibles for the various windows are xw_, where "x" is the first letter of the discription of the window.
+# Variables for the various windows are xw_, where "x" is the first letter of the description of the window.
 # Variables for the MP4 section are prefixed with m_
 # Variables for the WMV section are prefixed with w_
 # Variables for the SWF section are prefixed with s_
@@ -80,13 +80,19 @@ def check_os():
         exit()
 
 
-def check_for_nbr(path_to_nbr):
-    result = path.exists(path_to_nbr)
+# Checks the operating system to see if it is compatible. If not, it displays an error and quits the program.
+
+
+def check_file_existance(file_path):
+    result = path.exists(file_path)
     return result
 
 
+# Checks the given file path to see if the file exists and returns true or false.
+
+
 def locate_nbr():
-    if not check_for_nbr(nbr_path):
+    if not check_file_existance(nbr_path):
         download_nbr = messagebox.askquestion("Download dependency?", "The system could not find the NBR player.\nWould you like to download it?")
         if download_nbr == "yes":
             open_new_tab("www.webex.com/play-webex-recording.html")
@@ -103,6 +109,10 @@ def locate_nbr():
         return True
 
 
+# Checks if the NBR is present. If not it prompts the user to download it. If the user declines then it prompts if it is installed in a different location.
+# If yes then it executes the custom_nbr_location function. If not, the program displays an error and quits after the error is acknowledged.
+
+
 def file_type_set(ftype):
     global file_type
     file_type = ftype.lower()
@@ -114,11 +124,11 @@ def file_type_set(ftype):
 def custom_nbr_location():
     global nbr_path
     nbrplay.exe
-    messagebox.showinfo("Find the player...", message="Please browse to the path to the nbrplay.exe")
+    messagebox.showinfo("Find the player...", message="Please browse to the folder that houses the nbrplay.exe program.")
     nbr_path = filedialog.askdirectory(mustexist=True)
 
 
-# Sets the nbr_path variable to the user provided path.
+# Sets the nbr_path variable to the user provided path. The folder must exist to be accepted.
 
 
 def check_folder():
@@ -145,14 +155,14 @@ def progress_bar_window_system():
     main_window.withdraw()
     pg_window = Tk()
     w = 250 # width for the Tk root
-    h = 200 # height for the Tk root
+    h = 25 # height for the Tk root
     ws = pg_window.winfo_screenwidth() # width of the screen
     hs = pg_window.winfo_screenheight() # height of the screen
     x = (ws/2) - (w/2)
     y = (hs/2) - (h/2)
     
 
-    pg_window.title("Converstion Progress")
+    pg_window.title("Conversion Progress")
     pg_window.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
     progress_bar = ttk.Progressbar(pg_window, length=250, mode="determinate")
@@ -165,6 +175,9 @@ def progress_bar_window_system():
     pg_window.mainloop()
 
 
+# Creates the progress bar window, complete with the progress bar and supporting text. Centered on the screen.
+
+
 def convert_file():
     global g_input_file_dir
     global progress_bar
@@ -172,12 +185,12 @@ def convert_file():
     pg_window.update()
     if check_folder() == 5:
         pg_window.destroy()
-        messagebox.showerror("Cannot continue!", "The ARF input dir is invalid, please check that it exisits.")
+        messagebox.showerror("Cannot continue!", "The ARF input dir is invalid, please check that it exists.")
         main_window.deiconify()
         return
     elif check_folder() == 4:
         pg_window.destroy()
-        messagebox.showerror("Cannot continue!", "The ARF output dir is invalid, please check that it exisits.")
+        messagebox.showerror("Cannot continue!", "The ARF output dir is invalid, please check that it exists.")
         main_window.deiconify()
         return
     elif check_folder() == 9:
@@ -204,6 +217,11 @@ def convert_file():
     pg_window.destroy()
     main_window.deiconify()
     messagebox.showinfo(title="Conversion complete!", message="File conversion(s) are complete!")
+
+
+# The conversion process checks to make sure the dependencies are in place, if so then it creates the configs, enumerates the amount of files, sends that to the progress bar,
+# executes the file conversion, updates the progress bar and repeats until there are no more config files. After there are no more config files, it removes the progress bar window,
+# shows the main window and throws a completed message.
 
 
 def create_configs(fname):
@@ -307,11 +325,14 @@ def main_window_create():
     mw_options_button.grid(row=1, column=1, sticky="NESW")
     mw_exit_button.grid(row=2, column=1, sticky="NESW")
     
-    # Aranges the widgets on the window.
+    # Arranges the widgets on the window.
 
     main_window.mainloop()
 
     # Keep the main window on screen.
+
+
+# Creates and displays the main window.
 
 
 def options_window_create():
@@ -354,9 +375,12 @@ def options_window_create():
         
         options_window.mainloop()
         
-        # Keep the options window onscreen.
+        # Keep the options window on screen.
     elif ow_display_screen == "global":
         pass
+
+
+# Creates and displays the options window.
 
 
 def button_mp4():
