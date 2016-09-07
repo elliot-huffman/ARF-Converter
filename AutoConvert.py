@@ -9,66 +9,102 @@ from webbrowser import open_new_tab
 # Variables for the MP4 section are prefixed with m_
 # Variables for the WMV section are prefixed with w_
 # Variables for the SWF section are prefixed with s_
-# Variables for the global conversion settings are prefixed with g_
+
+class init_system:
+    def __init__(self):
+        self.path_to_file = path.abspath(__file__)
+        self.directory_name = path.dirname(self.path_to_file)
+        chdir(self.directory_name)
+        self.nbr_path = "C:\ProgramData\WebEx\WebEx\\500\\nbrplay.exe"
+        self.input_file_dir = path.dirname(self.path_to_file)
+        self.output_file_dir = path.dirname(self.path_to_file) + "\\Converted"
+        self.file_type = "mp4"
+        self.showui = 0
+        self.need_ui_section = True
+        self.width = 1920
+        self.height = 1080
+        self.m_ui_chat = 1
+        self.m_ui_qa = 1
+        self.m_ui_largeroutline = 1
+        self.m_framerate = 5
+        self.s_console_pcaudio = 0
+        self.s_framerate = 10
+        self.w_console_pcaudio = 0
+        self.w_ui_chat = 1
+        self.w_ui_video = 1
+        self.w_ui_largeroutline = 1
+        self.w_videocodec = "Windows Media Video 9"
+        self.w_audiocodec = "Windows Media Audio 9.2 Lossless"
+        self.w_videoformat = "default"
+        self.w_audioformat = "default"
+        self.w_videokeyframes = 4
+        self.w_maxstream = 1000
+        self.check_os()
+        self.locate_nbr()
+
+    def check_os(self):
+        if system() != "Windows":
+            clear_screen()
+            print("Please use Windows for file conversions.\nOther OSs are currently not supported :-(")
+            exit_program(False)
+    # Checks the operating system to see if it is compatible. If not, it displays an error and quits the program.
 
 
-def init_script():
-    global g_input_file_dir
-    global g_output_file_dir
-    global g_media_setting
-    global g_showui
-    global g_need_ui_section
-    global g_width
-    global g_height
-    global m_ui_chat
-    global m_ui_qa
-    global m_ui_largeroutline
-    global m_framerate
-    global s_console_pcaudio
-    global s_framerate
-    global w_console_pcaudio
-    global w_ui_chat
-    global w_ui_video
-    global w_ui_largeroutline
-    global w_videocodec
-    global w_audiocodec
-    global w_videoformat
-    global w_audioformat
-    global w_videokeyframes
-    global w_maxstream
-    global nbr_path
-    path_to_file = path.abspath(__file__)
-    directory_name = path.dirname(path_to_file)
-    chdir(directory_name)
-    nbr_path = "C:\ProgramData\WebEx\WebEx\\500\\nbrplay.exe"
-    g_input_file_dir = path.dirname(path_to_file)
-    g_output_file_dir = path.dirname(path_to_file) + "\\Converted"
-    g_media_setting = "MP4"
-    g_showui = 0
-    g_need_ui_section = True
-    g_width = 1920
-    g_height = 1080
-    m_ui_chat = 1
-    m_ui_qa = 1
-    m_ui_largeroutline = 1
-    m_framerate = 5
-    s_console_pcaudio = 0
-    s_framerate = 10
-    w_console_pcaudio = 0
-    w_ui_chat = 1
-    w_ui_video = 1
-    w_ui_largeroutline = 1
-    w_videocodec = "Windows Media Video 9"
-    w_audiocodec = "Windows Media Audio 9.2 Lossless"
-    w_videoformat = "default"
-    w_audioformat = "default"
-    w_videokeyframes = 4
-    w_maxstream = 1000
-    check_os()
-    locate_nbr()
+    def locate_nbr(self):
+        if not self.check_file_existance(self.nbr_path):
+            print("The system could not find the NBR player.\nWould you like to download it?")
+            me_locate_nbr = str(input("\nY or N: "))
+            if me_locate_nbr.lower() == "y":
+                open_new_tab("www.webex.com/play-webex-recording.html")
+                exit()
+            elif me_locate_nbr.lower() == "n":
+                clear_screen()
+                print("Maybe we missed it...\nDo you have the NBR player installed already?")
+                me_nbr_already_installed = str(input("Y or N: "))
+                if nbr_already_installed == "y":
+                    self.custom_nbr_location()
+                    self.locate_nbr()
+                else:
+                    clear_screen()
+                    print("This script requires the Network Broadcast Recording player to operate.")
+                    print("Please have it installed for the next time you run this script.")
+                    input("\nPress Enter/Return to continue...")
+                    exit_program(False)
+        else:
+            return True
+
+    # If the nbr.exe is not at the default location, asks user where it is. If not installed asks user if the user wishes to
+    # download the program. If the user does not want to then it stops the script and tells the user that it is required.
 
 
-# Initializes the script with default values and changes to the directory where the script is located.
+    def check_file_existance(self, file_path):
+        result = path.exists(file_path)
+        return result
+    # Checks the given file path to see if the file exists and returns true or false.
+
+
+    def custom_nbr_location(self):
+        clear_screen()
+        print("Please enter the path to the nbrplay.exe here")
+        self.nbr_path = input("\n(E.G. C:\\foo\\bar\\nbrplay.exe): ")
+    # Sets the nbr_path variable to the user provided path. The folder must exist to be accepted.
+
+
+    def check_folder(self):
+        error_num = 0
+        if not path.exists(self.input_file_dir):
+            error_num = error_num + 5
+        elif not path.exists(self.output_file_dir):
+            error_num = error_num + 4
+        return error_num
+        # Check is the source directory exists and if it does not then displays an error and goes back to the main menu.
+        # Also checks if the output directory exists and if it does not it creates it.
+        # 5 = input
+        # 4 = output
+        # 9 = input and output
+
+
+# Sets up the initial variables and checks for system compatibility. Also houses generic core functions.
 
 
 def clear_screen():
@@ -81,86 +117,6 @@ def clear_screen():
 # Sets up a multi platform clear screen function for Windows, OS X and Linux
 
 
-def check_os():
-    if system() != "Windows":
-        clear_screen()
-        print("This script is currently only compatible with Windows.")
-        input("\nPress Enter/Return to continue...")
-        exit_program(False)
-
-
-# Check if the operating system is supported.
-
-
-def check_for_nbr(path_to_nbr):
-    result = path.exists(path_to_nbr)
-    return result
-
-
-# Checks for the nbr.exe at the provided location.
-
-
-def check_folder():
-    global g_input_file_dir
-    global g_output_file_dir
-    error_num = 0
-    if not path.exists(g_input_file_dir):
-        error_num = error_num + 5
-    if not path.exists(g_output_file_dir):
-        error_num = error_num + 4
-    return error_num
-
-
-# Check is the source directory exists and if it does not then displays an error and goes back to the main menu.
-# Also checks if the output directory exists and if it does not it creates it.
-# 5 = input
-# 4 = output
-# 9 = input and output
-
-
-def locate_nbr():
-    if not check_for_nbr(nbr_path):
-        clear_screen()
-        print("The system could not find the NBR player.\nWould you like to download it?")
-        me_locate_nbr = str(input("\nY or N: "))
-        if me_locate_nbr.lower() == "y":
-            open_new_tab("www.webex.com/play-webex-recording.html")
-            exit()
-        elif me_locate_nbr.lower() == "n":
-            clear_screen()
-            print("Do you have it installed already?")
-            me_nbr_already_installed = str(input("Y or N: "))
-            if me_nbr_already_installed.lower() == "y":
-                custom_nbr_location()
-            else:
-                clear_screen()
-                print("This script requires the Network Broadcast Recording player to operate.")
-                print("Please have it installed for the next time you run this script.")
-                input("\nPress Enter/Return to continue...")
-                exit_program(False)
-        else:
-            clear_screen()
-            print("Please enter either Y or N!")
-            input("\nPress Enter/Return to continue...")
-            locate_nbr()
-    else:
-        return True
-
-
-# If the nbr.exe is not at the default location, asks user where it is. If not installed asks user if the user wishes to
-# download the program. If the user does not want to then it stops the script and tells the user that it is required.
-
-
-def custom_nbr_location():
-    global nbr_path
-    clear_screen()
-    print("Please enter the path to the nbrplay.exe here")
-    nbr_path = input("\n(E.G. C:\\foo\\bar\\nbrplay.exe): ")
-
-
-# Sets the nbr_path variable to the user provided path.
-
-
 def main_menu():
     clear_screen()
     print("Welcome to the Automatic ARF converter program. You have 5 options to chose from:")
@@ -171,13 +127,13 @@ def main_menu():
     print("5. Exit program")
     me_main_menu = int(input("\nEnter your selection here (1-5) then press Enter/Return: "))
     if me_main_menu == 1:
-        file_type_set("mp4")
+        vars_system.file_type = "mp4"
         convert_file()
     elif me_main_menu == 2:
-        file_type_set("wmv")
+        vars_system.file_type = "wmv"
         convert_file()
     elif me_main_menu == 3:
-        file_type_set("swf")
+        vars_system.file_type = "swf"
         convert_file()
     elif me_main_menu == 4:
         options_menu()
@@ -193,25 +149,16 @@ def main_menu():
 # Creates the main menu for the user to navigate.
 
 
-def file_type_set(ftype):
-    global file_type
-    file_type = ftype.lower()
-
-
-# Sets the file type to be converted to.
-
-
 def convert_file():
-    global g_input_file_dir
-    if check_folder() == 5:
+    if vars_system.check_folder() == 5:
         print("The ARF input dir is invalid, please check that it exists.")
         input("\n Press Enter/Return to return to the main menu...")
         main_menu()
-    if check_folder() == 4:
+    if vars_system.check_folder() == 4:
         print("The ARF output dir is invalid, please check that it exists.")
         input("\n Press Enter/Return to return to the main menu...")
         main_menu()
-    if check_folder() == 9:
+    if vars_system.check_folder() == 9:
         print("The ARF input and output dir is invalid, please check that they exist.")
         input("\n Press Enter/Return to return to the main menu...")
         main_menu()
@@ -227,7 +174,7 @@ def convert_file():
         if path.isfile(file) and file[-3:].lower() == "cfg":
             clear_screen()
             print("%s Files left to convert. This may take a while..." % str(cfg_counter))
-            execute_nbr_conversion(g_input_file_dir + "\\" + file)
+            execute_nbr_conversion(vars_system.input_file_dir + "\\" + file)
             cfg_counter -= 1
             remove(file)
     convert_again()
@@ -239,58 +186,56 @@ def convert_file():
 
 
 def create_configs(fname):
-    global file_type
     with open(fname[:-3] + "cfg", "a") as config_file:
         config_file.write("[Console]")
-        config_file.write("\ninputfile=%s" % g_input_file_dir + "\\" + fname)
-        config_file.write("\nmedia=%s" % file_type.upper())
-        config_file.write("\nshowui=%s" % g_showui)
-        if file_type == "swf":
-            config_file.write("\nPCAudio=%s" % s_console_pcaudio)
-        elif file_type == "wmv":
-            config_file.write("\nPCAudio=%s" % w_console_pcaudio)
-        if g_need_ui_section:
+        config_file.write("\ninputfile=%s" % vars_system.input_file_dir + "\\" + fname)
+        config_file.write("\nmedia=%s" % vars_system.file_type.upper())
+        config_file.write("\nshowui=%s" % vars_system.showui)
+        if vars_system.file_type.lower() == "swf":
+            config_file.write("\nPCAudio=%s" % vars_system.s_console_pcaudio)
+        elif vars_system.file_type.lower() == "wmv":
+            config_file.write("\nPCAudio=%s" % vars_system.w_console_pcaudio)
+        if vars_system.need_ui_section:
             config_file.write("\n[UI]")
-        if file_type == "mp4":
-            config_file.write("\nchat=%s" % m_ui_chat)
-        elif file_type == "wmv":
-            config_file.write("\nchat=%s" % w_ui_chat)
-        if file_type == "mp4":
-            config_file.write("\nqa=%s" % m_ui_qa)
-        elif file_type == "wmv":
-            config_file.write("\nvideo=%s" % w_ui_video)
-        if file_type == "mp4":
-            config_file.write("\nlargeroutline=%s" % m_ui_largeroutline)
-        elif file_type == "wmv":
-            config_file.write("\nlargeroutline=%s" % w_ui_largeroutline)
-        config_file.write("\n[%s]" % file_type.upper())
-        config_file.write("\noutputfile=%s" % g_output_file_dir + "\\" + fname[:-3] + file_type)
-        config_file.write("\nwidth=%s" % g_width)
-        config_file.write("\nheight=%s" % g_height)
-        if file_type == "mp4":
-            config_file.write("\nframerate=%s" % m_framerate)
-        elif file_type == "wmv":
-            config_file.write("\nvideocodec=%s" % w_videocodec)
-        elif file_type == "swf":
-            config_file.write("\nframerate=%s" % s_framerate)
-        if file_type == "wmv":
-            config_file.write("\naudiocodec=%s" % w_audiocodec)
-        if file_type == "wmv":
-            config_file.write("\nvideoformat=%s" % w_videoformat)
-        if file_type == "wmv":
-            config_file.write("\naudioformat=%s" % w_audioformat)
-        if file_type == "wmv":
-            config_file.write("\nvideokeyframes=%s" % w_videokeyframes)
-        if file_type == "wmv":
-            config_file.write("\nmaxstream=%s" % w_maxstream)
+        if vars_system.file_type == "mp4":
+            config_file.write("\nchat=%s" % vars_system.m_ui_chat)
+        elif vars_system.file_type.lower() == "wmv":
+            config_file.write("\nchat=%s" % vars_system.w_ui_chat)
+        if vars_system.file_type.lower() == "mp4":
+            config_file.write("\nqa=%s" % vars_system.m_ui_qa)
+        elif vars_system.file_type.lower() == "wmv":
+            config_file.write("\nvideo=%s" % vars_system.w_ui_video)
+        if vars_system.file_type.lower() == "mp4":
+            config_file.write("\nlargeroutline=%s" % vars_system.m_ui_largeroutline)
+        elif vars_system.file_type.lower() == "wmv":
+            config_file.write("\nlargeroutline=%s" % vars_system.w_ui_largeroutline)
+        config_file.write("\n[%s]" % vars_system.file_type.upper())
+        config_file.write("\noutputfile=%s" % vars_system.output_file_dir + "\\" + fname[:-3] + vars_system.file_type.lower())
+        config_file.write("\nwidth=%s" % vars_system.width)
+        config_file.write("\nheight=%s" % vars_system.height)
+        if vars_system.file_type.lower() == "mp4":
+            config_file.write("\nframerate=%s" % vars_system.m_framerate)
+        elif vars_system.file_type == "wmv":
+            config_file.write("\nvideocodec=%s" % vars_system.w_videocodec)
+        elif vars_system.file_type.lower() == "swf":
+            config_file.write("\nframerate=%s" % vars_system.s_framerate)
+        if vars_system.file_type.lower() == "wmv":
+            config_file.write("\naudiocodec=%s" % vars_system.w_audiocodec)
+        if vars_system.file_type.lower() == "wmv":
+            config_file.write("\nvideoformat=%s" % vars_system.w_videoformat)
+        if vars_system.file_type.lower() == "wmv":
+            config_file.write("\naudioformat=%s" % vars_system.w_audioformat)
+        if vars_system.file_type.lower() == "wmv":
+            config_file.write("\nvideokeyframes=%s" % vars_system.w_videokeyframes)
+        if vars_system.file_type.lower() == "wmv":
+            config_file.write("\nmaxstream=%s" % vars_system.w_maxstream)
 
 
 # Creates configuration files for the nbrplayer to use to convert the files.
 
 
 def execute_nbr_conversion(cfg_name):
-    global nbr_path
-    call(nbr_path + " -Convert" + ' "' + cfg_name + '"')
+    call(vars_system.nbr_path + " -Convert" + ' "' + cfg_name + '"')
 
 
 # Executes the nbr executable with the path to the generated cfg file.
@@ -368,18 +313,17 @@ def mp4_options_menu():
 
 
 def mp4_toggle_chat():
-    global m_ui_chat
     clear_screen()
-    print("The Q&A box toggle is set to: %s" % m_ui_chat)
+    print("The Q&A box toggle is set to: %s" % vars_system.m_ui_chat)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
     me_mp4_toggle_chat = input("Press Enter/Return when you are ready to continue: ")
     if me_mp4_toggle_chat.lower() == "y":
-        if m_ui_chat == 1:
-            m_ui_chat = 0
+        if vars_system.m_ui_chat == 1:
+            vars_system.m_ui_chat = 0
         else:
-            m_ui_chat = 1
+            vars_system.m_ui_chat = 1
         clear_screen()
-        print("The Q&A box toggle is now set to: %s" % m_ui_chat)
+        print("The Q&A box toggle is now set to: %s" % vars_system.m_ui_chat)
         input("Press Enter/Return to continue...")
     mp4_options_menu()
 
@@ -388,18 +332,17 @@ def mp4_toggle_chat():
 
 
 def mp4_toggle_qa():
-    global m_ui_qa
     clear_screen()
-    print("The Q&A box toggle is set to: %s" % m_ui_qa)
+    print("The Q&A box toggle is set to: %s" % vars_system.m_ui_qa)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
     me_mp4_toggle_qa = input("Press Enter/Return when you are ready to continue: ")
     if me_mp4_toggle_qa.lower() == "y":
-        if m_ui_qa == 1:
-            m_ui_qa = 0
+        if vars_system.m_ui_qa == 1:
+            vars_system.m_ui_qa = 0
         else:
-            m_ui_qa = 1
+            vars_system.m_ui_qa = 1
         clear_screen()
-        print("The Q&A box toggle is now set to: %s" % m_ui_qa)
+        print("The Q&A box toggle is now set to: %s" % vars_system.m_ui_qa)
         input("Press Enter/Return to continue...")
     mp4_options_menu()
 
@@ -408,18 +351,17 @@ def mp4_toggle_qa():
 
 
 def mp4_toggle_largeroutline():
-    global m_ui_largeroutline
     clear_screen()
-    print("The LargerOutline toggle is set to: %s" % m_ui_largeroutline)
+    print("The LargerOutline toggle is set to: %s" % vars_system.m_ui_largeroutline)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
     me_mp4_toggle_largeroutline = input("Press Enter/Return when you are ready to continue: ")
     if me_mp4_toggle_largeroutline.lower() == "y":
-        if m_ui_largeroutline == 1:
-            m_ui_largeroutline = 0
+        if vars_system.m_ui_largeroutline == 1:
+            vars_system.m_ui_largeroutline = 0
         else:
-            m_ui_largeroutline = 1
+            vars_system.m_ui_largeroutline = 1
         clear_screen()
-        print("The LargerOutline toggle is now set to: %s" % m_ui_largeroutline)
+        print("The LargerOutline toggle is now set to: %s" % vars_system.m_ui_largeroutline)
         input("Press Enter/Return to continue...")
     mp4_options_menu()
 
@@ -428,15 +370,14 @@ def mp4_toggle_largeroutline():
 
 
 def mp4_change_framerate():
-    global m_framerate
     clear_screen()
-    print("The current frame rate is set to: %sFPS.\nLeave it blank to do nothing." % m_framerate)
+    print("The current frame rate is set to: %sFPS.\nLeave it blank to do nothing." % vars_system.m_framerate)
     print("Enter a number above 0 (the recommended range is 1 to 10) to change the setting.")
     me_mp4_change_framerate = int(input("Press Enter/Return when you are ready to continue: "))
     if me_mp4_change_framerate > 0:
-        m_framerate = me_mp4_change_framerate
+        vars_system.m_framerate = me_mp4_change_framerate
         clear_screen()
-        print("The frame rate is now set to: %sFPS" % m_framerate)
+        print("The frame rate is now set to: %sFPS" % vars_system.m_framerate)
         input("Press Enter/Return to continue...")
     mp4_options_menu()
 
@@ -485,19 +426,18 @@ def wmv_options_menu():
 
 
 def wmv_toggle_pcaudio():
-    global w_console_pcaudio
     clear_screen()
-    print("The PCAudio toggle is set to: %s\n Would you like to toggle this setting?" % w_console_pcaudio)
+    print("The PCAudio toggle is set to: %s\n Would you like to toggle this setting?" % vars_system.w_console_pcaudio)
     print("This is an experimental and untested setting!!!")
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
     me_wmv_toggle_pcaudio = input("Press Enter/Return when you are ready to continue: ")
     if me_wmv_toggle_pcaudio.lower() == "y":
-        if w_console_pcaudio == 1:
-            w_console_pcaudio = 0
+        if vars_system.w_console_pcaudio == 1:
+            vars_system.w_console_pcaudio = 0
         else:
-            w_console_pcaudio = 1
+            vars_system.w_console_pcaudio = 1
         clear_screen()
-        print("The PCAudio toggle is now set to: %s" % w_console_pcaudio)
+        print("The PCAudio toggle is now set to: %s" % vars_system.w_console_pcaudio)
         input("Press Enter/Return to continue...")
     wmv_options_menu()
 
@@ -506,18 +446,17 @@ def wmv_toggle_pcaudio():
 
 
 def wmv_toggle_chat_box():
-    global w_ui_chat
     clear_screen()
-    print("The chat box toggle is set to: %s\n Would you like to toggle this setting?" % w_ui_chat)
+    print("The chat box toggle is set to: %s\n Would you like to toggle this setting?" % vars_system.w_ui_chat)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
     me_wmv_toggle_chat_box = input("Press Enter/Return when you are ready to continue: ")
     if me_wmv_toggle_chat_box.lower() == "y":
-        if w_ui_chat == 1:
-            w_ui_chat = 0
+        if vars_system.w_ui_chat == 1:
+            vars_system.w_ui_chat = 0
         else:
-            w_ui_chat = 1
+            vars_system.w_ui_chat = 1
         clear_screen()
-        print("The chat box toggle is now set to: %s" % w_ui_chat)
+        print("The chat box toggle is now set to: %s" % vars_system.w_ui_chat)
         input("Press Enter/Return to continue...")
     wmv_options_menu()
 
@@ -526,18 +465,17 @@ def wmv_toggle_chat_box():
 
 
 def wmv_toggle_webcam_video():
-    global w_ui_video
     clear_screen()
-    print("The web cam box toggle is set to: %s\n Would you like to toggle this setting?" % w_ui_video)
+    print("The web cam box toggle is set to: %s\n Would you like to toggle this setting?" % vars_system.w_ui_video)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
     me_wmv_toggle_video_box = input("Press Enter/Return when you are ready to continue: ")
     if me_wmv_toggle_video_box.lower() == "y":
-        if w_ui_video == 1:
-            w_ui_video = 0
+        if vars_system.w_ui_video == 1:
+           vars_system.w_ui_video = 0
         else:
-            w_ui_video = 1
+            vars_system.w_ui_video = 1
         clear_screen()
-        print("The web cam toggle is now set to: %s" % w_ui_video)
+        print("The web cam toggle is now set to: %s" % vars_system.w_ui_video)
         input("Press Enter/Return to continue...")
     wmv_options_menu()
 
@@ -546,18 +484,17 @@ def wmv_toggle_webcam_video():
 
 
 def wmv_toggle_largeroutline():
-    global w_ui_largeroutline
     clear_screen()
-    print("The LargerOutline toggle is set to: %s\n Would you like to toggle this setting?" % w_ui_largeroutline)
+    print("The LargerOutline toggle is set to: %s\n Would you like to toggle this setting?" % vars_system.w_ui_largeroutline)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
     me_wmv_toggle_largeroutline = input("Press Enter/Return when you are ready to continue: ")
     if me_wmv_toggle_largeroutline.lower() == "y":
-        if w_ui_largeroutline == 1:
-            w_ui_largeroutline = 0
+        if vars_system.w_ui_largeroutline == 1:
+            vars_system.w_ui_largeroutline = 0
         else:
-            w_ui_largeroutline = 1
+            vars_system.w_ui_largeroutline = 1
         clear_screen()
-        print("The LargerOutline toggle is now set to: %s" % w_ui_largeroutline)
+        print("The LargerOutline toggle is now set to: %s" % vars_system.w_ui_largeroutline)
         input("Press Enter/Return to continue...")
     wmv_options_menu()
 
@@ -566,19 +503,18 @@ def wmv_toggle_largeroutline():
 
 
 def wmv_change_videocodec():
-    global w_videocodec
     clear_screen()
-    print("The WMV video codex is currently set to: %s" % w_videocodec)
+    print("The WMV video codex is currently set to: %s" % vars_system.w_videocodec)
     print("There are 2 options for this setting:\n1. Windows Media Video 9\n2. Windows Media Video 9 Screen")
     print("\nLeave the field blank to do nothing")
     me_wmv_videocodec = int(input("\nPlease enter 1 or 2 then press Enter/Return: "))
     if me_wmv_videocodec == int:
         if me_wmv_videocodec == 1:
-            w_videocodec = "Windows Media Video"
+            vars_system.w_videocodec = "Windows Media Video"
         elif me_wmv_videocodec == 2:
-            w_videocodec = "Windows Media Video 9 Screen"
+            vars_system.w_videocodec = "Windows Media Video 9 Screen"
         clear_screen()
-        print("The video codex is now set to: %s" % w_videocodec)
+        print("The video codex is now set to: %s" % vars_system.w_videocodec)
         input("Press Enter/Return to continue...")
     wmv_options_menu()
 
@@ -587,20 +523,19 @@ def wmv_change_videocodec():
 
 
 def wmv_change_audiocodec():
-    global w_audiocodec
     clear_screen()
-    print("The WMV audio codex is currently set to: %s" % w_audiocodec)
+    print("The WMV audio codex is currently set to: %s" % vars_system.w_audiocodec)
     print("There are 3 options for this setting:\n1. Windows Media Audio 9.2 9\n2. Windows Media Audio 9.2 Lossless")
     print("3. Windows Media Audio 10 Professional\nLeave the field blank to do nothing")
     me_wmv_audiocodec = int(input("\nPlease enter 1-3 then press Enter/Return: "))
     if me_wmv_audiocodec == 1:
-        w_audiocodec = "Windows Media Video"
+        vars_system.w_audiocodec = "Windows Media Video"
     elif me_wmv_audiocodec == 2:
-        w_audiocodec = "Windows Media Video 9 Screen"
+        vars_system.w_audiocodec = "Windows Media Video 9 Screen"
     elif me_wmv_audiocodec == 3:
-        w_audiocodec = "Windows Media Audio 10 Professional"
+        vars_system.w_audiocodec = "Windows Media Audio 10 Professional"
     clear_screen()
-    print("The audio codex is now set to: %s" % w_audiocodec)
+    print("The audio codex is now set to: %s" % vars_system.w_audiocodec)
     input("Press Enter/Return to continue...")
     wmv_options_menu()
 
@@ -609,15 +544,14 @@ def wmv_change_audiocodec():
 
 
 def wmv_alter_videoformat():
-    global w_videoformat
     clear_screen()
     print("I have no idea what this setting does so I do not recommend changing this.")
-    print("Leave the field blank to do nothing.\n The current setting is: %s" % w_videoformat)
+    print("Leave the field blank to do nothing.\n The current setting is: %s" % vars_system.w_videoformat)
     me_wmv_videoformat = input("Enter some value here: ")
     if len(me_wmv_videoformat) > 0:
-        w_videoformat = me_wmv_videoformat
+        vars_system.w_videoformat = me_wmv_videoformat
         clear_screen()
-        print("The VideoFormat setting is now set to: %s" % w_videoformat)
+        print("The VideoFormat setting is now set to: %s" % vars_system.w_videoformat)
         input("Press Enter/Return to continue...")
     wmv_options_menu()
 
@@ -626,15 +560,14 @@ def wmv_alter_videoformat():
 
 
 def wmv_alter_audioformat():
-    global w_audioformat
     clear_screen()
     print("I have no idea what this setting does so I do not recommend changing this.")
-    print("Leave the field blank to do nothing.\n The current setting is: %s" % w_audioformat)
+    print("Leave the field blank to do nothing.\n The current setting is: %s" % vars_system.w_audioformat)
     me_wmv_audioformat = input("Enter some value here: ")
     if len(me_wmv_audioformat) > 0:
-        w_audioformat = me_wmv_audioformat
+        vars_system.w_audioformat = me_wmv_audioformat
         clear_screen()
-        print("The AudioFormat setting is now set to: %s" % w_audioformat)
+        print("The AudioFormat setting is now set to: %s" % vars_system.w_audioformat)
         input("Press Enter/Return to continue...")
     wmv_options_menu()
 
@@ -643,15 +576,14 @@ def wmv_alter_audioformat():
 
 
 def wmv_change_keyframes():
-    global w_videokeyframes
     clear_screen()
-    print("The current frame rate is set to: %sFPS.\nLeave it blank to do nothing." % w_videokeyframes)
+    print("The current frame rate is set to: %sFPS.\nLeave it blank to do nothing." % vars_system.w_videokeyframes)
     print("Enter a number above 0 (the recommended range is 4 to 10) to change the setting.")
     me_wmv_change_framerate = int(input("Press Enter/Return when you are ready to continue: "))
     if me_wmv_change_framerate > 0:
-        w_videokeyframes = me_wmv_change_framerate
+        vars_system.w_videokeyframes = me_wmv_change_framerate
         clear_screen()
-        print("The frame rate is now set to: %sFPS" % w_videokeyframes)
+        print("The frame rate is now set to: %sFPS" % vars_system.w_videokeyframes)
         input("Press Enter/Return to continue...")
     wmv_options_menu()
 
@@ -660,15 +592,14 @@ def wmv_change_keyframes():
 
 
 def wmv_change_maxstream():
-    global w_maxstream
     clear_screen()
-    print("The current MaxStream is set to: %sBPS.\nLeave it blank to do nothing." % w_maxstream)
+    print("The current MaxStream is set to: %sBPS.\nLeave it blank to do nothing." % vars_system.w_maxstream)
     print("Enter a number above 0 (the recommended range is 500 to 1000) to change the setting.")
     me_wmv_change_maxstream = int(input("Press Enter/Return when you are ready to continue: "))
     if me_wmv_change_maxstream > 0:
-        w_maxstream = me_wmv_change_maxstream
+        vars_system.w_maxstream = me_wmv_change_maxstream
         clear_screen()
-        print("MaxStream is now set to: %s" % w_maxstream)
+        print("MaxStream is now set to: %s" % vars_system.w_maxstream)
         input("Press Enter/Return to continue...")
     wmv_options_menu()
 
@@ -698,18 +629,17 @@ def swf_options_menu():
 
 
 def swf_toggle_pcaudio():
-    global s_console_pcaudio
     clear_screen()
-    print("The PCAudio toggle is set to: %s\n Would you like to toggle this setting?" % s_console_pcaudio)
+    print("The PCAudio toggle is set to: %s\n Would you like to toggle this setting?" % vars_system.s_console_pcaudio)
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
     me_swf_toggle_pcaudio = input("Press Enter/Return when you are ready to continue: ")
     if me_swf_toggle_pcaudio.lower() == "y":
-        if s_console_pcaudio == 1:
-            s_console_pcaudio = 0
+        if vars_system.s_console_pcaudio == 1:
+            vars_system.s_console_pcaudio = 0
         else:
-            s_console_pcaudio = 1
+            vars_system.s_console_pcaudio = 1
         clear_screen()
-        print("The PCAudio toggle is now set to: %s" % s_console_pcaudio)
+        print("The PCAudio toggle is now set to: %s" % vars_system.s_console_pcaudio)
         input("Press Enter/Return to continue...")
     swf_options_menu()
 
@@ -718,15 +648,14 @@ def swf_toggle_pcaudio():
 
 
 def swf_change_framerate():
-    global s_framerate
     clear_screen()
-    print("The current frame rate is set to: %sFPS. Leave below blank to do nothing." % s_framerate)
+    print("The current frame rate is set to: %sFPS. Leave below blank to do nothing." % vars_system.s_framerate)
     print("Enter a number above 0 to change the frame rate (the recommended range is from 1 to 10).")
     me_swf_change_framerate = int(input("Press Enter/Return when you are ready to continue: "))
     if me_swf_change_framerate > 0:
-        s_framerate = me_swf_change_framerate
+        vars_system.s_framerate = me_swf_change_framerate
         clear_screen()
-        print("The frame rate is now set to: %sFPS" % s_framerate)
+        print("The frame rate is now set to: %sFPS" % vars_system.s_framerate)
         input("Press Enter/Return to continue...")
     swf_options_menu()
 
@@ -763,17 +692,16 @@ def global_options_menu():
 
 
 def global_input_dir():
-    global g_input_file_dir
     clear_screen()
     print("This sets the directory that contains all of the ARFs to be converted. By default this setting is the same")
     print("as the directory that this script file is in.")
-    print("The current input dir is: %s" % g_input_file_dir)
+    print("The current input dir is: %s" % vars_system.input_file_dir)
     print("\nEnter the full path to the directory that contains the ARF files to be converted or blank to do nothing.")
     me_global_input_dir = input("Press Enter/Return when you are ready to continue: ")
     if len(me_global_input_dir) > 0:
-        g_input_file_dir = me_global_input_dir
+        vars_system.input_file_dir = me_global_input_dir
         clear_screen()
-        print("The input directory is now set to: %s" % g_input_file_dir)
+        print("The input directory is now set to: %s" % vars_system.input_file_dir)
         input("\nPress Enter/Return to continue...")
     global_options_menu()
 
@@ -782,19 +710,18 @@ def global_input_dir():
 
 
 def global_toggle_showui():
-    global g_showui
     clear_screen()
-    print("The ShowUI toggle is set to: %s\n Would you like to toggle this setting?" % g_showui)
+    print("The ShowUI toggle is set to: %s\n Would you like to toggle this setting?" % vars_system.showui)
     print("This option is experimental, I would not recommend changing this until tested.")
     print("\nPress Y to toggle the setting. Leave it blank to do nothing.")
     me_global_toggle_showui = input("Press Enter/Return when you are ready to continue: ")
     if me_global_toggle_showui.lower() == "y":
-        if g_showui == 1:
-            g_showui = 0
+        if vars_system.showui == 1:
+            vars_system.showui = 0
         else:
-            g_showui = 1
+            vars_system.showui = 1
         clear_screen()
-        print("The ShowUI toggle is now set to: %s" % g_showui)
+        print("The ShowUI toggle is now set to: %s" % vars_system.showui)
         input("Press Enter/Return to continue...")
     global_options_menu()
 
@@ -803,16 +730,15 @@ def global_toggle_showui():
 
 
 def global_output_dir():
-    global g_output_file_dir
     clear_screen()
     print("This sets the directory that will contain all of the converted ARFs. By default this setting is .\Converted")
-    print("The current output dir is: %s" % g_output_file_dir)
+    print("The current output dir is: %s" % vars_system.output_file_dir)
     print("\nEnter the full path to the directory that will contain the converted ARF files or blank to do nothing.")
     me_global_output_dir = input("Press Enter/Return when you are ready to continue: ")
     if len(me_global_output_dir) > 0:
-        g_output_file_dir = me_global_output_dir
+        vars_system.output_file_dir = me_global_output_dir
         clear_screen()
-        print("The output directory is now set to: %s" % g_output_file_dir)
+        print("The output directory is now set to: %s" % vars_system.output_file_dir)
         input("\nPress Enter/Return to continue...")
     global_options_menu()
 
@@ -821,16 +747,15 @@ def global_output_dir():
 
 
 def global_set_res_width():
-    global g_width
     clear_screen()
     print("This sets the resolution width for the converted file.")
-    print("The resolution width is currently set to: %spx" % g_width)
+    print("The resolution width is currently set to: %spx" % vars_system.width)
     print("\nEnter a number(recommended values are 1024 and above). Leave blank to change nothing.")
     me_global_res_width = len(input("Press Enter/Return when you are ready to continue: "))
     if me_global_res_width > 0:
-        g_width = me_global_res_width
+        vars_system.width = me_global_res_width
         clear_screen()
-        print("The resolution width is now set to: %s" % g_width)
+        print("The resolution width is now set to: %s" % vars_system.width)
         input("\nPress Enter/Return to continue...")
     global_options_menu()
 
@@ -839,16 +764,15 @@ def global_set_res_width():
 
 
 def global_set_res_height():
-    global g_height
     clear_screen()
     print("This sets the resolution height for the converted file.")
-    print("The resolution height is currently set to: %spx" % g_height)
+    print("The resolution height is currently set to: %spx" % vars_system.height)
     print("\nEnter a number(recommended values are 768 and above). Leave blank to change nothing.")
     me_global_res_height = len(input("Press Enter/Return when you are ready to continue: "))
     if me_global_res_height > 0:
-        g_height = me_global_res_height
+        vars_system.height = me_global_res_height
         clear_screen()
-        print("The resolution height is now set to: %s" % g_height)
+        print("The resolution height is now set to: %s" % vars_system.height)
         input("\nPress Enter/Return to continue...")
     global_options_menu()
 
@@ -857,7 +781,7 @@ def global_set_res_height():
 
 
 def restore_default_settings():
-    init_script()
+    vars_system.__init__()
     options_menu()
 
 
@@ -869,11 +793,11 @@ def exit_program(friendly):
     if friendly:
         print("Thank you for using this script, I hope you enjoyed it!")
     elif not friendly:
-        print("Thank you for considering this product! If you have any issues please email thelich2@gmail.com or")
+        print("Thank you for considering this product! If you have any issues please email ehuffman@elliot-labs.com or")
         print("file an issue on https://github.com/elliot-labs/ARF-Converter\n\nThanks!")
     else:
         print("You have triggered an exit that the programmer has not foreseen.")
-        print("Please report this to thelich2@gmail.com or https://github.com/elliot-labs/ARF-Converter")
+        print("Please report this to ehuffman@elliot-labs.com or https://github.com/elliot-labs/ARF-Converter")
     exit()
 
 
@@ -881,7 +805,7 @@ def exit_program(friendly):
 
 
 if __name__ == '__main__':
-    init_script()
+    vars_system = init_system()
     main_menu()
 
 

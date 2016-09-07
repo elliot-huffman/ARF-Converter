@@ -280,7 +280,7 @@ def options_window_create():
     options_window = render_window(200, 500, "Converter Options")
     
     options_window.new_label("You can only currently restore the default settings. More to come soon!", grid_columnspan=2)
-    options_window.new_button("Restore Defaults", init_script, 1, 1)
+    options_window.new_button("Restore Defaults", vars_system.__init__, 1, 1)
     options_window.new_button("Back to Main Window", button_back_to_mw, 1)
     
     options_window.root_window.mainloop()
