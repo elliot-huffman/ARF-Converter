@@ -11,192 +11,167 @@ from tkinter import messagebox, filedialog, ttk
 # Variables for the MP4 section are prefixed with m_
 # Variables for the WMV section are prefixed with w_
 # Variables for the SWF section are prefixed with s_
-# Variables for the global conversion settings are prefixed with g_
+
+class render_window:
+    def __init__(self, height, width, window_title):
+        self.root_window = Tk()
+        w = width
+        h = height
+        ws = self.root_window.winfo_screenwidth() # width of the screen
+        hs = self.root_window.winfo_screenheight() # height of the screen
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        self.root_window.title(window_title)
+        self.root_window.minsize(width, height)
+        self.root_window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
+    def new_button(self, button_text, button_command="", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
+        self.button = ttk.Button(self.root_window, text=button_text, command=button_command)
+        self.button.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
+        self.responsive_grid(grid_row, grid_column)
+
+    def new_label(self, label_text, text_alignment="center", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
+        self.label = ttk.Label(self.root_window, text=label_text, anchor=text_alignment)
+        self.label.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
+        self.responsive_grid(grid_row, grid_column)
+
+    def new_progress_bar(self, pg_length=250, pg_mode="determinate", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
+        self.progress_bar = ttk.Progressbar(self.root_window, length=pg_length, mode=pg_mode)
+        self.progress_bar.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
+        self.responsive_grid(grid_row, grid_column)
+
+    def responsive_grid(self, row_responsive=0, column_responsive=0, row_weight_num=1, column_weight_num=1):
+        self.root_window.grid_columnconfigure(column_responsive, weight=column_weight_num)
+        self.root_window.grid_rowconfigure(row_responsive, weight=row_weight_num)
 
 
-def init_script():
-    global g_input_file_dir
-    global g_output_file_dir
-    global g_media_setting
-    global g_showui
-    global g_need_ui_section
-    global g_width
-    global g_height
-    global m_ui_chat
-    global m_ui_qa
-    global m_ui_largeroutline
-    global m_framerate
-    global s_console_pcaudio
-    global s_framerate
-    global w_console_pcaudio
-    global w_ui_chat
-    global w_ui_video
-    global w_ui_largeroutline
-    global w_videocodec
-    global w_audiocodec
-    global w_videoformat
-    global w_audioformat
-    global w_videokeyframes
-    global w_maxstream
-    global nbr_path
-    global ow_display_screen
-    path_to_file = path.abspath(__file__)
-    directory_name = path.dirname(path_to_file)
-    chdir(directory_name)
-    nbr_path = "C:\ProgramData\WebEx\WebEx\\500\\nbrplay.exe"
-    g_input_file_dir = path.dirname(path_to_file)
-    g_output_file_dir = path.dirname(path_to_file) + "\\Converted"
-    g_media_setting = "MP4"
-    g_showui = 0
-    g_need_ui_section = True
-    g_width = 1920
-    g_height = 1080
-    m_ui_chat = 1
-    m_ui_qa = 1
-    m_ui_largeroutline = 1
-    m_framerate = 5
-    s_console_pcaudio = 0
-    s_framerate = 10
-    w_console_pcaudio = 0
-    w_ui_chat = 1
-    w_ui_video = 1
-    w_ui_largeroutline = 1
-    w_videocodec = "Windows Media Video 9"
-    w_audiocodec = "Windows Media Audio 9.2 Lossless"
-    w_videoformat = "default"
-    w_audioformat = "default"
-    w_videokeyframes = 4
-    w_maxstream = 1000
-    ow_display_screen = "main"
-    check_os()
-    locate_nbr()
+# Creates a framework to easily create new windows and populate them with widgets.
+
+
+class init_system:
+    def __init__(self):
+        self.path_to_file = path.abspath(__file__)
+        self.directory_name = path.dirname(self.path_to_file)
+        chdir(self.directory_name)
+        self.nbr_path = "C:\ProgramData\WebEx\WebEx\\500\\nbrplay.exe"
+        self.input_file_dir = path.dirname(self.path_to_file)
+        self.output_file_dir = path.dirname(self.path_to_file) + "\\Converted"
+        self.file_type = "mp4"
+        self.showui = 0
+        self.need_ui_section = True
+        self.width = 1920
+        self.height = 1080
+        self.m_ui_chat = 1
+        self.m_ui_qa = 1
+        self.m_ui_largeroutline = 1
+        self.m_framerate = 5
+        self.s_console_pcaudio = 0
+        self.s_framerate = 10
+        self.w_console_pcaudio = 0
+        self.w_ui_chat = 1
+        self.w_ui_video = 1
+        self.w_ui_largeroutline = 1
+        self.w_videocodec = "Windows Media Video 9"
+        self.w_audiocodec = "Windows Media Audio 9.2 Lossless"
+        self.w_videoformat = "default"
+        self.w_audioformat = "default"
+        self.w_videokeyframes = 4
+        self.w_maxstream = 1000
+        self.check_os()
+        self.locate_nbr()
+    # Sets up the initial variables and checks for system compatibility
+
+    
+    def check_os(self):
+        if system() != "Windows":
+            messagebox.showerror("Compatibility Error", "Please use Windows for file conversions.\nOther OSs are currently not supported :-(")
+            exit()
+    # Checks the operating system to see if it is compatible. If not, it displays an error and quits the program.
+
+
+    def locate_nbr(self):
+        if not self.check_file_existance(self.nbr_path):
+            download_nbr = messagebox.askquestion("Download dependency?", "The system could not find the NBR player.\nWould you like to download it?")
+            if download_nbr == "yes":
+                open_new_tab("www.webex.com/play-webex-recording.html")
+                exit()
+            elif download_nbr == "no":
+                nbr_already_installed = messagebox.askquestion("Maybe we missed it...", "Do you have the NBR player installed already?")
+                if nbr_already_installed == "yes":
+                    custom_nbr_location()
+                    locate_nbr()
+                else:
+                    messagebox.showerror("Cannot continue!", "This script requires the Network Broadcast Recording player to operate.\nPlease have it installed for the next time you run this script.")
+                    exit()
+        else:
+            return True
+        # Checks if the NBR is present. If not it prompts the user to download it. If the user declines then it prompts if it is installed in a different location.
+        # If yes then it executes the custom_nbr_location function. If not, the program displays an error and quits after the error is acknowledged.
+
+
+    def check_file_existance(self, file_path):
+        result = path.exists(file_path)
+        return result
+    # Checks the given file path to see if the file exists and returns true or false.
+
+
+    def custom_nbr_location(self):
+        messagebox.showinfo("Find the player...", message="Please browse to the folder that houses the nbrplay.exe program.")
+        self.nbr_path = filedialog.askdirectory(mustexist=True)
+    # Sets the nbr_path variable to the user provided path. The folder must exist to be accepted.
+
+
+    def check_folder(self):
+        error_num = 0
+        if not path.exists(self.input_file_dir):
+            error_num = error_num + 5
+        elif not path.exists(self.output_file_dir):
+            error_num = error_num + 4
+        return error_num
+        # Check is the source directory exists and if it does not then displays an error and goes back to the main menu.
+        # Also checks if the output directory exists and if it does not it creates it.
+        # 5 = input
+        # 4 = output
+        # 9 = input and output
 
 
 # Initializes the script with default values and changes to the directory where the script is located.
 
-def check_os():
-    if system() != "Windows":
-        messagebox.showerror("Compatibility Error", "Please use Windows for file conversions.\nOther OSs are currently not supported :-(")
-        exit()
-
-
-# Checks the operating system to see if it is compatible. If not, it displays an error and quits the program.
-
-
-def check_file_existance(file_path):
-    result = path.exists(file_path)
-    return result
-
-
-# Checks the given file path to see if the file exists and returns true or false.
-
-
-def locate_nbr():
-    if not check_file_existance(nbr_path):
-        download_nbr = messagebox.askquestion("Download dependency?", "The system could not find the NBR player.\nWould you like to download it?")
-        if download_nbr == "yes":
-            open_new_tab("www.webex.com/play-webex-recording.html")
-            exit()
-        elif download_nbr == "no":
-            nbr_already_installed = messagebox.askquestion("Maybe we missed it...", "Do you have the NBR player installed already?")
-            if nbr_already_installed == "yes":
-                custom_nbr_location()
-                locate_nbr()
-            else:
-                messagebox.showerror("Cannot continue!", "This script requires the Network Broadcast Recording player to operate.\nPlease have it installed for the next time you run this script.")
-                exit()
-    else:
-        return True
-
-
-# Checks if the NBR is present. If not it prompts the user to download it. If the user declines then it prompts if it is installed in a different location.
-# If yes then it executes the custom_nbr_location function. If not, the program displays an error and quits after the error is acknowledged.
-
-
-def file_type_set(ftype):
-    global file_type
-    file_type = ftype.lower()
-
-
-# Sets the file type to be converted to.
-
-
-def custom_nbr_location():
-    global nbr_path
-    nbrplay.exe
-    messagebox.showinfo("Find the player...", message="Please browse to the folder that houses the nbrplay.exe program.")
-    nbr_path = filedialog.askdirectory(mustexist=True)
-
-
-# Sets the nbr_path variable to the user provided path. The folder must exist to be accepted.
-
-
-def check_folder():
-    global g_input_file_dir
-    global g_output_file_dir
-    error_num = 0
-    if not path.exists(g_input_file_dir):
-        error_num = error_num + 5
-    elif not path.exists(g_output_file_dir):
-        error_num = error_num + 4
-    return error_num
-
-
-# Check is the source directory exists and if it does not then displays an error and goes back to the main menu.
-# Also checks if the output directory exists and if it does not it creates it.
-# 5 = input
-# 4 = output
-# 9 = input and output
-
 
 def progress_bar_window_system():
-    global progress_bar
     global pg_window
-    main_window.withdraw()
-    pg_window = Tk()
-    w = 250 # width for the Tk root
-    h = 25 # height for the Tk root
-    ws = pg_window.winfo_screenwidth() # width of the screen
-    hs = pg_window.winfo_screenheight() # height of the screen
-    x = (ws/2) - (w/2)
-    y = (hs/2) - (h/2)
-    
-
-    pg_window.title("Conversion Progress")
-    pg_window.geometry('%dx%d+%d+%d' % (w, h, x, y))
-
-    progress_bar = ttk.Progressbar(pg_window, length=250, mode="determinate")
-    progress_bar.pack()
-
-    conversion_text = ttk.Label(pg_window, anchor=CENTER, text="Converting Files")
-    conversion_text.pack(fill=X)
-
-    pg_window.after(1, func=convert_file)
-    pg_window.mainloop()
+    global pg_progress
+    pg_window = render_window(50, 250, "Conversion Progress")
+    pg_window.new_progress_bar()
+    pg_progress = pg_window.progress_bar
+    pg_window.new_label("Converting Files", grid_row=1)
+    pg_window.root_window.after(1, func=convert_file)
+    main_window.root_window.withdraw()
+    pg_window.root_window.mainloop()
 
 
 # Creates the progress bar window, complete with the progress bar and supporting text. Centered on the screen.
 
 
 def convert_file():
-    global g_input_file_dir
-    global progress_bar
     global pg_window
-    pg_window.update()
-    if check_folder() == 5:
-        pg_window.destroy()
+    global pg_progress
+    global main_window
+    pg_window.root_window.update()
+    if vars_system.check_folder() == 5:
+        pg_window.root_window.destroy()
         messagebox.showerror("Cannot continue!", "The ARF input dir is invalid, please check that it exists.")
-        main_window.deiconify()
+        main_window.root_window.deiconify()
         return
-    elif check_folder() == 4:
-        pg_window.destroy()
+    elif vars_system.check_folder() == 4:
+        pg_window.root_window.destroy()
         messagebox.showerror("Cannot continue!", "The ARF output dir is invalid, please check that it exists.")
-        main_window.deiconify()
+        main_window.root_window.deiconify()
         return
-    elif check_folder() == 9:
-        pg_window.destroy()
+    elif vars_system.check_folder() == 9:
+        pg_window.root_window.destroy()
         messagebox.showerror("Cannot continue!", "The ARF input and output dirs are invalid, please check that they exist.")
-        main_window.deiconify()
+        main_window.root_window.deiconify()
         return
     cfg_counter = 0
     for file in listdir("."):
@@ -206,16 +181,16 @@ def convert_file():
         if path.isfile(file) and file[-3:].lower() == "arf":
             create_configs(file)
             cfg_counter += 1
-    progress_bar.config(maximum=cfg_counter)
+    pg_progress.config(maximum=cfg_counter)
     for file in listdir("."):
         if path.isfile(file) and file[-3:].lower() == "cfg":
-            execute_nbr_conversion(g_input_file_dir + "\\" + file)
+            execute_nbr_conversion(vars_system.input_file_dir + "\\" + file)
             cfg_counter -= 1
-            progress_bar.config(value=cfg_counter)
-            pg_window.update()
+            pg_progress.config(value=cfg_counter)
+            pg_window.root_window.update()
             remove(file)
-    pg_window.destroy()
-    main_window.deiconify()
+    pg_window.root_window.destroy()
+    main_window.root_window.deiconify()
     messagebox.showinfo(title="Conversion complete!", message="File conversion(s) are complete!")
 
 
@@ -225,58 +200,56 @@ def convert_file():
 
 
 def create_configs(fname):
-    global file_type
     with open(fname[:-3] + "cfg", "a") as config_file:
         config_file.write("[Console]")
-        config_file.write("\ninputfile=%s" % g_input_file_dir + "\\" + fname)
-        config_file.write("\nmedia=%s" % file_type.upper())
-        config_file.write("\nshowui=%s" % g_showui)
-        if file_type == "swf":
-            config_file.write("\nPCAudio=%s" % s_console_pcaudio)
-        elif file_type == "wmv":
-            config_file.write("\nPCAudio=%s" % w_console_pcaudio)
-        if g_need_ui_section:
+        config_file.write("\ninputfile=%s" % vars_system.input_file_dir + "\\" + fname)
+        config_file.write("\nmedia=%s" % vars_system.file_type.upper())
+        config_file.write("\nshowui=%s" % vars_system.showui)
+        if vars_system.file_type.lower() == "swf":
+            config_file.write("\nPCAudio=%s" % vars_system.s_console_pcaudio)
+        elif vars_system.file_type.lower() == "wmv":
+            config_file.write("\nPCAudio=%s" % vars_system.w_console_pcaudio)
+        if vars_system.need_ui_section:
             config_file.write("\n[UI]")
-        if file_type == "mp4":
-            config_file.write("\nchat=%s" % m_ui_chat)
-        elif file_type == "wmv":
-            config_file.write("\nchat=%s" % w_ui_chat)
-        if file_type == "mp4":
-            config_file.write("\nqa=%s" % m_ui_qa)
-        elif file_type == "wmv":
-            config_file.write("\nvideo=%s" % w_ui_video)
-        if file_type == "mp4":
-            config_file.write("\nlargeroutline=%s" % m_ui_largeroutline)
-        elif file_type == "wmv":
-            config_file.write("\nlargeroutline=%s" % w_ui_largeroutline)
-        config_file.write("\n[%s]" % file_type.upper())
-        config_file.write("\noutputfile=%s" % g_output_file_dir + "\\" + fname[:-3] + file_type)
-        config_file.write("\nwidth=%s" % g_width)
-        config_file.write("\nheight=%s" % g_height)
-        if file_type == "mp4":
-            config_file.write("\nframerate=%s" % m_framerate)
-        elif file_type == "wmv":
-            config_file.write("\nvideocodec=%s" % w_videocodec)
-        elif file_type == "swf":
-            config_file.write("\nframerate=%s" % s_framerate)
-        if file_type == "wmv":
-            config_file.write("\naudiocodec=%s" % w_audiocodec)
-        if file_type == "wmv":
-            config_file.write("\nvideoformat=%s" % w_videoformat)
-        if file_type == "wmv":
-            config_file.write("\naudioformat=%s" % w_audioformat)
-        if file_type == "wmv":
-            config_file.write("\nvideokeyframes=%s" % w_videokeyframes)
-        if file_type == "wmv":
-            config_file.write("\nmaxstream=%s" % w_maxstream)
+        if vars_system.file_type == "mp4":
+            config_file.write("\nchat=%s" % vars_system.m_ui_chat)
+        elif vars_system.file_type.lower() == "wmv":
+            config_file.write("\nchat=%s" % vars_system.w_ui_chat)
+        if vars_system.file_type.lower() == "mp4":
+            config_file.write("\nqa=%s" % vars_system.m_ui_qa)
+        elif vars_system.file_type.lower() == "wmv":
+            config_file.write("\nvideo=%s" % vars_system.w_ui_video)
+        if vars_system.file_type.lower() == "mp4":
+            config_file.write("\nlargeroutline=%s" % vars_system.m_ui_largeroutline)
+        elif vars_system.file_type.lower() == "wmv":
+            config_file.write("\nlargeroutline=%s" % vars_system.w_ui_largeroutline)
+        config_file.write("\n[%s]" % vars_system.file_type.upper())
+        config_file.write("\noutputfile=%s" % vars_system.output_file_dir + "\\" + fname[:-3] + vars_system.file_type.lower())
+        config_file.write("\nwidth=%s" % vars_system.width)
+        config_file.write("\nheight=%s" % vars_system.height)
+        if vars_system.file_type.lower() == "mp4":
+            config_file.write("\nframerate=%s" % vars_system.m_framerate)
+        elif vars_system.file_type == "wmv":
+            config_file.write("\nvideocodec=%s" % vars_system.w_videocodec)
+        elif vars_system.file_type.lower() == "swf":
+            config_file.write("\nframerate=%s" % vars_system.s_framerate)
+        if vars_system.file_type.lower() == "wmv":
+            config_file.write("\naudiocodec=%s" % vars_system.w_audiocodec)
+        if vars_system.file_type.lower() == "wmv":
+            config_file.write("\nvideoformat=%s" % vars_system.w_videoformat)
+        if vars_system.file_type.lower() == "wmv":
+            config_file.write("\naudioformat=%s" % vars_system.w_audioformat)
+        if vars_system.file_type.lower() == "wmv":
+            config_file.write("\nvideokeyframes=%s" % vars_system.w_videokeyframes)
+        if vars_system.file_type.lower() == "wmv":
+            config_file.write("\nmaxstream=%s" % vars_system.w_maxstream)
 
 
 # Creates configuration files for the nbrplayer to use to convert the files.
 
 
 def execute_nbr_conversion(cfg_name):
-    global nbr_path
-    call(nbr_path + " -Convert" + ' "' + cfg_name + '"')
+    call(vars_system.nbr_path + " -Convert" + ' "' + cfg_name + '"')
 
 
 # Executes the nbr executable with the path to the generated cfg file.
@@ -284,107 +257,47 @@ def execute_nbr_conversion(cfg_name):
 
 def main_window_create():
     global main_window
-    main_window = Tk()
-    w = 250 # width for the Tk root
-    h = 200 # height for the Tk root
-    ws = main_window.winfo_screenwidth() # width of the screen
-    hs = main_window.winfo_screenheight() # height of the screen
-    x = (ws/2) - (w/2)
-    y = (hs/2) - (h/2)
-
-    # Create main Window and gather information.
-
-    main_window.title("ARF Auto Converter")
-    main_window.minsize(250, 200)
-    main_window.geometry('%dx%d+%d+%d' % (w, h, x, y))
-
-    # set window properties.
-
-    main_window.grid_columnconfigure(0,weight=1)
-    main_window.grid_columnconfigure(1,weight=1)
-    main_window.grid_rowconfigure(0,weight=1)
-    main_window.grid_rowconfigure(1,weight=1)
-    main_window.grid_rowconfigure(2,weight=1)
-    main_window.grid_rowconfigure(3,weight=1)
-
-    # make the interface responsive.
-
-    mw_welcome_text = ttk.Label(main_window, anchor=CENTER, text="Welcome to the ARF auto converter!")
-    mw_MP4_button = ttk.Button(main_window, text="Convert to MP4", command=button_mp4)
-    mw_WMV_button = ttk.Button(main_window, text="Convert to WMV", command=button_wmv)
-    mw_SWF_button = ttk.Button(main_window, text="Convert to SWF", command=button_swf)
-    mw_options_button = ttk.Button(main_window, text="Advanced Options", command=options_window_create)
-    mw_exit_button = ttk.Button(main_window, text="Exit", command=exit)
-
-    #Creates the Widgets.
-
-    mw_welcome_text.grid(columnspan=2, sticky="NESW")
-    mw_MP4_button.grid(row=1, sticky="NESW")
-    mw_WMV_button.grid(row=2, sticky="NESW")
-    mw_SWF_button.grid(row=3, sticky="NESW")
-    mw_options_button.grid(row=1, column=1, sticky="NESW")
-    mw_exit_button.grid(row=2, column=1, sticky="NESW")
+    main_window = render_window(200, 250, "ARF Auto Converter")
     
-    # Arranges the widgets on the window.
+    main_window.new_button("Convert to MP4", button_mp4, 1)
+    main_window.new_button("Convert to WMV", button_wmv, 2)
+    main_window.new_button("Convert to SWF", button_swf, 3)
+    main_window.new_button("Help", help_system, 2, 1)
+    main_window.new_button("Options", options_window_create, 1, 1)
+    main_window.new_button("Exit", exit, 3, 1)
+    main_window.new_label("Welcome to the ARF Auto Converter!", grid_columnspan=2)
 
-    main_window.mainloop()
-
-    # Keep the main window on screen.
+    main_window.root_window.mainloop()
 
 
-# Creates and displays the main window.
+# Uses the render_window framework to create a window and populate it with widgets.
 
 
 def options_window_create():
     global options_window
-    main_window.destroy()
-    options_window = Tk()
-    w = 500 # width for the Tk root
-    h = 200 # height for the Tk root
-    ws = options_window.winfo_screenwidth() # width of the screen
-    hs = options_window.winfo_screenheight() # height of the screen
-    x = (ws/2) - (w/2)
-    y = (hs/2) - (h/2)
+    main_window.root_window.destroy()
 
-    # Create main window and gathers various info
+    options_window = render_window(200, 500, "Converter Options")
     
-    if ow_display_screen == "main":
-        
-        options_window.title("Advanced Options")
-        options_window.minsize(500, 200)
-        options_window.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        
-        # Set window properties
-        
-        options_window.grid_columnconfigure(0,weight=1)
-        options_window.grid_rowconfigure(0,weight=1)
-        
-        # Make the interface responsive
-        
-        ow_welcome_text = ttk.Label(options_window, anchor=CENTER, justify=CENTER, text="You can only currently restore the default setting. More to come soon!")
-        ow_restore_defaults = ttk.Button(options_window, text="Restore Defaults", command=init_script)
-        ow_back_to_mw = ttk.Button(options_window, text="Back to Main Window", command=button_back_to_mw)
-        
-        # Create the widgets on the window
-        
-        ow_welcome_text.grid(columnspan=2, sticky="NESW")
-        ow_restore_defaults.grid(row=1, column=1, sticky="NSEW")
-        ow_back_to_mw.grid(row=1, sticky="NSEW")
-        
-        # Arrange the widgets
-        
-        options_window.mainloop()
-        
-        # Keep the options window on screen.
-    elif ow_display_screen == "global":
-        pass
+    options_window.new_label("You can only currently restore the default settings. More to come soon!", grid_columnspan=2)
+    options_window.new_button("Restore Defaults", init_script, 1, 1)
+    options_window.new_button("Back to Main Window", button_back_to_mw, 1)
+    
+    options_window.root_window.mainloop()
 
 
-# Creates and displays the options window.
+# Uses the render_window framework to create a window and populate it with widgets.
+
+
+def help_system():
+    messagebox.showinfo("Coming Soon!", "The help system will be present in a future version.")
+
+
+# Displays an info box that says "coming soon"
 
 
 def button_mp4():
-    file_type_set("mp4")
+    vars_system.file_type = "mp4"
     progress_bar_window_system()
 
 
@@ -392,7 +305,7 @@ def button_mp4():
 
 
 def button_wmv():
-    file_type_set("wmv")
+    vars_system.file_type = "wmv"
     progress_bar_window_system()
 
 
@@ -400,7 +313,7 @@ def button_wmv():
 
 
 def button_swf():
-    file_type_set("swf")
+    vars_system.file_type = "swf"
     progress_bar_window_system()
 
 
@@ -408,14 +321,14 @@ def button_swf():
 
 
 def button_back_to_mw():
-    options_window.destroy()
+    options_window.root_window.destroy()
     main_window_create()
 
 
 # Stops the options window and opens the main window.
 
 
-init_script()
+vars_system = init_system()
 main_window_create()
 
 # Starts the main window.
