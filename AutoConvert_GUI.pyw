@@ -24,6 +24,7 @@ class render_window:
         self.root_window.title(window_title)
         self.root_window.minsize(width, height)
         self.root_window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        self.radio_button_var = StringVar()
 
     def new_button(self, button_text, button_command="", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
         self.button = ttk.Button(self.root_window, text=button_text, command=button_command)
@@ -40,6 +41,16 @@ class render_window:
         self.progress_bar.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 
+    def new_radio_button(self, widget_text="Radio Button", radio_value="Radio Btn", radio_command="", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
+        self.radio_button = ttk.Radiobutton(self.root_window, text=widget_text, variable=self.radio_button_var, value=radio_value, command=radio_command)
+        self.radio_button.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
+        self.responsive_grid(grid_row, grid_column)
+    
+    def new_text_box(self, grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
+        self.text_box = ttk.Entry(self.root_window, textvariable=self.text_box_var)
+        self.text_box.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
+        self.responsive_grid(grid_row, grid_column)
+
     def responsive_grid(self, row_responsive=0, column_responsive=0, row_weight_num=1, column_weight_num=1):
         self.root_window.grid_columnconfigure(column_responsive, weight=column_weight_num)
         self.root_window.grid_rowconfigure(row_responsive, weight=row_weight_num)
@@ -50,33 +61,33 @@ class render_window:
 
 class init_system:
     def __init__(self):
-        self.path_to_file = path.abspath(__file__)
-        self.directory_name = path.dirname(self.path_to_file)
-        chdir(self.directory_name)
-        self.nbr_path = "C:\ProgramData\WebEx\WebEx\\500\\nbrplay.exe"
-        self.input_file_dir = path.dirname(self.path_to_file)
-        self.output_file_dir = path.dirname(self.path_to_file) + "\\Converted"
-        self.file_type = "mp4"
-        self.showui = 0
-        self.need_ui_section = True
-        self.width = 1920
-        self.height = 1080
-        self.m_ui_chat = 1
-        self.m_ui_qa = 1
-        self.m_ui_largeroutline = 1
-        self.m_framerate = 5
-        self.s_console_pcaudio = 0
-        self.s_framerate = 10
-        self.w_console_pcaudio = 0
-        self.w_ui_chat = 1
-        self.w_ui_video = 1
-        self.w_ui_largeroutline = 1
-        self.w_videocodec = "Windows Media Video 9"
-        self.w_audiocodec = "Windows Media Audio 9.2 Lossless"
-        self.w_videoformat = "default"
-        self.w_audioformat = "default"
-        self.w_videokeyframes = 4
-        self.w_maxstream = 1000
+        self.init_vars = {"path_to_file": path.abspath(__file__),
+        "nbr_path": "C:\ProgramData\WebEx\WebEx\\500\\nbrplay.exe",
+        "file_type": "mp4",
+        "showui": 0,
+        "need_ui_section": True,
+        "width": 1920,
+        "height": 1080,
+        "m_ui_chat": 1,
+        "m_ui_qa": 1,
+        "m_ui_largeroutline": 1,
+        "m_framerate": 5,
+        "s_console_pcaudio": 0,
+        "s_framerate": 10,
+        "w_console_pcaudio": 0,
+        "w_ui_chat": 1,
+        "w_ui_video": 1,
+        "w_ui_largeroutline": 1,
+        "w_videocodec": "Windows Media Video 9",
+        "w_audiocodec": "Windows Media Audio 9.2 Lossless",
+        "w_videoformat": "default",
+        "w_audioformat": "default",
+        "w_videokeyframes": 4,
+        "w_maxstream": 1000}
+        self.init_vars["directory_name"] = path.dirname(self.init_vars["path_to_file"])
+        self.init_vars["input_file_dir"] = path.dirname(self.init_vars["path_to_file"])
+        self.init_vars["output_file_dir"] = path.dirname(self.init_vars["path_to_file"]) + "\\Converted"
+        chdir(self.init_vars["directory_name"])
         self.check_os()
         self.locate_nbr()
     # Sets up the initial variables and checks for system compatibility
@@ -90,7 +101,7 @@ class init_system:
 
 
     def locate_nbr(self):
-        if not self.check_file_existance(self.nbr_path):
+        if not self.check_file_existance(self.init_vars["nbr_path"]):
             download_nbr = messagebox.askquestion("Download dependency?", "The system could not find the NBR player.\nWould you like to download it?")
             if download_nbr == "yes":
                 open_new_tab("www.webex.com/play-webex-recording.html")
@@ -117,15 +128,15 @@ class init_system:
 
     def custom_nbr_location(self):
         messagebox.showinfo("Find the player...", message="Please browse to the folder that houses the nbrplay.exe program.")
-        self.nbr_path = filedialog.askdirectory(mustexist=True)
+        self.init_vars["nbr_path"] = filedialog.askdirectory(mustexist=True)
     # Sets the nbr_path variable to the user provided path. The folder must exist to be accepted.
 
 
     def check_folder(self):
         error_num = 0
-        if not path.exists(self.input_file_dir):
+        if not path.exists(self.init_vars["input_file_dir"]):
             error_num = error_num + 5
-        elif not path.exists(self.output_file_dir):
+        elif not path.exists(self.init_vars["output_file_dir"]):
             error_num = error_num + 4
         return error_num
         # Check is the source directory exists and if it does not then displays an error and goes back to the main menu.
@@ -184,7 +195,7 @@ def convert_file():
     pg_progress.config(maximum=cfg_counter)
     for file in listdir("."):
         if path.isfile(file) and file[-3:].lower() == "cfg":
-            execute_nbr_conversion(vars_system.input_file_dir + "\\" + file)
+            execute_nbr_conversion(vars_system.init_vars["input_file_dir"] + "\\" + file)
             cfg_counter -= 1
             pg_progress.config(value=cfg_counter)
             pg_window.root_window.update()
@@ -202,54 +213,54 @@ def convert_file():
 def create_configs(fname):
     with open(fname[:-3] + "cfg", "a") as config_file:
         config_file.write("[Console]")
-        config_file.write("\ninputfile=%s" % vars_system.input_file_dir + "\\" + fname)
-        config_file.write("\nmedia=%s" % vars_system.file_type.upper())
-        config_file.write("\nshowui=%s" % vars_system.showui)
-        if vars_system.file_type.lower() == "swf":
-            config_file.write("\nPCAudio=%s" % vars_system.s_console_pcaudio)
-        elif vars_system.file_type.lower() == "wmv":
-            config_file.write("\nPCAudio=%s" % vars_system.w_console_pcaudio)
-        if vars_system.need_ui_section:
+        config_file.write("\ninputfile=%s" % vars_system.init_vars["input_file_dir"] + "\\" + fname)
+        config_file.write("\nmedia=%s" % vars_system.init_vars["file_type"].upper())
+        config_file.write("\nshowui=%s" % vars_system.init_vars["showui"])
+        if vars_system.init_vars["file_type"].lower() == "swf":
+            config_file.write("\nPCAudio=%s" % vars_system.init_vars["s_console_pcaudio"])
+        elif vars_system.init_vars["file_type"].lower() == "wmv":
+            config_file.write("\nPCAudio=%s" % vars_system.init_vars["w_console_pcaudio"])
+        if vars_system.init_vars["need_ui_section"]:
             config_file.write("\n[UI]")
-        if vars_system.file_type == "mp4":
-            config_file.write("\nchat=%s" % vars_system.m_ui_chat)
-        elif vars_system.file_type.lower() == "wmv":
-            config_file.write("\nchat=%s" % vars_system.w_ui_chat)
-        if vars_system.file_type.lower() == "mp4":
-            config_file.write("\nqa=%s" % vars_system.m_ui_qa)
-        elif vars_system.file_type.lower() == "wmv":
-            config_file.write("\nvideo=%s" % vars_system.w_ui_video)
-        if vars_system.file_type.lower() == "mp4":
-            config_file.write("\nlargeroutline=%s" % vars_system.m_ui_largeroutline)
-        elif vars_system.file_type.lower() == "wmv":
-            config_file.write("\nlargeroutline=%s" % vars_system.w_ui_largeroutline)
-        config_file.write("\n[%s]" % vars_system.file_type.upper())
-        config_file.write("\noutputfile=%s" % vars_system.output_file_dir + "\\" + fname[:-3] + vars_system.file_type.lower())
-        config_file.write("\nwidth=%s" % vars_system.width)
-        config_file.write("\nheight=%s" % vars_system.height)
-        if vars_system.file_type.lower() == "mp4":
-            config_file.write("\nframerate=%s" % vars_system.m_framerate)
-        elif vars_system.file_type == "wmv":
-            config_file.write("\nvideocodec=%s" % vars_system.w_videocodec)
-        elif vars_system.file_type.lower() == "swf":
-            config_file.write("\nframerate=%s" % vars_system.s_framerate)
-        if vars_system.file_type.lower() == "wmv":
-            config_file.write("\naudiocodec=%s" % vars_system.w_audiocodec)
-        if vars_system.file_type.lower() == "wmv":
-            config_file.write("\nvideoformat=%s" % vars_system.w_videoformat)
-        if vars_system.file_type.lower() == "wmv":
-            config_file.write("\naudioformat=%s" % vars_system.w_audioformat)
-        if vars_system.file_type.lower() == "wmv":
-            config_file.write("\nvideokeyframes=%s" % vars_system.w_videokeyframes)
-        if vars_system.file_type.lower() == "wmv":
-            config_file.write("\nmaxstream=%s" % vars_system.w_maxstream)
+        if vars_system.init_vars["file_type"] == "mp4":
+            config_file.write("\nchat=%s" % vars_system.init_vars["m_ui_chat"])
+        elif vars_system.init_vars["file_type"].lower() == "wmv":
+            config_file.write("\nchat=%s" % vars_system.init_vars["w_ui_chat"])
+        if vars_system.init_vars["file_type"].lower() == "mp4":
+            config_file.write("\nqa=%s" % vars_system.init_vars["m_ui_qa"])
+        elif vars_system.init_vars["file_type"].lower() == "wmv":
+            config_file.write("\nvideo=%s" % vars_system.init_vars["w_ui_video"])
+        if vars_system.init_vars["file_type"].lower() == "mp4":
+            config_file.write("\nlargeroutline=%s" % vars_system.init_vars["m_ui_largeroutline"])
+        elif vars_system.init_vars["file_type"].lower() == "wmv":
+            config_file.write("\nlargeroutline=%s" % vars_system.init_vars["w_ui_largeroutline"])
+        config_file.write("\n[%s]" % vars_system.init_vars["file_type"].upper())
+        config_file.write("\noutputfile=%s" % vars_system.init_vars["output_file_dir"] + "\\" + fname[:-3] + vars_system.init_vars["file_type"].lower())
+        config_file.write("\nwidth=%s" % vars_system.init_vars["width"])
+        config_file.write("\nheight=%s" % vars_system.init_vars["height"])
+        if vars_system.init_vars["file_type"].lower() == "mp4":
+            config_file.write("\nframerate=%s" % vars_system.init_vars["m_framerate"])
+        elif vars_system.init_vars["file_type"] == "wmv":
+            config_file.write("\nvideocodec=%s" % vars_system.init_vars["w_videocodec"])
+        elif vars_system.init_vars["file_type"].lower() == "swf":
+            config_file.write("\nframerate=%s" % vars_system.init_vars["s_framerate"])
+        if vars_system.init_vars["file_type"].lower() == "wmv":
+            config_file.write("\naudiocodec=%s" % vars_system.init_vars["w_audiocodec"])
+        if vars_system.init_vars["file_type"].lower() == "wmv":
+            config_file.write("\nvideoformat=%s" % vars_system.init_vars["w_videoformat"])
+        if vars_system.init_vars["file_type"].lower() == "wmv":
+            config_file.write("\naudioformat=%s" % vars_system.init_vars["w_audioformat"])
+        if vars_system.init_vars["file_type"].lower() == "wmv":
+            config_file.write("\nvideokeyframes=%s" % vars_system.init_vars["w_videokeyframes"])
+        if vars_system.init_vars["file_type"].lower() == "wmv":
+            config_file.write("\nmaxstream=%s" % vars_system.init_vars["w_maxstream"])
 
 
 # Creates configuration files for the nbrplayer to use to convert the files.
 
 
 def execute_nbr_conversion(cfg_name):
-    call(vars_system.nbr_path + " -Convert" + ' "' + cfg_name + '"')
+    call(vars_system.init_vars["nbr_path"] + " -Convert" + ' "' + cfg_name + '"')
 
 
 # Executes the nbr executable with the path to the generated cfg file.
@@ -278,11 +289,11 @@ def options_window_create():
     main_window.root_window.destroy()
 
     options_window = render_window(200, 500, "Converter Options")
-    
+
     options_window.new_label("You can only currently restore the default settings. More to come soon!", grid_columnspan=2)
     options_window.new_button("Restore Defaults", vars_system.__init__, 1, 1)
     options_window.new_button("Back to Main Window", button_back_to_mw, 1)
-    
+
     options_window.root_window.mainloop()
 
 
@@ -297,7 +308,7 @@ def help_system():
 
 
 def button_mp4():
-    vars_system.file_type = "mp4"
+    vars_system.init_vars["file_type"] = "mp4"
     progress_bar_window_system()
 
 
@@ -305,7 +316,7 @@ def button_mp4():
 
 
 def button_wmv():
-    vars_system.file_type = "wmv"
+    vars_system.init_vars["file_type"] = "wmv"
     progress_bar_window_system()
 
 
@@ -313,7 +324,7 @@ def button_wmv():
 
 
 def button_swf():
-    vars_system.file_type = "swf"
+    vars_system.init_vars["file_type"] = "swf"
     progress_bar_window_system()
 
 
