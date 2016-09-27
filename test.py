@@ -104,14 +104,6 @@ class change_var_window(render_window):
                 self.data_to_change["data_type"] = "num"
                 self.data_to_change["bool_value"] = False
                 self.new_button("Disable", self.change_data, 2)
-            elif vars_system.init_vars[self.data_to_change["var_name"]]:
-                self.data_to_change["data_type"] = "bool"
-                self.data_to_change["bool_value"] = False
-                self.new_button("Disable", self.change_data, 2)
-            elif not vars_system.init_vars[self.data_to_change["var_name"]]:
-                self.data_to_change["data_type"] = "bool"
-                self.data_to_change["bool_value"] = False
-                self.new_button("Disable", self.change_data, 2)
             else:
                 messagebox.showerror("Error!","An error has occured at toggle_var!")
 
