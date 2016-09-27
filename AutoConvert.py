@@ -13,7 +13,7 @@ from webbrowser import open_new_tab
 class init_system:
     def __init__(self):
         self.init_vars = {"path_to_file": path.abspath(__file__),
-        "nbr_path": "C:\ProgramData\WebEx\WebEx\\500\\nbrplay.exe",
+        "nbr_path": os.path.normpath("C:/ProgramData/WebEx/WebEx/500/nbrplay.exe"),
         "file_type": "mp4",
         "showui": 0,
         "need_ui_section": 1,
@@ -471,7 +471,7 @@ def wmv_toggle_webcam_video():
     me_wmv_toggle_video_box = input("Press Enter/Return when you are ready to continue: ")
     if me_wmv_toggle_video_box.lower() == "y":
         if vars_system.init_vars["w_ui_video"] == 1:
-           vars_system.init_vars["w_ui_video"] = 0
+            vars_system.init_vars["w_ui_video"] = 0
         else:
             vars_system.init_vars["w_ui_video"] = 1
         clear_screen()

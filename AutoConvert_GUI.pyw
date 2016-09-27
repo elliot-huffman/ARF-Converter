@@ -45,7 +45,7 @@ class render_window:
         self.radio_button = ttk.Radiobutton(self.root_window, text=widget_text, variable=self.radio_button_var, value=radio_value, command=radio_command)
         self.radio_button.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
-    
+
     def new_text_box(self, grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
         self.text_box = ttk.Entry(self.root_window, textvariable=self.text_box_var)
         self.text_box.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
@@ -62,7 +62,7 @@ class render_window:
 class init_system:
     def __init__(self):
         self.init_vars = {"path_to_file": path.abspath(__file__),
-        "nbr_path": "C:\ProgramData\WebEx\WebEx\\500\\nbrplay.exe",
+        "nbr_path": os.path.normpath("C:/ProgramData/WebEx/WebEx/500/nbrplay.exe"),
         "file_type": "mp4",
         "showui": 0,
         "need_ui_section": True,
@@ -92,7 +92,7 @@ class init_system:
         self.locate_nbr()
     # Sets up the initial variables and checks for system compatibility
 
-    
+
     def check_os(self):
         if system() != "Windows":
             messagebox.showerror("Compatibility Error", "Please use Windows for file conversions.\nOther OSs are currently not supported :-(")
@@ -269,7 +269,7 @@ def execute_nbr_conversion(cfg_name):
 def main_window_create():
     global main_window
     main_window = render_window(200, 250, "ARF Auto Converter")
-    
+
     main_window.new_button("Convert to MP4", button_mp4, 1)
     main_window.new_button("Convert to WMV", button_wmv, 2)
     main_window.new_button("Convert to SWF", button_swf, 3)
