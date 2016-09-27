@@ -61,25 +61,24 @@ class change_var_window(render_window):
     data_to_change = {}
 
     def change_data(self):
-        if self.data_to_change["bool_value"]:
-            if self.data_to_change["data_type"].lower() == "num":
-                vars_system.init_vars[self.data_to_change["var_name"]] =  1
-            elif self.data_to_change["data_type"].lower() == "bool":
-                vars_system.init_vars[self.data_to_change["var_name"]] = True
-            elif self.data_to_change["data_type"].lower() == "custom":
-                vars_system.init_vars[self.data_to_change["var_name"]] = self.data_to_change["custom_data_enable"]
-        elif not self.data_to_change["bool_value"]:
-            if self.data_to_change["data_type"].lower() == "num":
-                vars_system.init_vars[self.data_to_change["var_name"]] =  0
-            elif self.data_to_change["data_type"].lower() == "bool":
-                vars_system.init_vars[self.data_to_change["var_name"]] = False
-            elif self.data_to_change["data_type"].lower() == "custom":
-                vars_system.init_vars[self.data_to_change["var_name"]] = self.data_to_change["custom_data_disable"]
+        if self.data_to_change["is_bool_type"]:
+            if self.data_to_change["bool_value"]:
+                if self.data_to_change["data_type"].lower() == "num":
+                    vars_system.init_vars[self.data_to_change["var_name"]] =  1
+                elif self.data_to_change["data_type"].lower() == "custom":
+                    vars_system.init_vars[self.data_to_change["var_name"]] = self.data_to_change["custom_data_enable"]
+            elif not self.data_to_change["bool_value"]:
+                if self.data_to_change["data_type"].lower() == "num":
+                    vars_system.init_vars[self.data_to_change["var_name"]] =  0
+                elif self.data_to_change["data_type"].lower() == "custom":
+                    vars_system.init_vars[self.data_to_change["var_name"]] = self.data_to_change["custom_data_disable"]
         else:
             messagebox.showerror("Error!","An error has occured at change_data!")
         messagebox.showinfo("Success", "The option has been changed!")
         messagebox.showinfo("debug", vars_system.init_vars[self.data_to_change["var_name"]])
         self.root_window.destroy()
+
+        # seperator
 
     def toggle_var(self, line_one="line one here...", line_two="line two here...", var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
         self.new_label(line_one, grid_columnspan=2)
@@ -108,10 +107,10 @@ class change_var_window(render_window):
                 messagebox.showerror("Error!","An error has occured at toggle_var!")
 
 
-    def radio_var(self):
+    def radio_var(self, line_one="line one here...", line_two="line two here...", var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
         pass
 
-    def type_var(self):
+    def type_var(self, line_one="line one here...", line_two="line two here...", var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
         pass
 
 # seperator
@@ -216,10 +215,14 @@ def print_stuff():
 #wmv_change_videocodec.toggle_var()
 vars_system = init_system()
 
-wmv_change_videocodec = change_var_window(200, 250, "Need UI")
-wmv_change_videocodec.toggle_var("Change the UI Print.\nThe current setting is:", vars_system.init_vars["need_ui_section"], "need_ui_section")
-wmv_change_videocodec.root_window.mainloop()
-# 
+def toggle_var_window(var_to_change="showui", Custom_Data=False):
+    wmv_change_videocodec = change_var_window(200, 250, "Toggle %s" % var_to_change)
+    wmv_change_videocodec.toggle_var("WMP Setting", vars_system.init_vars[var_to_change], var_to_change, Custom_Data, "Windows Media Video 9", "Other Setting")
+    wmv_change_videocodec.root_window.mainloop()
+
+main_window = render_window(200, 250, "Main Window")
+main_window.new_button("Toggle Some Var", toggle_var_window)
+main_window.root_window.mainloop()
 
 
 
