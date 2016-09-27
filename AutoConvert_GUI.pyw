@@ -62,7 +62,7 @@ class render_window:
 class init_system:
     def __init__(self):
         self.init_vars = {"path_to_file": path.abspath(__file__),
-        "nbr_path": os.path.normpath("C:/ProgramData/WebEx/WebEx/500/nbrplay.exe"),
+        "nbr_path": path.normpath("C:/ProgramData/WebEx/WebEx/500/nbrplay.exe"),
         "file_type": "mp4",
         "showui": 0,
         "need_ui_section": True,
