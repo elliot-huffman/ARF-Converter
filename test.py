@@ -110,18 +110,22 @@ class change_var_window(render_window):
                 self.new_button("Disable", self.change_data, 2)
             else:
                 messagebox.showerror("Error!","An error has occured at toggle_var!")
+        self.root_window.mainloop()
 
 
     def radio_var(self, line_one="line one here...", line_two="line two here...", var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
         self.data_to_change["type_of_data"] = "radio"
         self.data_to_change["var_name"] = var_name
+        self.root_window.mainloop()
 
     def free_form_var(self, line_one="line one here...", line_two="line two here...", var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
         self.data_to_change["type_of_data"] = "free_form"
         self.data_to_change["var_name"] = var_name
         self.new_label(line_one, grid_columnspan=2)
         self.new_label(line_two, grid_row=1, grid_columnspan=2)
-        self.new_button("Cancel", self.root_window.destroy, grid_row=2, grid_column=1)
+        self.new_text_box(grid_row=2, grid_columnspan=2)
+        self.new_button("Cancel", self.root_window.destroy, grid_row=3, grid_column=1)
+        self.root_window.mainloop()
 
 # seperator
 
@@ -215,43 +219,18 @@ class init_system:
 # Initializes the script with default values and changes to the directory where the script is located.
 
 
-def print_stuff():
-    if radio_window.text_box_var.get().isdigit():
-        print(radio_window.text_box_var.get())
-    else:
-        messagebox.showerror("Cannot continue!", "Non Valid input detected!\nTry again.")
-
-#wmv_change_videocodec = change_var_window(200, 250, "Change Video Codec")
-#wmv_change_videocodec.toggle_var()
-vars_system = init_system()
-
-def toggle_var_window(var_to_change="showui", Custom_Data=False):
+def change_var_window(var_to_change="showui", Custom_Data=False):
     wmv_change_videocodec = change_var_window(200, 250, "Toggle %s" % var_to_change)
     wmv_change_videocodec.toggle_var("WMP Setting", vars_system.init_vars[var_to_change], var_to_change, Custom_Data, "Windows Media Video 9", "Other Setting")
-    wmv_change_videocodec.root_window.mainloop()
 
-def print_text_box_value():
-    messagebox.showinfo("Printed", main_window.text_box_var.get())
+
+# seperator
+
+
+vars_system = init_system()
 
 main_window = render_window(200, 250, "Main Window")
-main_window.new_button("Toggle Some Var", toggle_var_window,1)
+main_window.new_button("Toggle Some Var", change_var_window, 1)
 main_window.new_text_box()
-main_window.new_button("Print Value", print_text_box_value,1,1)
+main_window.new_button("Print Value", print_text_box_value, 1, 1)
 main_window.root_window.mainloop()
-
-
-
-#def wmv_change_videocodec():
-#    print("The WMV video codex is currently set to: %s" % vars_system.w_videocodec)
-#    print("There are 2 options for this setting:\n1. Windows Media Video 9\n2. Windows Media Video 9 Screen")
-#    print("\nLeave the field blank to do nothing")
-#    me_wmv_videocodec = int(input("\nPlease enter 1 or 2 then press Enter/Return: "))
-#    if me_wmv_videocodec == int:
-#        if me_wmv_videocodec == 1:
-#            vars_system.w_videocodec = "Windows Media Video"
-#        elif me_wmv_videocodec == 2:
-#            vars_system.w_videocodec = "Windows Media Video 9 Screen"
-#        clear_screen()
-#        print("The video codex is now set to: %s" % vars_system.w_videocodec)
-#        input("Press Enter/Return to continue...")
-#    wmv_options_menu()
