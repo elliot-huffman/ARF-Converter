@@ -17,7 +17,7 @@ class render_window:
         self.root_window.minsize(width, height)
         self.root_window.geometry('%dx%d+%d+%d' % (w, h, x, y))
         self.radio_button_var = StringVar()
-        self.text_box_var = StringVar() 
+        self.text_box_var = StringVar()
 
     def is_number(self, input_item):
         if input_item.get().isdigit():
@@ -64,12 +64,12 @@ class change_var_window(render_window):
         if self.data_to_change["type_of_data"].lower() == "bool":
             if self.data_to_change["bool_value"]:
                 if self.data_to_change["data_type"].lower() == "num":
-                    vars_system.init_vars[self.data_to_change["var_name"]] =  1
+                    vars_system.init_vars[self.data_to_change["var_name"]] = 1
                 elif self.data_to_change["data_type"].lower() == "custom":
                     vars_system.init_vars[self.data_to_change["var_name"]] = self.data_to_change["custom_data_enable"]
             elif not self.data_to_change["bool_value"]:
                 if self.data_to_change["data_type"].lower() == "num":
-                    vars_system.init_vars[self.data_to_change["var_name"]] =  0
+                    vars_system.init_vars[self.data_to_change["var_name"]] = 0
                 elif self.data_to_change["data_type"].lower() == "custom":
                     vars_system.init_vars[self.data_to_change["var_name"]] = self.data_to_change["custom_data_disable"]
         elif self.data_to_change["type_of_data"].lower() == "radio":
@@ -77,17 +77,16 @@ class change_var_window(render_window):
         elif self.data_to_change["type_of_data"].lower() == "free_form":
             pass
         else:
-            messagebox.showerror("Error!","An error has occured at change_data!")
+            messagebox.showerror("Error!", "An error has occured at change_data!")
         messagebox.showinfo("Success", "The option has been changed!")
         messagebox.showinfo("debug", vars_system.init_vars[self.data_to_change["var_name"]])
         self.root_window.destroy()
 
+
         # seperator
 
-    def toggle_var(self, line_one="line one here...", line_two="line two here...", var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
-        self.new_label(line_one, grid_columnspan=2)
-        self.new_label(line_two, grid_row=1, grid_columnspan=2)
-        self.new_button("Cancel", self.root_window.destroy, grid_row=2, grid_column=1)
+
+    def toggle_var(self, var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
         self.data_to_change["var_name"] = var_name
         self.data_to_change["type_of_data"] = "bool"
         if custom_data:
@@ -109,30 +108,25 @@ class change_var_window(render_window):
                 self.data_to_change["bool_value"] = False
                 self.new_button("Disable", self.change_data, 2)
             else:
-                messagebox.showerror("Error!","An error has occured at toggle_var!")
-        self.root_window.mainloop()
+                messagebox.showerror("Error!", "An error has occured at toggle_var!")
 
 
-    def radio_var(self, line_one="line one here...", line_two="line two here...", var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
+    def radio_var(self, var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
         self.data_to_change["type_of_data"] = "radio"
         self.data_to_change["var_name"] = var_name
-        self.root_window.mainloop()
 
-    def free_form_var(self, line_one="line one here...", line_two="line two here...", var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
+    def free_form_var(self, var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
         self.data_to_change["type_of_data"] = "free_form"
         self.data_to_change["var_name"] = var_name
-        self.new_label(line_one, grid_columnspan=2)
-        self.new_label(line_two, grid_row=1, grid_columnspan=2)
         self.new_text_box(grid_row=2, grid_columnspan=2)
-        self.new_button("Cancel", self.root_window.destroy, grid_row=3, grid_column=1)
-        self.root_window.mainloop()
 
 # seperator
+
 
 class init_system:
     def __init__(self):
         self.init_vars = {"path_to_file": path.abspath(__file__),
-        "nbr_path": "C:\ProgramData\WebEx\WebEx\\500\\nbrplay.exe",
+        "nbr_path": os.path.normpath("C:/ProgramData/WebEx/WebEx/500/nbrplay.exe"),
         "file_type": "mp4",
         "showui": 0,
         "need_ui_section": False,
@@ -162,7 +156,7 @@ class init_system:
         self.locate_nbr()
     # Sets up the initial variables and checks for system compatibility
 
-    
+
     def check_os(self):
         if system() != "Windows":
             messagebox.showerror("Compatibility Error", "Please use Windows for file conversions.\nOther OSs are currently not supported :-(")
@@ -219,18 +213,29 @@ class init_system:
 # Initializes the script with default values and changes to the directory where the script is located.
 
 
-def change_var_window(var_to_change="showui", Custom_Data=False):
-    wmv_change_videocodec = change_var_window(200, 250, "Toggle %s" % var_to_change)
-    wmv_change_videocodec.toggle_var("WMP Setting", vars_system.init_vars[var_to_change], var_to_change, Custom_Data, "Windows Media Video 9", "Other Setting")
-
-
+def create_change_var_window(line_one="Var Description", line_two="Var Value", var_to_change="showui", toggle=True, radio=False, free_form=False, Custom_Data=False, Custom_Enable="Enabled Value", Custom_Disable="Disabled Value"):
+    var_window = change_var_window(200, 250, "Change %s" % var_to_change)
+    var_window.new_label(line_one, grid_columnspan=2)
+    var_window.new_label(line_two, grid_row=1, grid_columnspan=2)
+    if toggle:
+        var_window.toggle_var("WMP Setting", vars_system.init_vars[var_to_change], var_to_change, custom_data=Custom_Data, custom_data_enable=Custom_Enable, custom_data_disable=Custom_Disable)
+        var_window.new_button("Cancel", self.root_window.destroy, grid_row=2, grid_column=1)
+    elif radio:
+        var_window.new_button("Cancel", self.root_window.destroy, grid_row=2, grid_column=1)
+    elif free_form:
+        var_window.new_button("Cancel", self.root_window.destroy, grid_row=2, grid_column=1)
+    var_window.root_window.mainloop()
 # seperator
+
+def print_text_box_value():
+    messagebox.showinfo("Value", main_window.text_box_var.get())
+
 
 
 vars_system = init_system()
 
 main_window = render_window(200, 250, "Main Window")
-main_window.new_button("Toggle Some Var", change_var_window, 1)
+main_window.new_button("Toggle Some Var", create_change_var_window, 1)
 main_window.new_text_box()
 main_window.new_button("Print Value", print_text_box_value, 1, 1)
 main_window.root_window.mainloop()
