@@ -19,12 +19,6 @@ class render_window:
         self.radio_button_var = StringVar()
         self.text_box_var = StringVar()
 
-    def is_number(self, input_item):
-        if input_item.get().isdigit():
-            return True
-        else:
-            return False
-
     def new_button(self, button_text, button_command="", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
         self.button = ttk.Button(self.root_window, text=button_text, command=button_command)
         self.button.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
@@ -43,12 +37,12 @@ class render_window:
     def responsive_grid(self, row_responsive=0, column_responsive=0, row_weight_num=1, column_weight_num=1):
         self.root_window.grid_columnconfigure(column_responsive, weight=column_weight_num)
         self.root_window.grid_rowconfigure(row_responsive, weight=row_weight_num)
-    
+
     def new_radio_button(self, widget_text="Radio Button", radio_value="Radio Btn", radio_command="", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
         self.radio_button = ttk.Radiobutton(self.root_window, text=widget_text, variable=self.radio_button_var, value=radio_value, command=radio_command)
         self.radio_button.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
-    
+
     def new_text_box(self, grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
         self.text_box = ttk.Entry(self.root_window, textvariable=self.text_box_var)
         self.text_box.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
@@ -59,6 +53,21 @@ class render_window:
 class change_var_window(render_window):
 
     data_to_change = {}
+    change_var_window_values = {"example_data_below": "Check it out!",
+    "var_to_change": "show_ui",
+    "toggle": False,
+    "radio": False,
+    "free_form":False,
+    "line_one": "Current value of:",
+    "line_two": "some varible name here passwed with a dicrionary",
+    "Custom_Data_Bool": False,
+    "Custom_Disable": "Enable me",
+    "Custom_Enable": "Disable me",
+    }
+
+    def save_freeform_value(self):
+        vars_system.init_vars[self.data_to_change["var_name"]] = self.text_box_var.get()
+        messagebox.showinfo("Debug", vars_system.init_vars[self.data_to_change["var_name"]])
 
     def change_data(self):
         if self.data_to_change["type_of_data"].lower() == "bool":
@@ -120,13 +129,27 @@ class change_var_window(render_window):
         self.data_to_change["var_name"] = var_name
         self.new_text_box(grid_row=2, grid_columnspan=2)
 
+    def create_change_var_window(self):
+        self.new_label(self.change_var_window_values["line_one"], grid_columnspan=2)
+        self.new_label(self.change_var_window_values["line_two"], grid_row=1, grid_columnspan=2)
+        if self.change_var_window_values["toggle"]:
+            self.toggle_var(self.change_var_window_values["var_to_change"], self.change_var_window_values["Custom_Data_Bool"], self.change_var_window_values["Custom_Enable"], self.change_var_window_values["Custom_Disable"])
+            self.new_button("Cancel", self.root_window.destroy, grid_row=2, grid_column=1)
+        elif self.change_var_window_values["radio"]:
+            pass
+        elif self.change_var_window_values["free_form"]:
+            self.new_text_box(2, grid_columnspan=2)
+            self.new_button("Save Value", self.save_freeform_value, 3)
+            self.new_button("Cancel", self.root_window.destroy, grid_row=3, grid_column=1)
+        self.root_window.mainloop()
+
 # seperator
 
 
 class init_system:
     def __init__(self):
         self.init_vars = {"path_to_file": path.abspath(__file__),
-        "nbr_path": os.path.normpath("C:/ProgramData/WebEx/WebEx/500/nbrplay.exe"),
+        "nbr_path": path.normpath("C:/ProgramData/WebEx/WebEx/500/nbrplay.exe"),
         "file_type": "mp4",
         "showui": 0,
         "need_ui_section": False,
@@ -213,29 +236,16 @@ class init_system:
 # Initializes the script with default values and changes to the directory where the script is located.
 
 
-def create_change_var_window(line_one="Var Description", line_two="Var Value", var_to_change="showui", toggle=True, radio=False, free_form=False, Custom_Data=False, Custom_Enable="Enabled Value", Custom_Disable="Disabled Value"):
-    var_window = change_var_window(200, 250, "Change %s" % var_to_change)
-    var_window.new_label(line_one, grid_columnspan=2)
-    var_window.new_label(line_two, grid_row=1, grid_columnspan=2)
-    if toggle:
-        var_window.toggle_var("WMP Setting", vars_system.init_vars[var_to_change], var_to_change, custom_data=Custom_Data, custom_data_enable=Custom_Enable, custom_data_disable=Custom_Disable)
-        var_window.new_button("Cancel", self.root_window.destroy, grid_row=2, grid_column=1)
-    elif radio:
-        var_window.new_button("Cancel", self.root_window.destroy, grid_row=2, grid_column=1)
-    elif free_form:
-        var_window.new_button("Cancel", self.root_window.destroy, grid_row=2, grid_column=1)
-    var_window.root_window.mainloop()
-# seperator
+def change_some_var_here():
+    wmv_show_ui = change_var_window(250, 200, "Toggle showui")
+    wmv_show_ui.change_var_window_values.update({"var_to_change": "showui", "toggle": True, "line_one": "Current value of showui:", "line_two": vars_system.init_vars["showui"]})
+    wmv_show_ui.create_change_var_window()
 
-def print_text_box_value():
-    messagebox.showinfo("Value", main_window.text_box_var.get())
-
-
+#seperator
 
 vars_system = init_system()
 
 main_window = render_window(200, 250, "Main Window")
-main_window.new_button("Toggle Some Var", create_change_var_window, 1)
-main_window.new_text_box()
-main_window.new_button("Print Value", print_text_box_value, 1, 1)
+main_window.new_button("Change some var", change_some_var_here, 1)
+
 main_window.root_window.mainloop()
