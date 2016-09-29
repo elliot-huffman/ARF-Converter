@@ -65,11 +65,15 @@ class change_var_window(render_window):
     def save_freeform_value(self):
         if self.change_var_window_values["is_number"] and vars_system.int_able_check(self.text_box.get()):
             vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
+            messagebox.showinfo("Success", "The custom value has been saved!")
+            main_window.root_window.deiconify()
             self.root_window.destroy()
         elif self.change_var_window_values["is_number"] and not vars_system.int_able_check(self.text_box.get()):
             messagebox.showerror("Error", "Entry has to be a number above zero.")
         elif not self.change_var_window_values["is_number"]:
             vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
+            messagebox.showinfo("Success", "The custom value has been saved!")
+            main_window.root_window.deiconify()
             self.root_window.destroy()
 
     def change_bool_data(self):
@@ -86,6 +90,7 @@ class change_var_window(render_window):
         else:
             messagebox.showerror("Error!", "An error has occured at change_data!")
         messagebox.showinfo("Success", "The toggle has been changed!")
+        main_window.root_window.deiconify()
         self.root_window.destroy()
 
 
@@ -114,10 +119,11 @@ class change_var_window(render_window):
             else:
                 print("Toggle var has executed unsuccessfilly")
                 print(self.change_var_window_values)
+                main_window.root_window.deiconify()
 
 
     def radio_var(self):
-        pass
+        main_window.root_window.deiconify()
  
 
     def create_change_var_window(self):
@@ -129,7 +135,7 @@ class change_var_window(render_window):
             # Toggle requires:
             # "var_to_change", "Custom_Data_Bool", "Custom_Enable", "Custom_Disable"
         elif self.change_var_window_values["radio"]:
-            pass
+            self.radio_var
             # Radio Requires:
             #
         elif self.change_var_window_values["free_form"]:
@@ -230,9 +236,6 @@ class init_system:
         # 9 = input and output
 
 
-# Initializes the script with default values and changes to the directory where the script is located.
-
-
     def int_able_check(self, string):
         try: 
             int(string)
@@ -241,20 +244,27 @@ class init_system:
             return False
 
 
+# Initializes the script with default values and changes to the directory where the script is located.
+
+
 def freeform_example():
     freeform = change_var_window(200, 250, "Change width")
     freeform.change_var_window_values.update({"free_form": True, "toggle": False, "radio": False, "var_to_change": "width", "line_one": "Current value of width:", "line_two": vars_system.init_vars["width"], "is_number": True})
+    main_window.root_window.withdraw()
     freeform.create_change_var_window()
     #remember to include Line_One and Line_Two!!!
 
 def example_toggle():
     toggle = change_var_window(200, 250, "Toggle ShowUI")
     toggle.change_var_window_values.update({"toggle": True, "var_to_change": "showui", "line_one": "Current value of ShowUI:", "line_two": vars_system.init_vars["showui"]})
+    main_window.root_window.withdraw()
     toggle.create_change_var_window()
 
 def radio_example():
     radio = change_var_window(200, 250, "Radio Select")
-    pass
+    radio.change_var_window_values.update({"free_form": False, "toggle": False, "radio": True, "var_to_change": "w_videocodec", "line_one": "Current value of w_videocodec:", "line_two": vars_system.init_vars["w_videocodec"]})
+    main_window.root_window.withdraw()
+    radio.create_change_var_window()
 
 #seperator
 
