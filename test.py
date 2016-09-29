@@ -16,7 +16,6 @@ class render_window:
         self.root_window.title(window_title)
         self.root_window.minsize(width, height)
         self.root_window.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        self.tkinter_controle_vars = {"radio_button_var": StringVar(), "text_box_var": StringVar() }
 
     def new_button(self, button_text, button_command="", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
         self.button = ttk.Button(self.root_window, text=button_text, command=button_command)
@@ -43,7 +42,7 @@ class render_window:
         self.responsive_grid(grid_row, grid_column)
 
     def new_text_box(self, grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
-        self.text_box = ttk.Entry(self.root_window, textvariable=self.tkinter_controle_vars["text_box_var"])
+        self.text_box = ttk.Entry(self.root_window)
         self.text_box.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 #seperator
@@ -64,25 +63,23 @@ class change_var_window(render_window):
     "is_number": True}
 
     def save_freeform_value(self):
-        messagebox.showinfo("Debug", self.tkinter_controle_vars["text_box_var"])
-        vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.tkinter_controle_vars["text_box_var"].get()
+        vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
         self.root_window.destroy()
 
     def change_bool_data(self):
         if self.change_var_window_values["bool_value"]:
             if self.change_var_window_values["data_type"].lower() == "num":
-                vars_system.init_vars[self.change_var_window_values["var_name"]] = 1
+                vars_system.init_vars[self.change_var_window_values["var_to_change"]] = 1
             elif self.change_var_window_values["data_type"].lower() == "custom":
-                vars_system.init_vars[self.change_var_window_values["var_name"]] = self.change_var_window_values["custom_data_enable"]
+                vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.change_var_window_values["custom_data_enable"]
         elif not self.change_var_window_values["bool_value"]:
             if self.change_var_window_values["data_type"].lower() == "num":
-                vars_system.init_vars[self.change_var_window_values["var_name"]] = 0
+                vars_system.init_vars[self.change_var_window_values["var_to_change"]] = 0
             elif self.change_var_window_values["data_type"].lower() == "custom":
-                vars_system.init_vars[self.change_var_window_values["var_name"]] = self.change_var_window_values["custom_data_disable"]
+                vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.change_var_window_values["custom_data_disable"]
         else:
             messagebox.showerror("Error!", "An error has occured at change_data!")
         messagebox.showinfo("Success", "The option has been changed!")
-        messagebox.showinfo("debug", vars_system.init_vars[self.change_var_window_values["var_name"]])
         self.root_window.destroy()
 
 
@@ -90,32 +87,30 @@ class change_var_window(render_window):
 
 
     def toggle_var(self, var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
-        self.change_var_window_values["var_to_change"] = var_name
         if custom_data:
             self.change_var_window_values["data_type"] = "custom"
             self.change_var_window_values["custom_data_enable"] = custom_data_enable
             self.change_var_window_values["custom_data_disable"] = custom_data_disable
-            if vars_system.init_vars[self.change_var_window_values["var_name"]] == custom_data_enable:
+            if vars_system.init_vars[self.change_var_window_values["var_to_change"]] == custom_data_enable:
                 self.change_var_window_values["bool_value"] = False
-            elif vars_system.init_vars[self.change_var_window_values["var_name"]] == custom_data_disable:
+            elif vars_system.init_vars[self.change_var_window_values["var_to_change"]] == custom_data_disable:
                 self.change_var_window_values["bool_value"] = True
             self.new_button("Toggle", self.change_bool_data, 2)
         elif not custom_data:
-            if vars_system.init_vars[self.change_var_window_values["var_name"]] == 0:
+            if vars_system.init_vars[self.change_var_window_values["var_to_change"]] == 0:
                 self.change_var_window_values["data_type"] = "num"
                 self.change_var_window_values["bool_value"] = True
                 self.new_button("Enable", self.change_bool_data, 2)
-            elif vars_system.init_vars[self.change_var_window_values["var_name"]] == 1:
+            elif vars_system.init_vars[self.change_var_window_values["var_to_change"]] == 1:
                 self.change_var_window_values["data_type"] = "num"
                 self.change_var_window_values["bool_value"] = False
                 self.new_button("Disable", self.change_bool_data, 2)
             else:
-                messagebox.showerror("Error!", "An error has occured at toggle_var!")
+                print("Toggle var has executed unsuccessfilly")
 
 
-    def radio_var(self, var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
-        self.change_var_window_values["type_of_data"] = "radio"
-        self.change_var_window_values["var_name"] = var_name
+    def radio_var(self):
+        pass
  
 
     def create_change_var_window(self):
@@ -231,17 +226,28 @@ class init_system:
 # Initializes the script with default values and changes to the directory where the script is located.
 
 
-def change_some_var_here():
-    wmv_show_ui = change_var_window(200, 250, "Change width")
-    wmv_show_ui.change_var_window_values.update({"free_form": True, "var_to_change": "width", "line_one": "Current value of width:", "line_two": vars_system.init_vars["width"], "is_number": True})
-    wmv_show_ui.create_change_var_window()
+def freeform_example():
+    freeform = change_var_window(200, 250, "Change width")
+    freeform.change_var_window_values.update({"free_form": True, "var_to_change": "width", "line_one": "Current value of width:", "line_two": vars_system.init_vars["width"], "is_number": True})
+    freeform.create_change_var_window()
     #remember to include Line_One and Line_Two!!!
+
+def example_toggle():
+    toggle = change_var_window(200, 250, "Toggle ShowUI")
+    toggle.change_var_window_values.update({"toggle": True, "var_to_change": "showui", "line_one": "Current value of ShowUI:", "line_two": vars_system.init_vars["showui"]})
+    toggle.create_change_var_window()
+
+def radio_example():
+    radio = change_var_window(200, 250, "Radio Select")
+    pass
 
 #seperator
 
 vars_system = init_system()
 
 main_window = render_window(200, 250, "Main Window")
-main_window.new_button("Change some var", change_some_var_here, 1)
+main_window.new_button("Freeform Edit", freeform_example, 1, grid_columnspan=2)
+main_window.new_button("Toggle Var", example_toggle)
+main_window.new_button("Radio Var", radio_example,grid_column=1)
 
 main_window.root_window.mainloop()
