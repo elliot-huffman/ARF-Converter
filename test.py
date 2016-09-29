@@ -63,8 +63,14 @@ class change_var_window(render_window):
     "is_number": True}
 
     def save_freeform_value(self):
-        vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
-        self.root_window.destroy()
+        if self.change_var_window_values["is_number"] and vars_system.int_able_check(self.text_box.get()):
+            vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
+            self.root_window.destroy()
+        elif self.change_var_window_values["is_number"] and not vars_system.int_able_check(self.text_box.get()):
+            messagebox.showerror("Error", "Entry has to be a number above zero.")
+        elif not self.change_var_window_values["is_number"]:
+            vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
+            self.root_window.destroy()
 
     def change_bool_data(self):
         if self.change_var_window_values["bool_value"]:
@@ -79,7 +85,7 @@ class change_var_window(render_window):
                 vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.change_var_window_values["custom_data_disable"]
         else:
             messagebox.showerror("Error!", "An error has occured at change_data!")
-        messagebox.showinfo("Success", "The option has been changed!")
+        messagebox.showinfo("Success", "The toggle has been changed!")
         self.root_window.destroy()
 
 
@@ -107,6 +113,7 @@ class change_var_window(render_window):
                 self.new_button("Disable", self.change_bool_data, 2)
             else:
                 print("Toggle var has executed unsuccessfilly")
+                print(self.change_var_window_values)
 
 
     def radio_var(self):
@@ -226,9 +233,17 @@ class init_system:
 # Initializes the script with default values and changes to the directory where the script is located.
 
 
+    def int_able_check(self, string):
+        try: 
+            int(string)
+            return True
+        except ValueError:
+            return False
+
+
 def freeform_example():
     freeform = change_var_window(200, 250, "Change width")
-    freeform.change_var_window_values.update({"free_form": True, "var_to_change": "width", "line_one": "Current value of width:", "line_two": vars_system.init_vars["width"], "is_number": True})
+    freeform.change_var_window_values.update({"free_form": True, "toggle": False, "radio": False, "var_to_change": "width", "line_one": "Current value of width:", "line_two": vars_system.init_vars["width"], "is_number": True})
     freeform.create_change_var_window()
     #remember to include Line_One and Line_Two!!!
 
