@@ -16,6 +16,7 @@ class render_window:
         self.root_window.title(window_title)
         self.root_window.minsize(width, height)
         self.root_window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        self.master_dictionary = {"radio_ctrl": StringVar()}
 
     def new_button(self, button_text, button_command="", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
         self.button = ttk.Button(self.root_window, text=button_text, command=button_command)
@@ -37,7 +38,7 @@ class render_window:
         self.root_window.grid_rowconfigure(row_responsive, weight=row_weight_num)
 
     def new_radio_button(self, widget_text="Radio Button", radio_value="Radio Btn", radio_command="", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
-        self.radio_button = ttk.Radiobutton(self.root_window, text=widget_text, variable=self.radio_button_var, value=radio_value, command=radio_command)
+        self.radio_button = ttk.Radiobutton(self.root_window, text=widget_text, variable=self.master_dictionary["radio_ctrl"], value=radio_value, command=radio_command)
         self.radio_button.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 
@@ -60,6 +61,7 @@ class change_var_window(render_window):
     "Custom_Data_Bool": False,
     "Custom_Disable": "Enable me",
     "Custom_Enable": "Disable me",
+    "radio_list": [("Radio Button 1", "btn_1"), ("Radio Button 2", "btn_2"), ("Radio Button 3", "btn_3")],
     "is_number": True}
 
     def save_freeform_value(self):
@@ -122,8 +124,11 @@ class change_var_window(render_window):
                 main_window.root_window.deiconify()
 
 
-    def radio_var(self):
-        main_window.root_window.deiconify()
+    def save_radio_var(self):
+        vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.master_dictionary["radio_ctrl"].get()
+        messagebox.showinfo("debug", self.master_dictionary["radio_ctrl"].get())
+        #self.root_window.destroy()
+        #main_window.root_window.deiconify()
  
 
     def create_change_var_window(self):
@@ -135,9 +140,18 @@ class change_var_window(render_window):
             # Toggle requires:
             # "var_to_change", "Custom_Data_Bool", "Custom_Enable", "Custom_Disable"
         elif self.change_var_window_values["radio"]:
-            self.radio_var
+            grid_placement = 2
+            self.master_dictionary["radio_ctrl"] = StringVar()
+            #self.master_dictionary["radio_ctrl"].set(vars_system.init_vars[self.change_var_window_values["var_to_change"]])
+            for radio_name, value in self.change_var_window_values["radio_list"]:
+                self.new_radio_button(widget_text=radio_name, radio_value=value, grid_row=grid_placement)
+                grid_placement +=1
+            grid_placement -=1
+            self.new_button("Cancle", self.root_window.destroy, grid_row=grid_placement, grid_column=1)
+            grid_placement -=1
+            self.new_button("Save", self.save_radio_var, grid_row=grid_placement, grid_column=1)
             # Radio Requires:
-            #
+            # "radio_list" "var_to_change"
         elif self.change_var_window_values["free_form"]:
             self.new_text_box(grid_row=2, grid_columnspan=2)
             self.new_button("Save Value", self.save_freeform_value, 3)
@@ -261,10 +275,24 @@ def example_toggle():
     toggle.create_change_var_window()
 
 def radio_example():
-    radio = change_var_window(200, 250, "Radio Select")
-    radio.change_var_window_values.update({"free_form": False, "toggle": False, "radio": True, "var_to_change": "w_videocodec", "line_one": "Current value of w_videocodec:", "line_two": vars_system.init_vars["w_videocodec"]})
-    main_window.root_window.withdraw()
+    radio = change_var_window(300, 350, "Radio Select")
+    radio.change_var_window_values.update({"free_form": False, "toggle": False, "radio": True, "var_to_change": "w_audiocodec", "line_one": "Current value of w_audiocodec:", "line_two": vars_system.init_vars["w_audiocodec"]})
+    radio.change_var_window_values.update({"radio_list": [("Windows Media Audio 9.2", "Windows Media Audio 9.2"), ("Windows Media Audio 9.2 Lossless", "Windows Media Audio 9.2 Lossless"), ("Windows Media Audio 10 Professional", "Windows Media Audio 10 Professional")]})
+    #main_window.root_window.withdraw()
     radio.create_change_var_window()
+def print_radio_value():
+    global radio_test_window
+    messagebox.showinfo("Debug", radio_test_window.master_dictionary["radio_ctrl"].get())
+def radio_test():
+    global radio_test_window
+    radio_test_window = render_window(200, 250, "Test")
+    radio_test_window.new_button("Dialog", print_radio_value, grid_column=1)
+    radio_test_window.new_radio_button("Button 1", "btn1")
+    radio_test_window.new_radio_button("Button 2", "btn2", grid_row=1)
+    radio_test_window.new_radio_button("Button 3", "btn3", grid_row=2)
+    radio_test_window.root_window.mainloop()
+
+
 
 #seperator
 
@@ -272,7 +300,7 @@ vars_system = init_system()
 
 main_window = render_window(200, 250, "Main Window")
 main_window.new_button("Freeform Edit", freeform_example, 1, grid_columnspan=2)
-main_window.new_button("Toggle Var", example_toggle)
-main_window.new_button("Radio Var", radio_example,grid_column=1)
+main_window.new_button("Toggle Var", radio_test)
+main_window.new_button("Radio Var", radio_example, grid_column=1)
 
 main_window.root_window.mainloop()
