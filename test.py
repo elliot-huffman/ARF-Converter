@@ -16,15 +16,33 @@ class render_window:
         self.root_window.title(window_title)
         self.root_window.minsize(width, height)
         self.root_window.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        self.master_dictionary = {"radio_ctrl": StringVar()}
+        self.master_dictionary = {"radio_ctrl": StringVar(), "top_level_window": False}
+
+    def new_top_level(self, height, width, window_title):
+        self.top_level_window = Toplevel()
+        w = width
+        h = height
+        ws = self.top_level_window.winfo_screenwidth() # width of the screen
+        hs = self.top_level_window.winfo_screenheight() # height of the screen
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        self.top_level_window.title(window_title)
+        self.top_level_window.minsize(width, height)
+        self.top_level_window.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
     def new_button(self, button_text, button_command="", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
-        self.button = ttk.Button(self.root_window, text=button_text, command=button_command)
+        if self.master_dictionary["top_level_window"]:
+            self.button = ttk.Button(self.top_level_window, text=button_text, command=button_command)
+        elif not self.master_dictionary["top_level_window"]:
+            self.button = ttk.Button(self.root_window, text=button_text, command=button_command)
         self.button.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 
     def new_label(self, label_text, text_alignment="center", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
-        self.label = ttk.Label(self.root_window, text=label_text, anchor=text_alignment)
+        if self.master_dictionary["top_level_window"]:
+            self.label = ttk.Label(self.top_level_window, text=label_text, anchor=text_alignment)
+        elif not self.master_dictionary["top_level_window"]:
+            self.label = ttk.Label(self.root_window, text=label_text, anchor=text_alignment)
         self.label.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 
@@ -34,11 +52,18 @@ class render_window:
         self.responsive_grid(grid_row, grid_column)
 
     def responsive_grid(self, row_responsive=0, column_responsive=0, row_weight_num=1, column_weight_num=1):
-        self.root_window.grid_columnconfigure(column_responsive, weight=column_weight_num)
-        self.root_window.grid_rowconfigure(row_responsive, weight=row_weight_num)
+        if self.master_dictionary["top_level_window"]:
+            self.top_level_window.grid_columnconfigure(column_responsive, weight=column_weight_num)
+            self.top_level_window.grid_rowconfigure(row_responsive, weight=row_weight_num)
+        elif not self.master_dictionary["top_level_window"]:
+            self.root_window.grid_columnconfigure(column_responsive, weight=column_weight_num)
+            self.root_window.grid_rowconfigure(row_responsive, weight=row_weight_num)
 
     def new_radio_button(self, widget_text="Radio Button", radio_value="Radio Btn", radio_command="", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
-        self.radio_button = ttk.Radiobutton(self.root_window, text=widget_text, variable=self.master_dictionary["radio_ctrl"], value=radio_value, command=radio_command)
+        if self.master_dictionary["top_level_window"]:
+            self.radio_button = ttk.Radiobutton(self.top_level_window, text=widget_text, variable=self.master_dictionary["radio_ctrl"], value=radio_value, command=radio_command)
+        elif not self.master_dictionary["top_level_window"]:
+            self.radio_button = ttk.Radiobutton(self.root_window, text=widget_text, variable=self.master_dictionary["radio_ctrl"], value=radio_value, command=radio_command)
         self.radio_button.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 
@@ -127,7 +152,7 @@ class change_var_window(render_window):
     def save_radio_var(self):
         vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.master_dictionary["radio_ctrl"].get()
         messagebox.showinfo("debug", self.master_dictionary["radio_ctrl"].get())
-        #self.root_window.destroy()
+        self.top_level_window.destroy()
         #main_window.root_window.deiconify()
  
 
@@ -147,7 +172,7 @@ class change_var_window(render_window):
                 self.new_radio_button(widget_text=radio_name, radio_value=value, grid_row=grid_placement)
                 grid_placement +=1
             grid_placement -=1
-            self.new_button("Cancle", self.root_window.destroy, grid_row=grid_placement, grid_column=1)
+            self.new_button("Cancle", self.top_level_window.destroy, grid_row=grid_placement, grid_column=1)
             grid_placement -=1
             self.new_button("Save", self.save_radio_var, grid_row=grid_placement, grid_column=1)
             # Radio Requires:
@@ -158,7 +183,10 @@ class change_var_window(render_window):
             self.new_button("Cancel", self.root_window.destroy, grid_row=3, grid_column=1)
             # Free_form requires:
             # "var_to_change" and "is_number"
-        self.root_window.mainloop()
+        if self.master_dictionary["top_level_window"]:
+            self.top_level_window.mainloop()
+        elif not self.master_dictionary["top_level_window"]:
+            self.root_window.mainloop()
 
 # seperator
 
@@ -275,22 +303,14 @@ def example_toggle():
     toggle.create_change_var_window()
 
 def radio_example():
-    radio = change_var_window(300, 350, "Radio Select")
-    radio.change_var_window_values.update({"free_form": False, "toggle": False, "radio": True, "var_to_change": "w_audiocodec", "line_one": "Current value of w_audiocodec:", "line_two": vars_system.init_vars["w_audiocodec"]})
-    radio.change_var_window_values.update({"radio_list": [("Windows Media Audio 9.2", "Windows Media Audio 9.2"), ("Windows Media Audio 9.2 Lossless", "Windows Media Audio 9.2 Lossless"), ("Windows Media Audio 10 Professional", "Windows Media Audio 10 Professional")]})
-    #main_window.root_window.withdraw()
-    radio.create_change_var_window()
+    main_window.new_top_level(200, 250, "Radio")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"free_form": False, "toggle": False, "radio": True, "var_to_change": "w_audiocodec", "line_one": "Current value of w_audiocodec:", "line_two": vars_system.init_vars["w_audiocodec"]})
+    main_window.change_var_window_values.update({"radio_list": [("Windows Media Audio 9.2", "Windows Media Audio 9.2"), ("Windows Media Audio 9.2 Lossless", "Windows Media Audio 9.2 Lossless"), ("Windows Media Audio 10 Professional", "Windows Media Audio 10 Professional")]})
+    main_window.create_change_var_window()
+
 def print_radio_value():
-    global radio_test_window
     messagebox.showinfo("Debug", radio_test_window.master_dictionary["radio_ctrl"].get())
-def radio_test():
-    global radio_test_window
-    radio_test_window = render_window(200, 250, "Test")
-    radio_test_window.new_button("Dialog", print_radio_value, grid_column=1)
-    radio_test_window.new_radio_button("Button 1", "btn1")
-    radio_test_window.new_radio_button("Button 2", "btn2", grid_row=1)
-    radio_test_window.new_radio_button("Button 3", "btn3", grid_row=2)
-    radio_test_window.root_window.mainloop()
 
 
 
@@ -298,9 +318,9 @@ def radio_test():
 
 vars_system = init_system()
 
-main_window = render_window(200, 250, "Main Window")
+main_window = change_var_window(200, 250, "Main Window")
 main_window.new_button("Freeform Edit", freeform_example, 1, grid_columnspan=2)
-main_window.new_button("Toggle Var", radio_test)
+main_window.new_button("Toggle Var", example_toggle)
 main_window.new_button("Radio Var", radio_example, grid_column=1)
 
 main_window.root_window.mainloop()
