@@ -4,7 +4,7 @@ from webbrowser import open_new_tab
 from tkinter import *
 from tkinter import messagebox, filedialog, ttk
 
-class render_window:
+class Render_Window:
     def __init__(self, height, width, window_title):
         self.root_window = Tk()
         w = width
@@ -78,16 +78,11 @@ class render_window:
         self.text_box.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 
-    def close_window(self):
-        if self.master_dictionary["top_level_window"]:
-            self.top_level_window.destroy()
-            self.root_window.deiconify()
-        elif not self.master_dictionary["top_level_window"]:
-            self.root_window.destroy()
+    
 #seperator
 
 
-class change_var_window(render_window):
+class change_var_window(Render_Window):
 
     change_var_window_values = {"example_data_below": "Check it out!",
                                 "var_to_change": "show_ui",
@@ -102,6 +97,13 @@ class change_var_window(render_window):
                                 "radio_list": [("Radio Button 1", "btn_1"), ("Radio Button 2", "btn_2"), ("Radio Button 3", "btn_3")],
                                 "is_number": True
                                }
+    def close_window(self):
+        if self.master_dictionary["top_level_window"]:
+            self.top_level_window.destroy()
+            self.root_window.deiconify()
+        elif not self.master_dictionary["top_level_window"]:
+            self.root_window.destroy()
+
     def save_freeform_value(self):
         if self.change_var_window_values["is_number"] and vars_system.int_able_check(self.text_box.get()):
             vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
@@ -328,5 +330,6 @@ main_window = change_var_window(200, 250, "Main Window")
 main_window.new_button("Freeform Edit", freeform_example, 1, grid_columnspan=2)
 main_window.new_button("Toggle Var", example_toggle)
 main_window.new_button("Radio Var", radio_example, grid_column=1)
+main_window.new_button("lambda test", lambda: messagebox.showerror("test","Example error"), 2, grid_columnspan=2)
 
 main_window.root_window.mainloop()
