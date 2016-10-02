@@ -83,17 +83,18 @@ class render_window:
 class change_var_window(render_window):
 
     change_var_window_values = {"example_data_below": "Check it out!",
-    "var_to_change": "show_ui",
-    "toggle": False,
-    "radio": False,
-    "free_form":False,
-    "line_one": "Current value of:",
-    "line_two": "some varible name here passwed with a dicrionary",
-    "Custom_Data_Bool": False,
-    "Custom_Disable": "Enable me",
-    "Custom_Enable": "Disable me",
-    "radio_list": [("Radio Button 1", "btn_1"), ("Radio Button 2", "btn_2"), ("Radio Button 3", "btn_3")],
-    "is_number": True}
+                                "var_to_change": "show_ui",
+                                "toggle": False,
+                                "radio": False,
+                                "free_form":False,
+                                "line_one": "Current value of:",
+                                "line_two": "some varible name here passwed with a dicrionary",
+                                "Custom_Data_Bool": False,
+                                "Custom_Disable": "Enable me",
+                                "Custom_Enable": "Disable me",
+                                "radio_list": [("Radio Button 1", "btn_1"), ("Radio Button 2", "btn_2"), ("Radio Button 3", "btn_3")],
+                                "is_number": True
+                               }
     def save_freeform_value(self):
         if self.change_var_window_values["is_number"] and vars_system.int_able_check(self.text_box.get()):
             vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
@@ -158,8 +159,8 @@ class change_var_window(render_window):
         vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.master_dictionary["radio_ctrl"].get()
         messagebox.showinfo("debug", self.master_dictionary["radio_ctrl"].get())
         self.top_level_window.destroy()
-        #main_window.root_window.deiconify()
- 
+        main_window.root_window.deiconify()
+
 
     def create_change_var_window(self):
         self.new_label(self.change_var_window_values["line_one"], grid_columnspan=2)
@@ -175,10 +176,10 @@ class change_var_window(render_window):
             #self.master_dictionary["radio_ctrl"].set(vars_system.init_vars[self.change_var_window_values["var_to_change"]])
             for radio_name, value in self.change_var_window_values["radio_list"]:
                 self.new_radio_button(widget_text=radio_name, radio_value=value, grid_row=grid_placement)
-                grid_placement +=1
-            grid_placement -=1
+                grid_placement += 1
+            grid_placement -= 1
             self.new_button("Cancle", self.top_level_window.destroy, grid_row=grid_placement, grid_column=1)
-            grid_placement -=1
+            grid_placement -= 1
             self.new_button("Save", self.save_radio_var, grid_row=grid_placement, grid_column=1)
             # Radio Requires:
             # "radio_list" "var_to_change"
@@ -198,29 +199,30 @@ class change_var_window(render_window):
 
 class init_system:
     def __init__(self):
-        self.init_vars = {"path_to_file": path.abspath(__file__),
-        "nbr_path": path.normpath("C:/ProgramData/WebEx/WebEx/500/nbrplay.exe"),
-        "file_type": "mp4",
-        "showui": 0,
-        "need_ui_section": False,
-        "width": 1920,
-        "height": 1080,
-        "m_ui_chat": 1,
-        "m_ui_qa": 1,
-        "m_ui_largeroutline": 1,
-        "m_framerate": 5,
-        "s_console_pcaudio": 0,
-        "s_framerate": 10,
-        "w_console_pcaudio": 0,
-        "w_ui_chat": 1,
-        "w_ui_video": 1,
-        "w_ui_largeroutline": 1,
-        "w_videocodec": "Windows Media Video 9",
-        "w_audiocodec": "Windows Media Audio 9.2 Lossless",
-        "w_videoformat": "default",
-        "w_audioformat": "default",
-        "w_videokeyframes": 4,
-        "w_maxstream": 1000}
+        self.init_vars = {
+            "path_to_file": path.abspath(__file__),
+            "nbr_path": path.normpath("C:/ProgramData/WebEx/WebEx/500/nbrplay.exe"),
+            "file_type": "mp4",
+            "showui": 0,
+            "need_ui_section": False,
+            "width": 1920,
+            "height": 1080,
+            "m_ui_chat": 1,
+            "m_ui_qa": 1,
+            "m_ui_largeroutline": 1,
+            "m_framerate": 5,
+            "s_console_pcaudio": 0,
+            "s_framerate": 10,
+            "w_console_pcaudio": 0,
+            "w_ui_chat": 1,
+            "w_ui_video": 1,
+            "w_ui_largeroutline": 1,
+            "w_videocodec": "Windows Media Video 9",
+            "w_audiocodec": "Windows Media Audio 9.2 Lossless",
+            "w_videoformat": "default",
+            "w_audioformat": "default",
+            "w_videokeyframes": 4,
+            "w_maxstream": 1000}
         self.init_vars["directory_name"] = path.dirname(self.init_vars["path_to_file"])
         self.init_vars["input_file_dir"] = path.dirname(self.init_vars["path_to_file"])
         self.init_vars["output_file_dir"] = path.dirname(self.init_vars["path_to_file"]) + "\\Converted"
@@ -246,8 +248,8 @@ class init_system:
             elif download_nbr == "no":
                 nbr_already_installed = messagebox.askquestion("Maybe we missed it...", "Do you have the NBR player installed already?")
                 if nbr_already_installed == "yes":
-                    custom_nbr_location()
-                    locate_nbr()
+                    self.custom_nbr_location()
+                    self.locate_nbr()
                 else:
                     messagebox.showerror("Cannot continue!", "This script requires the Network Broadcast Recording player to operate.\nPlease have it installed for the next time you run this script.")
                     exit()
@@ -284,7 +286,7 @@ class init_system:
 
 
     def int_able_check(self, string):
-        try: 
+        try:
             int(string)
             return True
         except ValueError:
