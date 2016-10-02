@@ -426,39 +426,95 @@ def execute_nbr_conversion(cfg_name):
 # Executes the nbr executable with the path to the generated cfg file.
 
 
-def main_window_create():
-    global main_window
-    main_window = render_window(200, 250, "ARF Auto Converter")
-
-    main_window.new_button("Convert to MP4", button_mp4, 1)
-    main_window.new_button("Convert to WMV", button_wmv, 2)
-    main_window.new_button("Convert to SWF", button_swf, 3)
-    main_window.new_button("Help", help_system, 2, 1)
-    main_window.new_button("Options", options_window_create, 1, 1)
-    main_window.new_button("Exit", exit, 3, 1)
-    main_window.new_label("Welcome to the ARF Auto Converter!", grid_columnspan=2)
-
-    main_window.root_window.mainloop()
-
-
 # Uses the render_window framework to create a window and populate it with widgets.
 
 
 def options_window_create():
-    global options_window
-    main_window.root_window.destroy()
-
-    options_window = render_window(200, 500, "Converter Options")
-
-    options_window.new_label("You can only currently restore the default settings. More to come soon!", grid_columnspan=2)
-    options_window.new_button("Restore Defaults", vars_system.__init__, 1, 1)
-    options_window.new_button("Back to Main Window", button_back_to_mw, 1)
-
-    options_window.root_window.mainloop()
+    main_window.root_window.withdraw()
+    main_window.new_top_level(200, 250, "Converter Options")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.new_label("Below are the available options categories:", grid_columnspan=2)
+    main_window.new_button("Global Options", global_options_window, grid_row=1)
+    main_window.new_button("WMV Options", wmv_options_window,grid_row=1, grid_column=1)
+    main_window.new_button("MP4 Options", mp4_options_window, grid_row=2)
+    main_window.new_button("SWF Options", swf_options_window, grid_row=2, grid_column=1)
+    main_window.new_button("Restore Defaults", vars_system.__init__, grid_row=3)
+    main_window.new_button("Back to Main Window", main_window.close_window, grid_row=3, grid_column=1)
+    main_window.top_level_window.mainloop()
 
 
 # Uses the render_window framework to create a window and populate it with widgets.
 
+def global_options_window():
+    main_window.top_level_window.withdraw()
+    main_window.new_top_level(200, 250, "Global options")
+    main_window.new_label("Global options available:", grid_columnspan=2)
+    main_window.new_button("Change Input Dir", change_input_dir, 1)
+    main_window.new_button("Change Output Dir", change_output_dir, 1, 1)
+    main_window.new_button("Change Width", change_width, 2)
+    main_window.new_button("Change Heigth", change_height, 2, 1)
+    main_window.new_button("Toggle ShowUI", toggle_showui, 3)
+    main_window.new_button("Go back", main_window.close_window, 3, 1)
+    main_window.top_level_window.mainloop()
+
+def wmv_options_window():
+    main_window.top_level_window.withdraw()
+    main_window.new_top_level(200, 250, "WMV options")
+    main_window.new_label("Global options available:", grid_columnspan=2)
+    main_window.new_button("Change Input Dir", toggle_showui, 1)
+    main_window.new_button("Change Output Dir", toggle_showui, 1, 1)
+    main_window.new_button("Change Width", toggle_showui, 2)
+    main_window.new_button("Change Heigth", toggle_showui, 2, 1)
+    main_window.new_button("Toggle ShowUI", toggle_showui, 3)
+    main_window.new_button("Go back", main_window.close_window, 3, 1)
+    main_window.top_level_window.mainloop()
+
+def mp4_options_window():
+    main_window.top_level_window.withdraw()
+    main_window.new_top_level(200, 250, "MP4 options")
+    main_window.new_label("Global options available:", grid_columnspan=2)
+    main_window.new_button("Change Input Dir", toggle_showui, 1)
+    main_window.new_button("Change Output Dir", toggle_showui, 1, 1)
+    main_window.new_button("Change Width", toggle_showui, 2)
+    main_window.new_button("Change Frame Rate", toggle_showui, 2, 1)
+    main_window.new_button("Go back", main_window.close_window, 3, 1)
+    main_window.top_level_window.mainloop()
+
+def swf_options_window():
+    main_window.top_level_window.withdraw()
+    main_window.new_top_level(200, 250, "SWF options")
+    main_window.new_label("Global options available:", grid_columnspan=2)
+    main_window.new_button("Change Input Dir", toggle_showui, 1)
+    main_window.new_button("Change Output Dir", toggle_showui, 1, 1)
+    main_window.new_button("Change Width", toggle_showui, 2)
+    main_window.new_button("Change Heigth", toggle_showui, 2, 1)
+    main_window.new_button("Toggle ShowUI", toggle_showui, 3)
+    main_window.new_button("Go back", main_window.close_window, 3, 1)
+    main_window.top_level_window.mainloop()
+
+def toggle_showui():
+    main_window.new_top_level(200, 250, "Toggle ShowUI")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"toggle": True, "var_to_change": "showui", "line_one": "Current value of ShowUI:", "line_two": vars_system.init_vars["showui"]})
+    main_window.create_change_var_window()
+
+def change_width():
+    main_window.new_top_level(200, 250, "Change width")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"free_form": True, "toggle": False, "radio": False, "var_to_change": "width", "line_one": "Current value of width:", "line_two": vars_system.init_vars["width"], "is_number": True})
+    main_window.create_change_var_window()
+
+def change_height():
+    main_window.new_top_level(200, 250, "Change height")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"free_form": True, "toggle": False, "radio": False, "var_to_change": "height", "line_one": "Current value of height:", "line_two": vars_system.init_vars["height"], "is_number": True})
+    main_window.create_change_var_window()
+
+def change_output_dir():
+    pass
+
+def change_input_dir():
+    pass
 
 def help_system():
     messagebox.showinfo("Coming Soon!", "The help system will be present in a future version.")
@@ -491,15 +547,18 @@ def button_swf():
 # Starts file conversions for the SWF file type.
 
 
-def button_back_to_mw():
-    options_window.root_window.destroy()
-    main_window_create()
-
-
-# Stops the options window and opens the main window.
-
-
 vars_system = init_system()
-main_window_create()
+
+main_window = change_var_window(200, 250, "ARF Auto Converter")
+
+main_window.new_button("Convert to MP4", button_mp4, 1)
+main_window.new_button("Convert to WMV", button_wmv, 2)
+main_window.new_button("Convert to SWF", button_swf, 3)
+main_window.new_button("Help", help_system, 2, 1)
+main_window.new_button("Options", options_window_create, 1, 1)
+main_window.new_button("Exit", exit, 3, 1)
+main_window.new_label("Welcome to the ARF Auto Converter!", grid_columnspan=2)
+
+main_window.root_window.mainloop()
 
 # Starts the main window.
