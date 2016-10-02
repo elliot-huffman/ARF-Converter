@@ -24,66 +24,218 @@ class render_window:
         self.root_window.title(window_title)
         self.root_window.minsize(width, height)
         self.root_window.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        self.radio_button_var = StringVar()
+        self.master_dictionary = {"radio_ctrl": StringVar(), "top_level_window": False}
+
+    def new_top_level(self, height, width, window_title):
+        self.top_level_window = Toplevel()
+        w = width
+        h = height
+        ws = self.top_level_window.winfo_screenwidth() # width of the screen
+        hs = self.top_level_window.winfo_screenheight() # height of the screen
+        x = (ws/2) - (w/2)
+        y = (hs/2) - (h/2)
+        self.top_level_window.title(window_title)
+        self.top_level_window.minsize(width, height)
+        self.top_level_window.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
     def new_button(self, button_text, button_command="", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
-        self.button = ttk.Button(self.root_window, text=button_text, command=button_command)
+        if self.master_dictionary["top_level_window"]:
+            self.button = ttk.Button(self.top_level_window, text=button_text, command=button_command)
+        elif not self.master_dictionary["top_level_window"]:
+            self.button = ttk.Button(self.root_window, text=button_text, command=button_command)
         self.button.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 
     def new_label(self, label_text, text_alignment="center", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
-        self.label = ttk.Label(self.root_window, text=label_text, anchor=text_alignment)
+        if self.master_dictionary["top_level_window"]:
+            self.label = ttk.Label(self.top_level_window, text=label_text, anchor=text_alignment)
+        elif not self.master_dictionary["top_level_window"]:
+            self.label = ttk.Label(self.root_window, text=label_text, anchor=text_alignment)
         self.label.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 
     def new_progress_bar(self, pg_length=250, pg_mode="determinate", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
-        self.progress_bar = ttk.Progressbar(self.root_window, length=pg_length, mode=pg_mode)
+        if self.master_dictionary["top_level_window"]:
+            self.progress_bar = ttk.Progressbar(self.top_level_window, length=pg_length, mode=pg_mode)
+        elif not self.master_dictionary["top_level_window"]:
+            self.progress_bar = ttk.Progressbar(self.root_window, length=pg_length, mode=pg_mode)
         self.progress_bar.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 
+    def responsive_grid(self, row_responsive=0, column_responsive=0, row_weight_num=1, column_weight_num=1):
+        if self.master_dictionary["top_level_window"]:
+            self.top_level_window.grid_columnconfigure(column_responsive, weight=column_weight_num)
+            self.top_level_window.grid_rowconfigure(row_responsive, weight=row_weight_num)
+        elif not self.master_dictionary["top_level_window"]:
+            self.root_window.grid_columnconfigure(column_responsive, weight=column_weight_num)
+            self.root_window.grid_rowconfigure(row_responsive, weight=row_weight_num)
+
     def new_radio_button(self, widget_text="Radio Button", radio_value="Radio Btn", radio_command="", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
-        self.radio_button = ttk.Radiobutton(self.root_window, text=widget_text, variable=self.radio_button_var, value=radio_value, command=radio_command)
+        if self.master_dictionary["top_level_window"]:
+            self.radio_button = ttk.Radiobutton(self.top_level_window, text=widget_text, variable=self.master_dictionary["radio_ctrl"], value=radio_value, command=radio_command)
+        elif not self.master_dictionary["top_level_window"]:
+            self.radio_button = ttk.Radiobutton(self.root_window, text=widget_text, variable=self.master_dictionary["radio_ctrl"], value=radio_value, command=radio_command)
         self.radio_button.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 
     def new_text_box(self, grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
-        self.text_box = ttk.Entry(self.root_window, textvariable=self.text_box_var)
+        if self.master_dictionary["top_level_window"]:
+            self.text_box = ttk.Entry(self.top_level_window)
+        elif not self.master_dictionary["top_level_window"]:
+            self.text_box = ttk.Entry(self.root_window)
         self.text_box.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 
-    def responsive_grid(self, row_responsive=0, column_responsive=0, row_weight_num=1, column_weight_num=1):
-        self.root_window.grid_columnconfigure(column_responsive, weight=column_weight_num)
-        self.root_window.grid_rowconfigure(row_responsive, weight=row_weight_num)
+    def close_window(self):
+        if self.master_dictionary["top_level_window"]:
+            self.top_level_window.destroy()
+            self.root_window.deiconify()
+        elif not self.master_dictionary["top_level_window"]:
+            self.root_window.destroy()
 
 
 # Creates a framework to easily create new windows and populate them with widgets.
 
 
+class change_var_window(render_window):
+
+    change_var_window_values = {"example_data_below": "Check it out!",
+                                "var_to_change": "show_ui",
+                                "toggle": False,
+                                "radio": False,
+                                "free_form":False,
+                                "line_one": "Current value of:",
+                                "line_two": "some varible name here passwed with a dicrionary",
+                                "Custom_Data_Bool": False,
+                                "Custom_Disable": "Enable me",
+                                "Custom_Enable": "Disable me",
+                                "radio_list": [("Radio Button 1", "btn_1"), ("Radio Button 2", "btn_2"), ("Radio Button 3", "btn_3")],
+                                "is_number": True
+                               }
+    def save_freeform_value(self):
+        if self.change_var_window_values["is_number"] and vars_system.int_able_check(self.text_box.get()):
+            vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
+            messagebox.showinfo("Success", "The custom value has been saved!")
+            self.close_window()
+        elif self.change_var_window_values["is_number"] and not vars_system.int_able_check(self.text_box.get()):
+            messagebox.showerror("Error", "Entry has to be a number above zero.")
+        elif not self.change_var_window_values["is_number"]:
+            vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
+            messagebox.showinfo("Success", "The custom value has been saved!")
+            self.close_window()
+
+    def change_bool_data(self):
+        if self.change_var_window_values["bool_value"]:
+            if self.change_var_window_values["data_type"].lower() == "num":
+                vars_system.init_vars[self.change_var_window_values["var_to_change"]] = 1
+            elif self.change_var_window_values["data_type"].lower() == "custom":
+                vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.change_var_window_values["custom_data_enable"]
+        elif not self.change_var_window_values["bool_value"]:
+            if self.change_var_window_values["data_type"].lower() == "num":
+                vars_system.init_vars[self.change_var_window_values["var_to_change"]] = 0
+            elif self.change_var_window_values["data_type"].lower() == "custom":
+                vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.change_var_window_values["custom_data_disable"]
+        else:
+            messagebox.showerror("Error!", "An error has occured at change_data!")
+        messagebox.showinfo("Success", "The toggle has been changed!")
+        self.close_window()
+
+
+        # seperator
+
+
+    def toggle_var(self, custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
+        if custom_data:
+            self.change_var_window_values["data_type"] = "custom"
+            self.change_var_window_values["custom_data_enable"] = custom_data_enable
+            self.change_var_window_values["custom_data_disable"] = custom_data_disable
+            if vars_system.init_vars[self.change_var_window_values["var_to_change"]] == custom_data_enable:
+                self.change_var_window_values["bool_value"] = False
+            elif vars_system.init_vars[self.change_var_window_values["var_to_change"]] == custom_data_disable:
+                self.change_var_window_values["bool_value"] = True
+            self.new_button("Toggle", self.change_bool_data, 2)
+        elif not custom_data:
+            if vars_system.init_vars[self.change_var_window_values["var_to_change"]] == 0:
+                self.change_var_window_values["data_type"] = "num"
+                self.change_var_window_values["bool_value"] = True
+                self.new_button("Enable", self.change_bool_data, 2)
+            elif vars_system.init_vars[self.change_var_window_values["var_to_change"]] == 1:
+                self.change_var_window_values["data_type"] = "num"
+                self.change_var_window_values["bool_value"] = False
+                self.new_button("Disable", self.change_bool_data, 2)
+            else:
+                print("Toggle var has executed unsuccessfilly")
+                print(self.change_var_window_values)
+                main_window.root_window.deiconify()
+
+
+    def save_radio_var(self):
+        vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.master_dictionary["radio_ctrl"].get()
+        messagebox.showinfo("debug", self.master_dictionary["radio_ctrl"].get())
+        self.close_window()
+
+
+    def create_change_var_window(self):
+        self.root_window.withdraw()
+        self.new_label(self.change_var_window_values["line_one"], grid_columnspan=2)
+        self.new_label(self.change_var_window_values["line_two"], grid_row=1, grid_columnspan=2)
+        if self.change_var_window_values["toggle"]:
+            self.toggle_var(self.change_var_window_values["Custom_Data_Bool"], self.change_var_window_values["Custom_Enable"], self.change_var_window_values["Custom_Disable"])
+            self.new_button("Cancel", self.close_window, grid_row=2, grid_column=1)
+            # Toggle requires:
+            # "var_to_change", "Custom_Data_Bool", "Custom_Enable", "Custom_Disable"
+        elif self.change_var_window_values["radio"]:
+            grid_placement = 2
+            self.master_dictionary["radio_ctrl"] = StringVar()
+            #self.master_dictionary["radio_ctrl"].set(vars_system.init_vars[self.change_var_window_values["var_to_change"]])
+            for radio_name, value in self.change_var_window_values["radio_list"]:
+                self.new_radio_button(widget_text=radio_name, radio_value=value, grid_row=grid_placement)
+                grid_placement += 1
+            grid_placement -= 1
+            self.new_button("Cancle", self.close_window, grid_row=grid_placement, grid_column=1)
+            grid_placement -= 1
+            self.new_button("Save", self.save_radio_var, grid_row=grid_placement, grid_column=1)
+            # Radio Requires:
+            # "radio_list" "var_to_change"
+        elif self.change_var_window_values["free_form"]:
+            self.new_text_box(grid_row=2, grid_columnspan=2)
+            self.new_button("Save Value", self.save_freeform_value, 3)
+            self.new_button("Cancel", self.close_window, grid_row=3, grid_column=1)
+            # Free_form requires:
+            # "var_to_change" and "is_number"
+        if self.master_dictionary["top_level_window"]:
+            self.top_level_window.mainloop()
+        elif not self.master_dictionary["top_level_window"]:
+            self.root_window.mainloop()
+
+# seperator
+
 class init_system:
     def __init__(self):
-        self.init_vars = {"path_to_file": path.abspath(__file__),
-        "nbr_path": path.normpath("C:/ProgramData/WebEx/WebEx/500/nbrplay.exe"),
-        "file_type": "mp4",
-        "showui": 0,
-        "need_ui_section": True,
-        "width": 1920,
-        "height": 1080,
-        "m_ui_chat": 1,
-        "m_ui_qa": 1,
-        "m_ui_largeroutline": 1,
-        "m_framerate": 5,
-        "s_console_pcaudio": 0,
-        "s_framerate": 10,
-        "w_console_pcaudio": 0,
-        "w_ui_chat": 1,
-        "w_ui_video": 1,
-        "w_ui_largeroutline": 1,
-        "w_videocodec": "Windows Media Video 9",
-        "w_audiocodec": "Windows Media Audio 9.2 Lossless",
-        "w_videoformat": "default",
-        "w_audioformat": "default",
-        "w_videokeyframes": 4,
-        "w_maxstream": 1000}
+        self.init_vars = {
+            "path_to_file": path.abspath(__file__),
+            "nbr_path": path.normpath("C:/ProgramData/WebEx/WebEx/500/nbrplay.exe"),
+            "file_type": "mp4",
+            "showui": 0,
+            "need_ui_section": False,
+            "width": 1920,
+            "height": 1080,
+            "m_ui_chat": 1,
+            "m_ui_qa": 1,
+            "m_ui_largeroutline": 1,
+            "m_framerate": 5,
+            "s_console_pcaudio": 0,
+            "s_framerate": 10,
+            "w_console_pcaudio": 0,
+            "w_ui_chat": 1,
+            "w_ui_video": 1,
+            "w_ui_largeroutline": 1,
+            "w_videocodec": "Windows Media Video 9",
+            "w_audiocodec": "Windows Media Audio 9.2 Lossless",
+            "w_videoformat": "default",
+            "w_audioformat": "default",
+            "w_videokeyframes": 4,
+            "w_maxstream": 1000}
         self.init_vars["directory_name"] = path.dirname(self.init_vars["path_to_file"])
         self.init_vars["input_file_dir"] = path.dirname(self.init_vars["path_to_file"])
         self.init_vars["output_file_dir"] = path.dirname(self.init_vars["path_to_file"]) + "\\Converted"
@@ -109,8 +261,8 @@ class init_system:
             elif download_nbr == "no":
                 nbr_already_installed = messagebox.askquestion("Maybe we missed it...", "Do you have the NBR player installed already?")
                 if nbr_already_installed == "yes":
-                    custom_nbr_location()
-                    locate_nbr()
+                    self.custom_nbr_location()
+                    self.locate_nbr()
                 else:
                     messagebox.showerror("Cannot continue!", "This script requires the Network Broadcast Recording player to operate.\nPlease have it installed for the next time you run this script.")
                     exit()
@@ -144,6 +296,14 @@ class init_system:
         # 5 = input
         # 4 = output
         # 9 = input and output
+
+
+    def int_able_check(self, string):
+        try:
+            int(string)
+            return True
+        except ValueError:
+            return False
 
 
 # Initializes the script with default values and changes to the directory where the script is located.
