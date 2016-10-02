@@ -77,6 +77,13 @@ class render_window:
             self.text_box = ttk.Entry(self.root_window)
         self.text_box.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
+
+    def close_window(self):
+        if self.master_dictionary["top_level_window"]:
+            self.top_level_window.destroy()
+            self.root_window.deiconify()
+        elif not self.master_dictionary["top_level_window"]:
+            self.root_window.destroy()
 #seperator
 
 
@@ -99,15 +106,13 @@ class change_var_window(render_window):
         if self.change_var_window_values["is_number"] and vars_system.int_able_check(self.text_box.get()):
             vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
             messagebox.showinfo("Success", "The custom value has been saved!")
-            main_window.root_window.deiconify()
-            self.root_window.destroy()
+            self.close_window()
         elif self.change_var_window_values["is_number"] and not vars_system.int_able_check(self.text_box.get()):
             messagebox.showerror("Error", "Entry has to be a number above zero.")
         elif not self.change_var_window_values["is_number"]:
             vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
             messagebox.showinfo("Success", "The custom value has been saved!")
-            main_window.root_window.deiconify()
-            self.root_window.destroy()
+            self.close_window()
 
     def change_bool_data(self):
         if self.change_var_window_values["bool_value"]:
@@ -123,14 +128,13 @@ class change_var_window(render_window):
         else:
             messagebox.showerror("Error!", "An error has occured at change_data!")
         messagebox.showinfo("Success", "The toggle has been changed!")
-        main_window.root_window.deiconify()
-        self.root_window.destroy()
+        self.close_window()
 
 
         # seperator
 
 
-    def toggle_var(self, var_name="some_var", custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
+    def toggle_var(self, custom_data=False, custom_data_enable="placeholder", custom_data_disable="placeholder"):
         if custom_data:
             self.change_var_window_values["data_type"] = "custom"
             self.change_var_window_values["custom_data_enable"] = custom_data_enable
@@ -158,16 +162,16 @@ class change_var_window(render_window):
     def save_radio_var(self):
         vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.master_dictionary["radio_ctrl"].get()
         messagebox.showinfo("debug", self.master_dictionary["radio_ctrl"].get())
-        self.top_level_window.destroy()
-        main_window.root_window.deiconify()
+        self.close_window()
 
 
     def create_change_var_window(self):
+        self.root_window.withdraw()
         self.new_label(self.change_var_window_values["line_one"], grid_columnspan=2)
         self.new_label(self.change_var_window_values["line_two"], grid_row=1, grid_columnspan=2)
         if self.change_var_window_values["toggle"]:
-            self.toggle_var(self.change_var_window_values["var_to_change"], self.change_var_window_values["Custom_Data_Bool"], self.change_var_window_values["Custom_Enable"], self.change_var_window_values["Custom_Disable"])
-            self.new_button("Cancel", self.root_window.destroy, grid_row=2, grid_column=1)
+            self.toggle_var(self.change_var_window_values["Custom_Data_Bool"], self.change_var_window_values["Custom_Enable"], self.change_var_window_values["Custom_Disable"])
+            self.new_button("Cancel", self.close_window, grid_row=2, grid_column=1)
             # Toggle requires:
             # "var_to_change", "Custom_Data_Bool", "Custom_Enable", "Custom_Disable"
         elif self.change_var_window_values["radio"]:
@@ -178,7 +182,7 @@ class change_var_window(render_window):
                 self.new_radio_button(widget_text=radio_name, radio_value=value, grid_row=grid_placement)
                 grid_placement += 1
             grid_placement -= 1
-            self.new_button("Cancle", self.top_level_window.destroy, grid_row=grid_placement, grid_column=1)
+            self.new_button("Cancle", self.close_window, grid_row=grid_placement, grid_column=1)
             grid_placement -= 1
             self.new_button("Save", self.save_radio_var, grid_row=grid_placement, grid_column=1)
             # Radio Requires:
@@ -186,7 +190,7 @@ class change_var_window(render_window):
         elif self.change_var_window_values["free_form"]:
             self.new_text_box(grid_row=2, grid_columnspan=2)
             self.new_button("Save Value", self.save_freeform_value, 3)
-            self.new_button("Cancel", self.root_window.destroy, grid_row=3, grid_column=1)
+            self.new_button("Cancel", self.close_window, grid_row=3, grid_column=1)
             # Free_form requires:
             # "var_to_change" and "is_number"
         if self.master_dictionary["top_level_window"]:
@@ -297,17 +301,16 @@ class init_system:
 
 
 def freeform_example():
-    freeform = change_var_window(200, 250, "Change width")
-    freeform.change_var_window_values.update({"free_form": True, "toggle": False, "radio": False, "var_to_change": "width", "line_one": "Current value of width:", "line_two": vars_system.init_vars["width"], "is_number": True})
-    main_window.root_window.withdraw()
-    freeform.create_change_var_window()
-    #remember to include Line_One and Line_Two!!!
+    main_window.new_top_level(200, 250, "Change width")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"free_form": True, "toggle": False, "radio": False, "var_to_change": "width", "line_one": "Current value of width:", "line_two": vars_system.init_vars["width"], "is_number": True})
+    main_window.create_change_var_window()
 
 def example_toggle():
-    toggle = change_var_window(200, 250, "Toggle ShowUI")
-    toggle.change_var_window_values.update({"toggle": True, "var_to_change": "showui", "line_one": "Current value of ShowUI:", "line_two": vars_system.init_vars["showui"]})
-    main_window.root_window.withdraw()
-    toggle.create_change_var_window()
+    main_window.new_top_level(200, 250, "Toggle ShowUI")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"toggle": True, "var_to_change": "showui", "line_one": "Current value of ShowUI:", "line_two": vars_system.init_vars["showui"]})
+    main_window.create_change_var_window()
 
 def radio_example():
     main_window.new_top_level(200, 250, "Radio")
