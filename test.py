@@ -47,7 +47,10 @@ class render_window:
         self.responsive_grid(grid_row, grid_column)
 
     def new_progress_bar(self, pg_length=250, pg_mode="determinate", grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
-        self.progress_bar = ttk.Progressbar(self.root_window, length=pg_length, mode=pg_mode)
+        if self.master_dictionary["top_level_window"]:
+            self.progress_bar = ttk.Progressbar(self.top_level_window, length=pg_length, mode=pg_mode)
+        elif not self.master_dictionary["top_level_window"]:
+            self.progress_bar = ttk.Progressbar(self.root_window, length=pg_length, mode=pg_mode)
         self.progress_bar.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 
@@ -68,7 +71,10 @@ class render_window:
         self.responsive_grid(grid_row, grid_column)
 
     def new_text_box(self, grid_row=0, grid_column=0, grid_sticky="NESW", grid_columnspan=1, grid_rowspan=1):
-        self.text_box = ttk.Entry(self.root_window)
+        if self.master_dictionary["top_level_window"]:
+            self.text_box = ttk.Entry(self.top_level_window)
+        elif not self.master_dictionary["top_level_window"]:
+            self.text_box = ttk.Entry(self.root_window)
         self.text_box.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 #seperator
@@ -88,7 +94,6 @@ class change_var_window(render_window):
     "Custom_Enable": "Disable me",
     "radio_list": [("Radio Button 1", "btn_1"), ("Radio Button 2", "btn_2"), ("Radio Button 3", "btn_3")],
     "is_number": True}
-
     def save_freeform_value(self):
         if self.change_var_window_values["is_number"] and vars_system.int_able_check(self.text_box.get()):
             vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
@@ -308,10 +313,6 @@ def radio_example():
     main_window.change_var_window_values.update({"free_form": False, "toggle": False, "radio": True, "var_to_change": "w_audiocodec", "line_one": "Current value of w_audiocodec:", "line_two": vars_system.init_vars["w_audiocodec"]})
     main_window.change_var_window_values.update({"radio_list": [("Windows Media Audio 9.2", "Windows Media Audio 9.2"), ("Windows Media Audio 9.2 Lossless", "Windows Media Audio 9.2 Lossless"), ("Windows Media Audio 10 Professional", "Windows Media Audio 10 Professional")]})
     main_window.create_change_var_window()
-
-def print_radio_value():
-    messagebox.showinfo("Debug", radio_test_window.master_dictionary["radio_ctrl"].get())
-
 
 
 #seperator
