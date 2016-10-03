@@ -472,10 +472,10 @@ def wmv_options_window():
     main_window.top_level_window.withdraw()
     main_window.new_top_level(200, 250, "WMV options")
     main_window.new_label("WMV options available:", grid_columnspan=2)
-    main_window.new_button("Toggle PCAudio", toggle_pcaudio, 1)
-    main_window.new_button("Toggle Chat", toggle_chat, 1, 1)
-    main_window.new_button("Toggle WebCam", toggle_webcam, 2)
-    main_window.new_button("Toggle largeroutline", toggle_largeroutline, 2, 1)
+    main_window.new_button("Toggle PCAudio", w_toggle_pcaudio, 1)
+    main_window.new_button("Toggle Chat", w_toggle_chat, 1, 1)
+    main_window.new_button("Toggle WebCam", w_toggle_webcam, 2)
+    main_window.new_button("Toggle largeroutline", w_toggle_largeroutline, 2, 1)
     main_window.new_button("Chose videocodec", chose_videocodec, 3)
     main_window.new_button("Chose audiocodec", chose_audiocodec, 3, 1)
     main_window.new_button("Change videoformat", change_videoformat, 4)
@@ -505,28 +505,78 @@ def swf_options_window():
     main_window.new_button("Go back", main_window.close_window, 2, grid_columnspan=2)
     main_window.top_level_window.mainloop()
 
-def toggle_pcaudio():
+def chose_videocodec():
+    main_window.new_top_level(200, 250, "Radio")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": False, "radio": True, "var_to_change": "w_videocodec", "line_one": "Current VideoCodec:", "line_two": vars_system.init_vars["w_videocodec"]})
+    main_window.change_var_window_values.update({"radio_list": [("Windows Media Video 9", "Windows Media Video 9"), ("Windows Media Video 9 Screen", "Windows Media Video 9 Screen")]})
+    main_window.create_change_var_window()
+def chose_audiocodec():
+    main_window.new_top_level(200, 250, "Radio")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": False, "radio": True, "var_to_change": "w_audiocodec", "line_one": "Current AudioCodec:", "line_two": vars_system.init_vars["w_audiocodec"]})
+    main_window.change_var_window_values.update({"radio_list": [("Windows Media Audio 9.2", "Windows Media Audio 9.2"), ("Windows Media Audio 9.2 Lossless", "Windows Media Audio 9.2 Lossless"), ("Windows Media Audio 10 Professional", "Windows Media Audio 10 Professional")]})
+    main_window.create_change_var_window()
+def change_videoformat():
+    main_window.new_top_level(200, 250, "Change VideoFormat")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": True, "toggle": False, "radio": False, "var_to_change": "w_videoformat", "line_one": "Current value of VideoFormat:", "line_two": vars_system.init_vars["w_videoformat"], "is_number": False})
+    main_window.create_change_var_window()
+def change_audioformat():
+    main_window.new_top_level(200, 250, "Change AudioFormat")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": True, "toggle": False, "radio": False, "var_to_change": "w_audioformat", "line_one": "Current value of AudioFormat:", "line_two": vars_system.init_vars["w_audioformat"], "is_number": False})
+    main_window.create_change_var_window()
+def change_videokeyframes():
+    main_window.new_top_level(200, 250, "Change KeyFrames")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": True, "toggle": False, "radio": False, "var_to_change": "w_videokeyframes", "line_one": "Current number of KeyFrames:", "line_two": vars_system.init_vars["w_videokeyframes"], "is_number": True})
+    main_window.create_change_var_window()
+def change_maxstream():
+    main_window.new_top_level(200, 250, "Change width")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": True, "toggle": False, "radio": False, "var_to_change": "w_maxstream", "line_one": "Current value of MaxStream:", "line_two": vars_system.init_vars["w_maxstream"], "is_number": True})
+    main_window.create_change_var_window()
+def w_toggle_chat():
+    main_window.new_top_level(200, 250, "Toggle Chat")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": True, "radio": False, "var_to_change": "w_ui_chat", "line_one": "Current value of Chat:", "line_two": vars_system.init_vars["w_ui_chat"]})
+    main_window.create_change_var_window()
+
+def w_toggle_webcam():
+    main_window.new_top_level(200, 250, "Toggle WebCam")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": True, "radio": False, "var_to_change": "w_ui_video", "line_one": "Current value of WebCam:", "line_two": vars_system.init_vars["w_ui_video"]})
+    main_window.create_change_var_window()
+
+def w_toggle_largeroutline():
+    main_window.new_top_level(200, 250, "Toggle LargerOutline")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": True, "radio": False, "var_to_change": "w_ui_largeroutline", "line_one": "Current value of LargerOutline:", "line_two": vars_system.init_vars["w_ui_largeroutline"]})
+    main_window.create_change_var_window()
+
+def w_toggle_pcaudio():
     main_window.new_top_level(200, 250, "Toggle PCAudio")
     main_window.master_dictionary["top_level_window"] = True
-    main_window.change_var_window_values.update({"toggle": True, "var_to_change": "w_console_pcaudio", "line_one": "Current value of w_console_pcaudio:", "line_two": vars_system.init_vars["w_console_pcaudio"]})
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": True, "radio": False, "var_to_change": "w_console_pcaudio", "line_one": "Current value of w_console_pcaudio:", "line_two": vars_system.init_vars["w_console_pcaudio"]})
     main_window.create_change_var_window()
 
 def toggle_showui():
     main_window.new_top_level(200, 250, "Toggle ShowUI")
     main_window.master_dictionary["top_level_window"] = True
-    main_window.change_var_window_values.update({"toggle": True, "var_to_change": "showui", "line_one": "Current value of ShowUI:", "line_two": vars_system.init_vars["showui"]})
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": True, "radio": False, "var_to_change": "showui", "line_one": "Current value of ShowUI:", "line_two": vars_system.init_vars["showui"]})
     main_window.create_change_var_window()
 
 def change_width():
     main_window.new_top_level(200, 250, "Change width")
     main_window.master_dictionary["top_level_window"] = True
-    main_window.change_var_window_values.update({"free_form": True, "toggle": False, "radio": False, "var_to_change": "width", "line_one": "Current value of width:", "line_two": vars_system.init_vars["width"], "is_number": True})
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": True, "toggle": False, "radio": False, "var_to_change": "width", "line_one": "Current value of width:", "line_two": vars_system.init_vars["width"], "is_number": True})
     main_window.create_change_var_window()
 
 def change_height():
-    main_window.new_top_level(200, 250, "Change height")
+    main_window.new_top_level(200, 250, "Change Height")
     main_window.master_dictionary["top_level_window"] = True
-    main_window.change_var_window_values.update({"free_form": True, "toggle": False, "radio": False, "var_to_change": "height", "line_one": "Current value of height:", "line_two": vars_system.init_vars["height"], "is_number": True})
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": True, "toggle": False, "radio": False, "var_to_change": "height", "line_one": "Current value of height:", "line_two": vars_system.init_vars["height"], "is_number": True})
     main_window.create_change_var_window()
 
 def change_output_dir():
