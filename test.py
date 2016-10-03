@@ -315,25 +315,25 @@ class init_system:
 def browse_example():
     main_window.new_top_level(200, 250, "Browse for a dir")
     main_window.master_dictionary["top_level_window"] = True
-    main_window.change_var_window_values.update({"browse_data": True, "browse_for_dir": True, "free_form": False, "toggle": False, "radio": False, "var_to_change": "input_file_dir", "line_one": "Current value of input_file_dir:", "line_two": vars_system.init_vars["input_file_dir"]})
+    main_window.change_var_window_values.update({"browse_data": True, "free_form": False, "toggle": False, "radio": False, "browse_for_dir": True, "var_to_change": "input_file_dir", "line_one": "Current value of input_file_dir:", "line_two": vars_system.init_vars["input_file_dir"]})
     main_window.create_change_var_window()
 
 def freeform_example():
     main_window.new_top_level(200, 250, "Change width")
     main_window.master_dictionary["top_level_window"] = True
-    main_window.change_var_window_values.update({"free_form": True, "toggle": False, "radio": False, "var_to_change": "width", "line_one": "Current value of width:", "line_two": vars_system.init_vars["width"], "is_number": True})
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": True, "toggle": False, "radio": False, "var_to_change": "width", "line_one": "Current value of width:", "line_two": vars_system.init_vars["width"], "is_number": True})
     main_window.create_change_var_window()
 
 def example_toggle():
     main_window.new_top_level(200, 250, "Toggle ShowUI")
     main_window.master_dictionary["top_level_window"] = True
-    main_window.change_var_window_values.update({"toggle": True, "var_to_change": "showui", "line_one": "Current value of ShowUI:", "line_two": vars_system.init_vars["showui"]})
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": True, "radio": False, "var_to_change": "showui", "line_one": "Current value of ShowUI:", "line_two": vars_system.init_vars["showui"]})
     main_window.create_change_var_window()
 
 def radio_example():
     main_window.new_top_level(200, 250, "Radio")
     main_window.master_dictionary["top_level_window"] = True
-    main_window.change_var_window_values.update({"free_form": False, "toggle": False, "radio": True, "var_to_change": "w_audiocodec", "line_one": "Current value of w_audiocodec:", "line_two": vars_system.init_vars["w_audiocodec"]})
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": False, "radio": True, "var_to_change": "w_audiocodec", "line_one": "Current value of w_audiocodec:", "line_two": vars_system.init_vars["w_audiocodec"]})
     main_window.change_var_window_values.update({"radio_list": [("Windows Media Audio 9.2", "Windows Media Audio 9.2"), ("Windows Media Audio 9.2 Lossless", "Windows Media Audio 9.2 Lossless"), ("Windows Media Audio 10 Professional", "Windows Media Audio 10 Professional")]})
     main_window.create_change_var_window()
 
