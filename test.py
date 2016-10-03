@@ -101,10 +101,11 @@ class change_var_window(Render_Window):
                                }
     def browse_for_data(self):
         if self.change_var_window_values["browse_for_dir"]:
-            vars_system.init_vars[self.change_var_window_values["var_to_change"]] = filedialog.askdirectory(mustexist=True)
+            vars_system.init_vars[self.change_var_window_values["var_to_change"]] = path.normpath(filedialog.askdirectory(mustexist=True))
         elif not self.change_var_window_values["browse_for_dir"]:
-            vars_system.init_vars[self.change_var_window_values["var_to_change"]] = filedialog.askopenfile()
+            vars_system.init_vars[self.change_var_window_values["var_to_change"]] = path.normpath(filedialog.askopenfile())
         self.close_window()
+
     def close_window(self):
         if self.master_dictionary["top_level_window"]:
             self.top_level_window.destroy()
