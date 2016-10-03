@@ -476,8 +476,8 @@ def wmv_options_window():
     main_window.new_button("Toggle Chat", w_toggle_chat, 1, 1)
     main_window.new_button("Toggle WebCam", w_toggle_webcam, 2)
     main_window.new_button("Toggle largeroutline", w_toggle_largeroutline, 2, 1)
-    main_window.new_button("Chose videocodec", chose_videocodec, 3)
-    main_window.new_button("Chose audiocodec", chose_audiocodec, 3, 1)
+    main_window.new_button("Choose videocodec", choose_videocodec, 3)
+    main_window.new_button("Choose audiocodec", choose_audiocodec, 3, 1)
     main_window.new_button("Change videoformat", change_videoformat, 4)
     main_window.new_button("Change audioformat", change_audioformat, 4, 1)
     main_window.new_button("Change videokeyframes", change_videokeyframes, 5)
@@ -505,13 +505,13 @@ def swf_options_window():
     main_window.new_button("Go back", main_window.close_window, 2, grid_columnspan=2)
     main_window.top_level_window.mainloop()
 
-def chose_videocodec():
+def choose_videocodec():
     main_window.new_top_level(200, 250, "Radio")
     main_window.master_dictionary["top_level_window"] = True
     main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": False, "radio": True, "var_to_change": "w_videocodec", "line_one": "Current VideoCodec:", "line_two": vars_system.init_vars["w_videocodec"]})
     main_window.change_var_window_values.update({"radio_list": [("Windows Media Video 9", "Windows Media Video 9"), ("Windows Media Video 9 Screen", "Windows Media Video 9 Screen")]})
     main_window.create_change_var_window()
-def chose_audiocodec():
+def choose_audiocodec():
     main_window.new_top_level(200, 250, "Radio")
     main_window.master_dictionary["top_level_window"] = True
     main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": False, "radio": True, "var_to_change": "w_audiocodec", "line_one": "Current AudioCodec:", "line_two": vars_system.init_vars["w_audiocodec"]})
