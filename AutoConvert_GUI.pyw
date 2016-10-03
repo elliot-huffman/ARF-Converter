@@ -86,13 +86,6 @@ class render_window:
         self.text_box.grid(row=grid_row, column=grid_column, sticky=grid_sticky, columnspan=grid_columnspan, rowspan=grid_rowspan)
         self.responsive_grid(grid_row, grid_column)
 
-    def close_window(self):
-        if self.master_dictionary["top_level_window"]:
-            self.top_level_window.destroy()
-            self.root_window.deiconify()
-        elif not self.master_dictionary["top_level_window"]:
-            self.root_window.destroy()
-
 
 # Creates a framework to easily create new windows and populate them with widgets.
 
@@ -112,6 +105,18 @@ class change_var_window(render_window):
                                 "radio_list": [("Radio Button 1", "btn_1"), ("Radio Button 2", "btn_2"), ("Radio Button 3", "btn_3")],
                                 "is_number": True
                                }
+    def browse_for_data(self):
+        if self.change_var_window_values["browse_for_dir"]:
+            vars_system.init_vars[self.change_var_window_values["var_to_change"]] = path.normpath(filedialog.askdirectory(mustexist=True))
+        elif not self.change_var_window_values["browse_for_dir"]:
+            vars_system.init_vars[self.change_var_window_values["var_to_change"]] = path.normpath(filedialog.askopenfile())
+        self.close_window()
+    def close_window(self):
+        if self.master_dictionary["top_level_window"]:
+            self.top_level_window.destroy()
+            self.root_window.deiconify()
+        elif not self.master_dictionary["top_level_window"]:
+            self.root_window.destroy()
     def save_freeform_value(self):
         if self.change_var_window_values["is_number"] and vars_system.int_able_check(self.text_box.get()):
             vars_system.init_vars[self.change_var_window_values["var_to_change"]] = self.text_box.get()
@@ -203,6 +208,11 @@ class change_var_window(render_window):
             self.new_button("Cancel", self.close_window, grid_row=3, grid_column=1)
             # Free_form requires:
             # "var_to_change" and "is_number"
+        elif self.change_var_window_values["browse_data"]:
+            self.new_button("Browse", self.browse_for_data, grid_row=2)
+            self.new_button("Cancel", self.close_window, grid_row=2, grid_column=1)
+            # browse_data requires:
+            # "var_to_change" and "browse_for_dir""
         if self.master_dictionary["top_level_window"]:
             self.top_level_window.mainloop()
         elif not self.master_dictionary["top_level_window"]:
@@ -309,9 +319,10 @@ class init_system:
 # Initializes the script with default values and changes to the directory where the script is located.
 
 
-def progress_bar_window_system():
+def progress_bar_window_system(file_type):
     global pg_window
     global pg_progress
+    vars_system.init_vars["file_type"] = file_type.lower()
     pg_window = render_window(50, 250, "Conversion Progress")
     pg_window.new_progress_bar()
     pg_progress = pg_window.progress_bar
@@ -511,10 +522,16 @@ def change_height():
     main_window.create_change_var_window()
 
 def change_output_dir():
-    pass
+    main_window.new_top_level(200, 250, "Browse for output dir")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": True, "browse_for_dir": True, "free_form": False, "toggle": False, "radio": False, "var_to_change": "output_file_dir", "line_one": "Current value of output_file_dir:", "line_two": vars_system.init_vars["output_file_dir"]})
+    main_window.create_change_var_window()
 
 def change_input_dir():
-    pass
+    main_window.new_top_level(200, 250, "Browse for output dir")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": True, "browse_for_dir": True, "free_form": False, "toggle": False, "radio": False, "var_to_change": "input_file_dir", "line_one": "Current value of input_file_dir:", "line_two": vars_system.init_vars["input_file_dir"]})
+    main_window.create_change_var_window()
 
 def help_system():
     messagebox.showinfo("Coming Soon!", "The help system will be present in a future version.")
@@ -523,37 +540,13 @@ def help_system():
 # Displays an info box that says "coming soon"
 
 
-def button_mp4():
-    vars_system.init_vars["file_type"] = "mp4"
-    progress_bar_window_system()
-
-
-# Starts file conversions for the SWF file type.
-
-
-def button_wmv():
-    vars_system.init_vars["file_type"] = "wmv"
-    progress_bar_window_system()
-
-
-# Starts file conversions for the SWF file type.
-
-
-def button_swf():
-    vars_system.init_vars["file_type"] = "swf"
-    progress_bar_window_system()
-
-
-# Starts file conversions for the SWF file type.
-
-
 vars_system = init_system()
 
 main_window = change_var_window(200, 250, "ARF Auto Converter")
 
-main_window.new_button("Convert to MP4", button_mp4, 1)
-main_window.new_button("Convert to WMV", button_wmv, 2)
-main_window.new_button("Convert to SWF", button_swf, 3)
+main_window.new_button("Convert to MP4", lambda: progress_bar_window_system("mp4"), 1)
+main_window.new_button("Convert to WMV", lambda: progress_bar_window_system("wmv"), 2)
+main_window.new_button("Convert to SWF", lambda: progress_bar_window_system("swf"), 3)
 main_window.new_button("Help", help_system, 2, 1)
 main_window.new_button("Options", options_window_create, 1, 1)
 main_window.new_button("Exit", exit, 3, 1)
