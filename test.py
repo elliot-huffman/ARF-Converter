@@ -89,7 +89,8 @@ class change_var_window(Render_Window):
                                 "browse_data": False,
                                 "toggle": False,
                                 "radio": False,
-                                "free_form":False,
+                                "free_form": False,
+                                "browse_for_dir": True,
                                 "line_one": "Current value of:",
                                 "line_two": "some varible name here passwed with a dicrionary",
                                 "Custom_Data_Bool": False,
@@ -99,7 +100,11 @@ class change_var_window(Render_Window):
                                 "is_number": True
                                }
     def browse_for_data(self):
-        pass
+        if self.change_var_window_values["browse_for_dir"]:
+            vars_system.init_vars[self.change_var_window_values["var_to_change"]] = filedialog.askdirectory(mustexist=True)
+        elif not self.change_var_window_values["browse_for_dir"]:
+            vars_system.init_vars[self.change_var_window_values["var_to_change"]] = filedialog.askopenfile()
+        self.close_window()
     def close_window(self):
         if self.master_dictionary["top_level_window"]:
             self.top_level_window.destroy()
@@ -309,7 +314,7 @@ class init_system:
 def browse_example():
     main_window.new_top_level(200, 250, "Browse for a dir")
     main_window.master_dictionary["top_level_window"] = True
-    main_window.change_var_window_values.update({"browse_data": True, "free_form": False, "toggle": False, "radio": False, "var_to_change": "input_file_dir", "line_one": "Current value of input_file_dir:", "line_two": vars_system.init_vars["input_file_dir"]})
+    main_window.change_var_window_values.update({"browse_data": True, "browse_for_dir": True, "free_form": False, "toggle": False, "radio": False, "var_to_change": "input_file_dir", "line_one": "Current value of input_file_dir:", "line_two": vars_system.init_vars["input_file_dir"]})
     main_window.create_change_var_window()
 
 def freeform_example():
@@ -342,5 +347,6 @@ main_window.new_button("Toggle Var", example_toggle)
 main_window.new_button("Radio Var", radio_example, grid_column=1)
 main_window.new_button("Browse Var", browse_example, grid_row=2)
 main_window.new_button("lambda test", lambda: messagebox.showinfo("test","a message box..."), grid_row=2, grid_column=1)
+main_window.new_button("Browse", browse_example, grid_row=3, grid_columnspan=2)
 
 main_window.root_window.mainloop()
