@@ -86,6 +86,7 @@ class change_var_window(Render_Window):
 
     change_var_window_values = {"example_data_below": "Check it out!",
                                 "var_to_change": "show_ui",
+                                "browse_data": False,
                                 "toggle": False,
                                 "radio": False,
                                 "free_form":False,
@@ -97,6 +98,8 @@ class change_var_window(Render_Window):
                                 "radio_list": [("Radio Button 1", "btn_1"), ("Radio Button 2", "btn_2"), ("Radio Button 3", "btn_3")],
                                 "is_number": True
                                }
+    def browse_for_data(self):
+        pass
     def close_window(self):
         if self.master_dictionary["top_level_window"]:
             self.top_level_window.destroy()
@@ -195,13 +198,15 @@ class change_var_window(Render_Window):
             self.new_button("Cancel", self.close_window, grid_row=3, grid_column=1)
             # Free_form requires:
             # "var_to_change" and "is_number"
+        elif self.change_var_window_values["browse_data"]:
+            self.new_button("Browse", self.browse_for_data, grid_row=2)
+            self.new_button("Cancel", self.close_window, grid_row=2, grid_column=1)
         if self.master_dictionary["top_level_window"]:
             self.top_level_window.mainloop()
         elif not self.master_dictionary["top_level_window"]:
             self.root_window.mainloop()
 
 # seperator
-
 
 class init_system:
     def __init__(self):
@@ -301,6 +306,11 @@ class init_system:
 
 # Initializes the script with default values and changes to the directory where the script is located.
 
+def browse_example():
+    main_window.new_top_level(200, 250, "Browse for a dir")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": True, "free_form": False, "toggle": False, "radio": False, "var_to_change": "input_file_dir", "line_one": "Current value of input_file_dir:", "line_two": vars_system.init_vars["input_file_dir"]})
+    main_window.create_change_var_window()
 
 def freeform_example():
     main_window.new_top_level(200, 250, "Change width")
@@ -330,6 +340,7 @@ main_window = change_var_window(200, 250, "Main Window")
 main_window.new_button("Freeform Edit", freeform_example, 1, grid_columnspan=2)
 main_window.new_button("Toggle Var", example_toggle)
 main_window.new_button("Radio Var", radio_example, grid_column=1)
-main_window.new_button("lambda test", lambda: messagebox.showerror("test","Example error"), 2, grid_columnspan=2)
+main_window.new_button("Browse Var", browse_example, grid_row=2)
+main_window.new_button("lambda test", lambda: messagebox.showinfo("test","a message box..."), grid_row=2, grid_column=1)
 
 main_window.root_window.mainloop()
