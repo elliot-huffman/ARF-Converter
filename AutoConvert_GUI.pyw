@@ -458,6 +458,7 @@ def options_window_create():
 
 def global_options_window():
     main_window.top_level_window.withdraw()
+    main_window.master_dictionary["top_level_window"] = True
     main_window.new_top_level(200, 250, "Global options")
     main_window.new_label("Global options available:", grid_columnspan=2)
     main_window.new_button("Change Input Dir", change_input_dir, 1)
@@ -470,7 +471,8 @@ def global_options_window():
 
 def wmv_options_window():
     main_window.top_level_window.withdraw()
-    main_window.new_top_level(200, 250, "WMV options")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.new_top_level(350, 400, "WMV options")
     main_window.new_label("WMV options available:", grid_columnspan=2)
     main_window.new_button("Toggle PCAudio", w_toggle_pcaudio, 1)
     main_window.new_button("Toggle Chat", w_toggle_chat, 1, 1)
@@ -487,23 +489,56 @@ def wmv_options_window():
 
 def mp4_options_window():
     main_window.top_level_window.withdraw()
+    main_window.master_dictionary["top_level_window"] = True
     main_window.new_top_level(200, 250, "MP4 options")
     main_window.new_label("MP4 options available:", grid_columnspan=2)
-    main_window.new_button("Change Input Dir", toggle_showui, 1)
-    main_window.new_button("Change Output Dir", toggle_showui, 1, 1)
-    main_window.new_button("Change Width", toggle_showui, 2)
-    main_window.new_button("Change Frame Rate", toggle_showui, 2, 1)
+    main_window.new_button("Toggle Chat", m_toggle_chat, 1)
+    main_window.new_button("Toggle QA", toggle_qa, 1, 1)
+    main_window.new_button("Toggle LargerOutline", m_toggle_largeroutline, 2)
+    main_window.new_button("Change Frame Rate", m_change_framerate, 2, 1)
     main_window.new_button("Go back", main_window.close_window, 3, grid_columnspan=2)
     main_window.top_level_window.mainloop()
 
 def swf_options_window():
     main_window.top_level_window.withdraw()
+    main_window.master_dictionary["top_level_window"] = True
     main_window.new_top_level(200, 250, "SWF options")
     main_window.new_label("SWF options available:", grid_columnspan=2)
-    main_window.new_button("Toggle PCAudio", toggle_showui, 1)
-    main_window.new_button("Change Framerate", toggle_showui, 1, 1)
+    main_window.new_button("Toggle PCAudio", s_toggle_pcaudio, 1)
+    main_window.new_button("Change Framerate", s_change_framerate, 1, 1)
     main_window.new_button("Go back", main_window.close_window, 2, grid_columnspan=2)
     main_window.top_level_window.mainloop()
+
+def s_toggle_pcaudio():
+    main_window.new_top_level(200, 250, "Toggle PCAudio")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": True, "radio": False, "var_to_change": "s_console_pcaudio", "line_one": "Current value of PCAudio:", "line_two": vars_system.init_vars["s_console_pcaudio"]})
+    main_window.create_change_var_window()
+def s_change_framerate():
+    main_window.new_top_level(200, 250, "Change Frame Rate")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": True, "toggle": False, "radio": False, "var_to_change": "s_framerate", "line_one": "Current Frame Rate:", "line_two": vars_system.init_vars["s_framerate"], "is_number": True})
+    main_window.create_change_var_window()
+def m_toggle_chat():
+    main_window.new_top_level(200, 250, "Toggle Chat")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": True, "radio": False, "var_to_change": "m_ui_chat", "line_one": "Current value of Chat:", "line_two": vars_system.init_vars["m_ui_chat"]})
+    main_window.create_change_var_window()
+def toggle_qa():
+    main_window.new_top_level(200, 250, "Toggle QA")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": True, "radio": False, "var_to_change": "m_ui_qa", "line_one": "Current value of QA:", "line_two": vars_system.init_vars["m_ui_qa"]})
+    main_window.create_change_var_window()
+def m_toggle_largeroutline():
+    main_window.new_top_level(200, 250, "Toggle LargerOutline")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": False, "toggle": True, "radio": False, "var_to_change": "m_ui_largeroutline", "line_one": "Current value of LargerOutline:", "line_two": vars_system.init_vars["m_ui_largeroutline"]})
+    main_window.create_change_var_window()
+def m_change_framerate():
+    main_window.new_top_level(200, 250, "Change Frame Rate")
+    main_window.master_dictionary["top_level_window"] = True
+    main_window.change_var_window_values.update({"browse_data": False, "free_form": True, "toggle": False, "radio": False, "var_to_change": "m_framerate", "line_one": "Current Frame Rate:", "line_two": vars_system.init_vars["m_framerate"], "is_number": True})
+    main_window.create_change_var_window()
 
 def choose_videocodec():
     main_window.new_top_level(200, 250, "Radio")
