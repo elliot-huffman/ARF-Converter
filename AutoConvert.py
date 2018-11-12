@@ -50,7 +50,7 @@ class init_system:
 
 
     def locate_nbr(self):
-        if not self.check_file_existance(self.init_vars["nbr_path"]):
+        if not self.check_file_existence(self.init_vars["nbr_path"]):
             print("The system could not find the NBR player.\nWould you like to download it?")
             me_locate_nbr = str(input("\nY or N: "))
             if me_locate_nbr.lower() == "y":
@@ -76,7 +76,7 @@ class init_system:
     # download the program. If the user does not want to then it stops the script and tells the user that it is required.
 
 
-    def check_file_existance(self, file_path):
+    def check_file_existence(self, file_path):
         result = path.exists(file_path)
         return result
     # Checks the given file path to see if the file exists and returns true or false.
