@@ -60,7 +60,7 @@ class init_system:
                 clear_screen()
                 print("Maybe we missed it...\nDo you have the NBR player installed already?")
                 me_nbr_already_installed = str(input("Y or N: "))
-                if nbr_already_installed == "y":
+                if me_nbr_already_installed == "y":
                     self.custom_nbr_location()
                     self.locate_nbr()
                 else:
@@ -731,7 +731,7 @@ def global_toggle_showui():
 
 def global_output_dir():
     clear_screen()
-    print("This sets the directory that will contain all of the converted ARFs. By default this setting is .\Converted")
+    print("This sets the directory that will contain all of the converted ARFs. By default this setting is .\\Converted")
     print("The current output dir is: %s" % vars_system.init_vars["output_file_dir"])
     print("\nEnter the full path to the directory that will contain the converted ARF files or blank to do nothing.")
     me_global_output_dir = input("Press Enter/Return when you are ready to continue: ")
