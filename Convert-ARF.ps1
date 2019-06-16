@@ -37,15 +37,18 @@ param (
     [Switch]$SWF = $false,
     # Path to the ARF source directory.
     # The default is the current working directory.
+    # Validates that path specified is a directory
     [Parameter(
         Mandatory = $false,
         ValueFromPipeline = $true,
         ValueFromPipelineByPropertyName = $true
     )]
     [ValidateNotNullOrEmpty()]
+    [ValidateScript( { Test-Path $_ -PathType "Container" })]
     [System.String]$Path = ".\",
     # Path to the ARF destination directory
     # The default is the current working directory
+    # Validates that path specified is a directory
     [Parameter(
         Mandatory = $false,
         ValueFromPipeline = $true,
@@ -55,12 +58,14 @@ param (
     [ValidateScript( { Test-Path $_ -PathType "Container" })]
     [System.String]$Destination = ".\",
     # Path to the NBR Player executable
+    # Validates if the path is a leaf as the executable will be a leaf
     [Parameter(
         Mandatory = $false,
         ValueFromPipeline = $true,
         ValueFromPipelineByPropertyName = $true
     )]
     [ValidateNotNullOrEmpty()]
+    [ValidateScript( { Test-Path $_ -PathType "Leaf" })]
     [System.String]$NBRPath
 )
 
