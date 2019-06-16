@@ -14,8 +14,6 @@
     This script only runs on Windows currently
 #>
 
-#Requires -PSEdition Desktop
-
 # [OutputType([System.String])]
 [CmdletBinding(DefaultParameterSetName = 'MP4')]
 param (
@@ -81,6 +79,11 @@ function Test-Prerequisite {
         Write-Error "NBR Player not found. Please specify the location of nbrplay.exe.
         Use the -NBRPath parameter to achieve this."
         return $false
+    # Check to see if the script is running on Windows
+    # Throw an error if it isn't
+    if ($PSVersionTable.Platform -ne "Win32NT") {
+        # Write an error to the console host
+        Write-Warning -Message "This is only supported on Windows, running this on other platforms is at your own risk!"
     }
 }
 
