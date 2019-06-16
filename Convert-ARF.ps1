@@ -44,6 +44,16 @@ param (
     )]
     [ValidateNotNullOrEmpty()]
     [System.String]$Path = ".\",
+    # Path to the ARF destination directory
+    # The default is the current working directory
+    [Parameter(
+        Mandatory = $false,
+        ValueFromPipeline = $true,
+        ValueFromPipelineByPropertyName = $true
+    )]
+    [ValidateNotNullOrEmpty()]
+    [ValidateScript( { Test-Path $_ -PathType "Container" })]
+    [System.String]$Destination = ".\",
     # Path to the NBR Player executable
     [Parameter(
         Mandatory = $false,
