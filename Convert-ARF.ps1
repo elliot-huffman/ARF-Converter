@@ -17,19 +17,19 @@
 # [OutputType([System.String])]
 [CmdletBinding(DefaultParameterSetName = 'MP4')]
 param (
-    # Convert to an MP4 file
+    # Convert to an MP4 file.
     [Parameter(
         Mandatory = $false,
         ParameterSetName = "MP4"
     )]
     [Switch]$MP4 = $false,
-    # Convert to an WMV file
+    # Convert to an WMV file.
     [Parameter(
         Mandatory = $false,
         ParameterSetName = "WMV"
     )]
     [Switch]$WMV = $false,
-    # Convert to an SWF file
+    # Convert to an SWF file.
     [Parameter(
         Mandatory = $false,
         ParameterSetName = "SWF"
@@ -37,7 +37,7 @@ param (
     [Switch]$SWF = $false,
     # Path to the ARF source directory.
     # The default is the current working directory.
-    # Validates that path specified is a directory
+    # Validates that path specified is a directory.
     [Parameter(
         Mandatory = $false,
         ValueFromPipeline = $true,
@@ -46,9 +46,9 @@ param (
     [ValidateNotNullOrEmpty()]
     [ValidateScript( { Test-Path $_ -PathType "Container" })]
     [System.String]$Path = ".\",
-    # Path to the ARF destination directory
-    # The default is the current working directory
-    # Validates that path specified is a directory
+    # Path to the ARF destination directory.
+    # The default is the current working directory.
+    # Validates that path specified is a directory.
     [Parameter(
         Mandatory = $false,
         ValueFromPipeline = $true,
@@ -57,8 +57,8 @@ param (
     [ValidateNotNullOrEmpty()]
     [ValidateScript( { Test-Path $_ -PathType "Container" })]
     [System.String]$Destination = ".\",
-    # Path to the NBR Player executable
-    # Validates if the path is a leaf as the executable will be a leaf
+    # Path to the NBR Player executable.
+    # Validates if the path is a leaf as the executable will be a leaf.
     [Parameter(
         Mandatory = $false,
         ValueFromPipeline = $true,
@@ -72,7 +72,7 @@ param (
 function Test-Prerequisite {
     <#
     .SYNOPSIS
-        Checks if the pre-requisites are installed on the machine
+        Checks if the pre-requisites are installed on the machine.
     .DESCRIPTION
         Tests to see if the NBR player is present on the system.
         Throws an error if it is not present stating that the user needs to specify the value themselves or install it on the system.
@@ -80,7 +80,7 @@ function Test-Prerequisite {
         A path to the NBR player executable.
         Input is validated and will be returned if input is valid.
     .EXAMPLE
-        PS C:\> Test-Prerequisite
+        PS C:\> Test-Prerequisite.
         Checks the system to see if NBR player is installed and if it is, it will return the path to the specific install location.
         If it is not installed, it will throw an error stating that the NBR player can't be found and has instruction on how to install it.
         If the system is not running windows, it will write a warning.
