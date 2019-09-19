@@ -118,7 +118,35 @@ function New-Config {
         Output (if any)
     .NOTES
         General notes
-    #>    
+    #>
+    param(
+        # Toggle show UI in the config file
+        [Parameter(Mandatory = $false)]
+        [Switch]$ShowUI = $false,
+        # Toggle PC Audio in the config file
+        # This is only available for WMV and SWF files
+        [Parameter(
+            Mandatory = $false,
+            ParameterSetName = "WMV"
+        )]
+        [Parameter(
+            Mandatory = $false,
+            ParameterSetName = "SWF"
+        )]
+        [Switch]$PCAudio = $false
+    )
+
+    # Build the global config section of the config file
+    $GlobalConfig = "
+[Console]
+inputfile=$InputFile
+media=$FileType
+showui=$([int]$ShowUI)
+PCAudio=$([int]$PCAudio)
+[UI]
+chat=1
+qa=1
+"    
 }
 
 function ConvertFrom-ARF {
