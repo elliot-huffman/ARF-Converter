@@ -17,56 +17,9 @@
 # [OutputType([System.String])]
 [CmdletBinding(DefaultParameterSetName = 'MP4')]
 param (
-    # Convert to an MP4 file.
-    [Parameter(
-        Mandatory = $false,
-        ParameterSetName = "MP4"
-    )]
-    [Switch]$MP4 = $false,
-    # Convert to an WMV file.
-    [Parameter(
-        Mandatory = $false,
-        ParameterSetName = "WMV"
-    )]
-    [Switch]$WMV = $false,
-    # Convert to an SWF file.
-    [Parameter(
-        Mandatory = $false,
-        ParameterSetName = "SWF"
-    )]
-    [Switch]$SWF = $false,
-    # Path to the ARF source directory.
-    # The default is the current working directory.
-    # Validates that path specified is a directory.
-    [Parameter(
-        Mandatory = $false,
-        ValueFromPipeline = $true,
-        ValueFromPipelineByPropertyName = $true
-    )]
-    [ValidateNotNullOrEmpty()]
-    [ValidateScript( { Test-Path $_ -PathType "Container" })]
-    [System.String]$Path = ".\",
-    # Path to the ARF destination directory.
-    # The default is the current working directory.
-    # Validates that path specified is a directory.
-    [Parameter(
-        Mandatory = $false,
-        ValueFromPipeline = $true,
-        ValueFromPipelineByPropertyName = $true
-    )]
-    [ValidateNotNullOrEmpty()]
-    [ValidateScript( { Test-Path $_ -PathType "Container" })]
-    [System.String]$Destination = ".\",
-    # Path to the NBR Player executable.
-    # Validates if the path is a leaf as the executable will be a leaf.
-    [Parameter(
-        Mandatory = $false,
-        ValueFromPipeline = $true,
-        ValueFromPipelineByPropertyName = $true
-    )]
-    [ValidateNotNullOrEmpty()]
-    [ValidateScript( { Test-Path $_ -PathType "Leaf" })]
-    [System.String]$NBRPath
+    $MP4,
+    $WMV,
+    $SWF
 )
 
 function Test-Prerequisite {
