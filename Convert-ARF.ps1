@@ -186,7 +186,6 @@ function ConvertFrom-ARF {
     #>
 }
 
-
-if ($CLIMode) {
-    # Execute script as CLI mode
+if ($MyInvocation.Line -NotMatch "^\.\s") {
+    # run script in CLI mode, not dot sourced - standalone
 }
