@@ -88,7 +88,7 @@ function Test-Prerequisite {
 
         # Test to see if the NBR player executable is present legacy NBR location
         elseif (Test-Path -Path "C:\ProgramData\WebEx\WebEx\500\nbrplay.exe") {
-            # Set the variable to be equal to the 
+            # Set the variable to be equal to the
             $Path = "C:\ProgramData\WebEx\WebEx\500\nbrplay.exe"
         }
 
@@ -193,55 +193,55 @@ function ConvertFrom-CiscoARF {
     .FUNCTIONALITY
         The functionality that best describes this cmdlet
 #>
-    [CmdletBinding(DefaultParameterSetName='Parameter Set 1',
-                   SupportsShouldProcess=$true,
-                   PositionalBinding=$false,
-                   HelpUri = 'http://www.microsoft.com/',
-                   ConfirmImpact='Medium')]
+    [CmdletBinding(DefaultParameterSetName = 'Parameter Set 1',
+        SupportsShouldProcess = $true,
+        PositionalBinding = $false,
+        HelpUri = 'http://www.microsoft.com/',
+        ConfirmImpact = 'Medium')]
     [Alias()]
     [OutputType([String])]
     Param (
         # Param1 help description
-        [Parameter(Mandatory=$true,
-                   Position=0,
-                   ValueFromPipeline=$true,
-                   ValueFromPipelineByPropertyName=$true,
-                   ValueFromRemainingArguments=$false, 
-                   ParameterSetName='Parameter Set 1')]
+        [Parameter(Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            ValueFromRemainingArguments = $false,
+            ParameterSetName = 'Parameter Set 1')]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
-        [ValidateCount(0,5)]
+        [ValidateCount(0, 5)]
         [ValidateSet("sun", "moon", "earth")]
-        [Alias("p1")] 
+        [Alias("p1")]
         $Param1,
-        
+
         # Param2 help description
-        [Parameter(ParameterSetName='Parameter Set 1')]
+        [Parameter(ParameterSetName = 'Parameter Set 1')]
         [AllowNull()]
         [AllowEmptyCollection()]
         [AllowEmptyString()]
-        [ValidateScript({$true})]
-        [ValidateRange(0,5)]
+        [ValidateScript( { $true })]
+        [ValidateRange(0, 5)]
         [int]
         $Param2,
-        
+
         # Param3 help description
-        [Parameter(ParameterSetName='Another Parameter Set')]
+        [Parameter(ParameterSetName = 'Another Parameter Set')]
         [ValidatePattern("[a-z]*")]
-        [ValidateLength(0,15)]
+        [ValidateLength(0, 15)]
         [String]
         $Param3
     )
-    
+
     begin {
     }
-    
+
     process {
         if ($pscmdlet.ShouldProcess("Target", "Operation")) {
-            
+
         }
     }
-    
+
     end {
     }
 }
