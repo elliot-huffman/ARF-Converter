@@ -10,6 +10,15 @@
     Inputs (if any)
 .OUTPUTS
     Output (if any)
+.COMPONENT
+    The component this cmdlet belongs to
+.ROLE
+    The user's company role this cmdlet is designed for
+.FUNCTIONALITY
+    The functionality that best describes this cmdlet
+    ???
+.LINK
+    https://github.com/elliot-labs/PowerShell-Doodads
 .NOTES
     This script only runs on Windows currently
 #>
