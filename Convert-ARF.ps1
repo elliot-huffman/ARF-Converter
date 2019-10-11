@@ -129,33 +129,45 @@ function New-Config {
         General notes
     #>
     param(
-        # Toggle show UI in the config file
-        [Parameter(Mandatory = $false)]
-        [Switch]$ShowUI = $false,
-        # Toggle PC Audio in the config file
-        # This is only available for WMV and SWF files
-        [Parameter(
-            Mandatory = $false,
-            ParameterSetName = "WMV"
-        )]
-        [Parameter(
-            Mandatory = $false,
-            ParameterSetName = "SWF"
-        )]
-        [Switch]$PCAudio = $false
+        [System.Collections.HashTable]$InputObject
     )
 
+    begin { }
+    process { }
+    end {
+        foreach ($Key in $InputObject.keys) {
+            # If the key value pair does not contain a HashTable, treat it as just key and values with no section header.
+            if ($InputObject[$Key] -IsNot [System.Collections.HashTable]) {
+
+                # Write the key value pairs to the specified file.
+                Add-Content -Path $FilePath -Value "$Key=$($InputObject[$Key])"
+            } else {
+                #Sections
+                Add-Content -Path $FilePath -Value "[$Key]"
+                foreach ($SubKey in ($InputObject[$Key].keys | Sort-Object)) {
+                    if ($SubKey -match "^Comment[\d]+") {
+                        Add-Content -Path $FilePath -Value "$($InputObject[$Key][$SubKey])"
+                    } else {
+                        Add-Content -Path $FilePath -Value "$SubKey=$($InputObject[$Key][$SubKey])"
+                    }
+
+                }
+                Add-Content -Path $FilePath -Value ""
+            }
+        }
+    }
+
     # Build the global config section of the config file
-    $GlobalConfig = "
-[Console]
-inputfile=$InputFile
-media=$FileType
-showui=$([int]$ShowUI)
-PCAudio=$([int]$PCAudio)
-[UI]
-chat=1
-qa=1
-"    
+    #     $GlobalConfig = "
+    # [Console]
+    # inputfile=$InputFile
+    # media=$FileType
+    # showui=$([int]$ShowUI)
+    # PCAudio=$([int]$PCAudio)
+    # [UI]
+    # chat=1
+    # qa=1
+    # "
 }
 
 function ConvertFrom-ARF {
