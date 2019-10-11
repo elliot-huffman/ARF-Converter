@@ -170,7 +170,7 @@ function New-Config {
     # "
 }
 
-function ConvertFrom-ARF {
+function ConvertFrom-CiscoARF {
     <#
     .SYNOPSIS
         Short description
