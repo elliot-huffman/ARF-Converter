@@ -155,6 +155,15 @@ function Export-INIConfiguration {
             return $true
         })]
         [System.Collections.HashTable]$InputObject,
+        [Parameter(
+            Mandatory=$true,
+            Position=1,
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+        )]
+        [ValidateNotNullOrEmpty()]
+        [ValidateScript({})]
+        [System.String[]]$Path
     )
 
     begin { }
