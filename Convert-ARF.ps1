@@ -136,23 +136,27 @@ function Export-INIConfiguration {
     process { }
     end {
         foreach ($Key in $InputObject.keys) {
-            # If the key value pair does not contain a HashTable, treat it as just key and values with no section header.
-            if ($InputObject[$Key] -IsNot [System.Collections.HashTable]) {
+            # If there is a hash table in the value section, make the key the section name and loop through the
+            # sub keys and values to create the INI section's key and values.
+            if ($InputObject[$Key] -Is [System.Collections.HashTable]) {
+                # Write the key value as the section name of the INI formatted
+                Add-Content -Path $Path -Value "[$Key]"
 
-                # Write the key value pairs to the specified file.
-                Add-Content -Path $FilePath -Value "$Key=$($InputObject[$Key])"
-            } else {
-                #Sections
-                Add-Content -Path $FilePath -Value "[$Key]"
+                # Loop through the embedded HashTable and write the key and values to the file
                 foreach ($SubKey in ($InputObject[$Key].keys | Sort-Object)) {
                     if ($SubKey -match "^Comment[\d]+") {
-                        Add-Content -Path $FilePath -Value "$($InputObject[$Key][$SubKey])"
+                        Add-Content -Path $Path -Value "$($InputObject[$Key][$SubKey])"
                     } else {
-                        Add-Content -Path $FilePath -Value "$SubKey=$($InputObject[$Key][$SubKey])"
+                        Add-Content -Path $Path -Value "$SubKey=$($InputObject[$Key][$SubKey])"
                     }
-
                 }
-                Add-Content -Path $FilePath -Value ""
+
+                # Add white space to bottom of file.
+                Add-Content -Path $Path -Value ""
+            # If the key value pair does not contain a HashTable, treat it as just key and values with no section header.
+            } else {
+                # Write the key value pairs to the specified file.
+                Add-Content -Path $Path -Value "$Key=$($InputObject[$Key])"
             }
         }
     }
