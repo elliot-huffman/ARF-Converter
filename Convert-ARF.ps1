@@ -112,7 +112,7 @@ If it is not installed, please install it by going to www.webex.com/play-webex-r
     return $Path
 }
 
-function New-Config {
+function Export-INIConfiguration {
     <#
     .SYNOPSIS
         Creates the config files for the NBR player's conversion system
