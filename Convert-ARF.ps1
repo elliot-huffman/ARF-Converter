@@ -129,7 +129,32 @@ function Export-INIConfiguration {
         General notes
     #>
     param(
-        [System.Collections.HashTable]$InputObject
+        [Parameter(
+            Mandatory=$true,
+            Position=0,
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+        )]
+        [ValidateNotNullOrEmpty()]
+        [ValidateScript({
+            foreach ($Key in $_.Keys) {
+                if (($key -Is [System.String]) -and ($_[$key] -Is [System.String])) {
+                    continue
+                } elseif (($key -Is [System.String]) -and ($_[$key] -Is [System.Collections.HashTable])) {
+                    foreach ($SubKey in $_[$key].Keys) {
+                        if (($SubKey -Is [System.String]) -and ($_[$key][$SubKey] -Is [System.String])) {
+                            continue
+                        } else {
+                            return $false
+                        }
+                    }
+                } else {
+                    return $false
+                }
+            }
+            return $true
+        })]
+        [System.Collections.HashTable]$InputObject,
     )
 
     begin { }
