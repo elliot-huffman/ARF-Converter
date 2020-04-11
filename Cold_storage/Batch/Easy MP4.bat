@@ -3,7 +3,7 @@
 color 2e
 cls
 cd /d %~dp0
-if not EXIST C:\programdata\webex\webex\500\nbrplay.exe goto nonbr
+if not EXIST "C:\programdata\webex\webex\500\nbrplay.exe" goto nonbr
 if not EXIST "%cd%\Converted\" mkdir Converted
 del *.cfg
 goto precfg
@@ -78,7 +78,7 @@ rem Above is the CFG file template used to create the ARF's CFG file.
 setlocal
 cls
 echo %count% files remaining... This may take some time ;)
-c:\programdata\webex\webex\500\nbrplay.exe -Convert "%~dp1\%~n1.cfg"
+"c:\programdata\webex\webex\500\nbrplay.exe" -Convert "%~dp1\%~n1.cfg"
 exit /b
 
 rem This converts the file based upon the imputed CFG file that was created in one of the previous steps.
