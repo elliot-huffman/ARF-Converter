@@ -112,6 +112,94 @@ If it is not installed, please install it by going to www.webex.com/play-webex-r
     return $Path
 }
 
+function Test-MP4Prerequisite {
+    <#
+    .SYNOPSIS
+        Tests to see if the MP4 libraries are present.
+    .DESCRIPTION
+        Takes the specified path to the nbr install and validates if the MP4 libraries are installed or not.
+        If it is not able to find the MP4 libs, it returns false, if it can find them it is successful.
+    .PARAMETER NBRPath
+        This parameter takes a path to the NBR player's installation directory.
+        It validates that the specified path is present and is a directory.
+        The correct directory has the "webex.exe" file located in it.
+    .EXAMPLE
+        PS C:\> Test-MP4Prerequisite -NBRPath "C:\Program Files (x86)\Webex\"
+        Checks relative to the specified directory for the MP4 libs.
+        If the plugin directory is not present then it creates the directory and returns false.
+        If the plugin directory exists then the directory is checked for teh appropriate DLLs.
+        If the DLLs are indeed present then $true is returned.
+    .INPUTS
+        System.String
+    .OUTPUTS
+        System.Boolean
+    .NOTES
+        Returns $False if the required files could not be found.
+        Returns $True if the required files could be found.
+
+        Writes an error if it could not create the required folder for the MP4 DLLs.
+        This is non terminating.
+    #>
+    
+    #Requires -RunAsAdministrator
+
+    param (
+        [Parameter(
+            Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            ValueFromRemainingArguments = $true
+        )]
+        [ValidateScript({ Test-Path "$_\webex.exe" -PathType "Leaf" })]
+        [System.String]$NBRPath
+    )
+
+    process {
+        # Checks to see if the Plugin directory is present before checking for the MP4 libraries.
+        if (-not (Test-Path -Path "$NBRPath\Webex\500\Plugin" -PathType "Container")) {
+
+            # Write warning messages to the end user if the the path doesn't exist.
+            # This means that the correct directory would not exist and the user would need to set up the MP4 libs.
+            Write-Warning -Message "The MP4 DLLs are not present, please download and place them into the plugin folder here: $NBRPath\Webex\500\Plugin"
+            Write-Warning -Message "You can download the MP4 libraries here: https://cisco.bravais.com/s/0ovsmxyXiqUxhn0vSSUb"
+            Write-Warning -Message "You can learn more here: https://help.webex.com/en-us/WBX56022/Prompted-to-Enter-URL-Account-Name-and-Password-when-Converting-an-NBR-to-MP4-Format"
+
+            # Catch errors on directory creation so that errors can be handled gracefully.
+            try {
+                # Create the Plugin folder for the end user to place the MP4 files into.
+                New-Item -Path "$NBRPath\Webex\500\Plugin" -ItemType "Directory"
+            }
+            catch {
+                # Could not create the directory for some reason, write an error.
+                Write-Error -Message "Failed to create the plugin directory."
+            }
+
+            # Return false indicating that the test has failed to find the required MP4 files.
+            return $false
+        } elseif (-not (Test-Path -Path "$NBRPath\Webex\500\Plugin\atgpcext.dll" -PathType "Leaf")) {
+            # Write warning messages to the end user if the the path doesn't exist.
+            # This means that the correct directory would not exist and the user would need to set up the MP4 libs.
+            Write-Warning -Message "The Download Module DLL is not present, please download and place it into the plugin folder here: $NBRPath\Webex\500\Plugin"
+            Write-Warning -Message "You can download the MP4 libraries here: https://cisco.bravais.com/s/0ovsmxyXiqUxhn0vSSUb"
+            Write-Warning -Message "You can learn more here: https://help.webex.com/en-us/WBX56022/Prompted-to-Enter-URL-Account-Name-and-Password-when-Converting-an-NBR-to-MP4-Format"
+            
+            return $false
+        } elseif (-not (Test-Path -Path "$NBRPath\Webex\500\Plugin\libfaac.dll" -PathType "Leaf")) {
+            # Write warning messages to the end user if the the path doesn't exist.
+            # This means that the correct directory would not exist and the user would need to set up the MP4 libs.
+            Write-Warning -Message "The ffmpeg AAC DLL is not present, please download and place it into the plugin folder here: $NBRPath\Webex\500\Plugin"
+            Write-Warning -Message "You can download the MP4 libraries here: https://cisco.bravais.com/s/0ovsmxyXiqUxhn0vSSUb"
+            Write-Warning -Message "You can learn more here: https://help.webex.com/en-us/WBX56022/Prompted-to-Enter-URL-Account-Name-and-Password-when-Converting-an-NBR-to-MP4-Format"
+            
+            return $false
+        } else {
+            # Returns true if the required files are present.
+            return $true
+        }
+    }    
+}
+
 function Export-INIConfiguration {
     <#
     .SYNOPSIS
