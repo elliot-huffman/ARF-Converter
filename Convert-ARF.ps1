@@ -31,7 +31,7 @@ param (
     $SWF
 )
 
-function Test-Prerequisite {
+function Test-NBRPrerequisite {
     <#
     .SYNOPSIS
         Checks if the pre-requisites are installed on the machine.
