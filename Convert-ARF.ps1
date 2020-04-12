@@ -218,10 +218,10 @@ function Export-INIConfiguration {
     #>
     param(
         [Parameter(
-            Mandatory=$true,
-            Position=0,
-            ValueFromPipeline=$true,
-            ValueFromPipelineByPropertyName=$true
+            Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true
         )]
         [ValidateNotNullOrEmpty()]
         [ValidateScript({
@@ -244,10 +244,10 @@ function Export-INIConfiguration {
         })]
         [System.Collections.HashTable]$InputObject,
         [Parameter(
-            Mandatory=$true,
-            Position=1,
-            ValueFromPipeline=$true,
-            ValueFromPipelineByPropertyName=$true
+            Mandatory = $true,
+            Position = 1,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true
         )]
         [ValidateNotNullOrEmpty()]
         [ValidateScript({})]
