@@ -198,9 +198,9 @@ function Export-INIConfiguration {
     # Build the global config section of the config file
     #     $GlobalConfig = "
     # [Console]
-    # inputfile=$InputFile
+    # InputFile=$InputFile
     # media=$FileType
-    # showui=$([int]$ShowUI)
+    # ShowUI=$([int]$ShowUI)
     # PCAudio=$([int]$PCAudio)
     # [UI]
     # chat=1
