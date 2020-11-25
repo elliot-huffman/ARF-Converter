@@ -69,22 +69,17 @@ begin {
         [Global_Options]$GlobalOptions
         $FileTypeOptions
 
-    # If there is no user input, test to see if the player is installed
-    if ($null -eq $Path) {
-        # Test to see if the NBR player executable is present in the 32bit program folder for 64bit Windows
-        if (Test-Path -Path "C:\Program Files (x86)\Webex\Webex\500\nbrplay.exe") {
-            $Path = "C:\Program Files (x86)\Webex\Webex\500\nbrplay.exe"
+        INI_Options([Global_Options]$GlobalOption, [MP4_Options]$MP4Option){
+            $this.GlobalOptions = $GlobalOption
+            $this.FileTypeOptions = $MP4Option
         }
-
-        # Test to see if the NBR player executable is present in the program folder for 32bit Windows
-        elseif (Test-Path -Path "C:\Program Files\Webex\Webex\500\nbrplay.exe") {
-            $Path = "C:\Program Files\Webex\Webex\500\nbrplay.exe"
+        INI_Options([Global_Options]$GlobalOption, [WMV_Options]$WMVOption){
+            $this.GlobalOptions = $GlobalOption
+            $this.FileTypeOptions = $WMVOption
         }
-
-        # Test to see if the NBR player executable is present legacy NBR location
-        elseif (Test-Path -Path "C:\ProgramData\WebEx\WebEx\500\nbrplay.exe") {
-            # Set the variable to be equal to the
-            $Path = "C:\ProgramData\WebEx\WebEx\500\nbrplay.exe"
+        INI_Options([Global_Options]$GlobalOption, [SWF_Options]$SWFOption){
+            $this.GlobalOptions = $GlobalOption
+            $this.FileTypeOptions = $SWFOption
         }
     }
 
