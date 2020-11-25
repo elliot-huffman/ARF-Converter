@@ -32,6 +32,42 @@ param (
 
 begin {
 
+    # Define the INI file configuration options class
+    class Global_Options {
+        [System.String]$InputFile
+        [System.String]$OutputFile
+        [System.String]$MediaType
+        [System.Boolean]$ShowUI
+        [System.Int64]$Width
+        [System.Int64]$Height
+    }
+    class MP4_Options {
+        [System.Boolean]$Chat
+        [System.Boolean]$Video
+        [System.Boolean]$QuestionAnswer
+        [System.Boolean]$LargeOutLine = $True
+        [System.Int64]$FrameRate
+    }
+    class WMV_Options {
+        [System.Boolean]$PCAudio = $False
+        [System.Boolean]$Chat = $False
+        [System.Boolean]$Video = $False
+        [System.Boolean]$LargerOutline = $True
+        [System.String]$VideoCodec
+        [System.String]$AudioCodec
+        [System.String]$VideoFormat = "default"
+        [System.String]$AudioFormat = "default"
+        [System.Int64]$VideoKeyFrames
+        [System.Int64]$MaxStream
+    }
+    class SWF_Options {
+        [System.Boolean]$PCAudio = $True
+        [System.Int64]$FrameRate
+    }
+    
+    class INI_Options {
+        [Global_Options]$GlobalOptions
+        $FileTypeOptions
 
     # If there is no user input, test to see if the player is installed
     if ($null -eq $Path) {
