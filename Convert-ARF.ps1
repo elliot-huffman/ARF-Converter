@@ -26,9 +26,8 @@
 # [OutputType([System.String])]
 [CmdletBinding(DefaultParameterSetName = 'MP4')]
 param (
-    $MP4,
-    $WMV,
-    $SWF
+    [ValidateSet("MP4", "WMV", "SWF")]
+    [System.String]$OutputType = "MP4"
 )
 
 begin {
